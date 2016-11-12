@@ -1320,7 +1320,7 @@ CancelImportProcessing:
             writer.WriteAttributeString("Name", YamlDotNetDLL)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(YamlDotNetDLL).FileVersion)
             writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & YamlDotNetDLL))
-            writer.WriteAttributeString("URL", YamlDotNetDLL)
+            writer.WriteAttributeString("URL", YamlDotNetDLLURL)
             writer.WriteEndElement()
 
             ' End document.
