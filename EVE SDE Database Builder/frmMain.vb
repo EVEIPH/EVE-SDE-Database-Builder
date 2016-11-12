@@ -26,6 +26,8 @@ Public Class frmMain
     Private Const SQLiteEF6DLL As String = "System.Data.SQLite.EF6.dll"
     Private Const SQLiteLinqDLL As String = "System.Data.SQLite.Linq.dll"
     Private Const YamlDotNetDLL As String = "YamlDotNet.dll"
+    Private Const MainEXEManifest As String = "EVE SDE Database Builder.exe.manifest"
+    Private Const UpdaterEXEManifest As String = "ESDEDB Updater.exe.manifest"
 
     Private Const LatestVersionXML As String = "LatestVersionESDEDB.xml"
 
@@ -38,6 +40,8 @@ Public Class frmMain
     Private SQLiteEF6DLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.EF6.dll"
     Private SQLiteLinqDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.Linq.dll"
     Private YamlDotNetDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/YamlDotNet.dll"
+    Private MainEXEManifestURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe.manifest"
+    Private UpdaterEXEManifestURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe.manifest"
 
     ' For setting the number of threads to use
     Public SelectedThreads As Integer
@@ -1183,7 +1187,9 @@ CancelImportProcessing:
         Call BuildBinaryFile()
     End Sub
 
-    ' Copies all the files from directories and then builds the xml file and saves it here for upload to github
+    ''' <summary>
+    ''' Copies all the files from directories and then builds the xml file and saves it here for upload to github
+    ''' </summary>
     Private Sub CopyFilesBuildXML()
         Dim NewFilesAdded As Boolean = False
         Dim Updater As New ProgramUpdater
@@ -1229,6 +1235,16 @@ CancelImportProcessing:
 
         If Updater.MD5CalcFile(YamlDotNetDLL) <> Updater.MD5CalcFile(LatestFilesFolder & YamlDotNetDLL) Then
             File.Copy(YamlDotNetDLL, LatestFilesFolder & YamlDotNetDLL, True)
+            NewFilesAdded = True
+        End If
+
+        If Updater.MD5CalcFile(MainEXEManifest) <> Updater.MD5CalcFile(LatestFilesFolder & MainEXEManifest) Then
+            File.Copy(MainEXEManifest, LatestFilesFolder & MainEXEManifest, True)
+            NewFilesAdded = True
+        End If
+
+        If Updater.MD5CalcFile(UpdaterEXEManifest) <> Updater.MD5CalcFile(LatestFilesFolder & UpdaterEXEManifest) Then
+            File.Copy(UpdaterEXEManifest, LatestFilesFolder & UpdaterEXEManifest, True)
             NewFilesAdded = True
         End If
 
@@ -1330,6 +1346,20 @@ CancelImportProcessing:
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(YamlDotNetDLL).FileVersion)
             writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & YamlDotNetDLL))
             writer.WriteAttributeString("URL", YamlDotNetDLLURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", MainEXEManifest)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(MainEXEManifest).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & MainEXEManifest))
+            writer.WriteAttributeString("URL", MainEXEManifestURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", UpdaterEXEManifest)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(UpdaterEXEManifest).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & UpdaterEXEManifest))
+            writer.WriteAttributeString("URL", UpdaterEXEManifestURL)
             writer.WriteEndElement()
 
             ' End document.
