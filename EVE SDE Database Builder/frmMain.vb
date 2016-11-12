@@ -1299,7 +1299,7 @@ CancelImportProcessing:
             writer.WriteAttributeString("Name", SQLiteBaseDLL)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteBaseDLL).FileVersion)
             writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & SQLiteBaseDLL))
-            writer.WriteAttributeString("URL", SQLiteBaseDLL)
+            writer.WriteAttributeString("URL", SQLiteBaseDLLURL)
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
