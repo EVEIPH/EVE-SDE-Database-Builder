@@ -1,0 +1,154 @@
+﻿
+Imports YamlDotNet.Serialization
+Imports System.IO
+
+Public Class YAMLstaStations
+    Inherits YAMLFilesBase
+
+    Public Const staStationsFile As String = "staStations.yaml"
+
+    Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
+        MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
+    End Sub
+
+    ''' <summary>
+    ''' Imports the yaml file into the database set in the constructor
+    ''' </summary>
+    ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
+    Public Sub ImportFile(ByVal Params As ImportParameters)
+        Dim DSB = New DeserializerBuilder()
+        DSB.IgnoreUnmatchedProperties()
+        DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
+        Dim DS As New Deserializer
+        DS = DSB.Build
+
+        Dim YAMLRecords As New List(Of staStation)
+        Dim DataFields As List(Of DBField)
+        Dim IndexFields As List(Of String)
+        Dim SQL As String = ""
+        Dim Count As Long = 0
+        Dim TotalRecords As Long = 0
+
+        ' Build table
+        Dim Table As New List(Of DBTableField)
+        Table.Add(New DBTableField("stationID", FieldType.int_type, 0, False, True))
+        Table.Add(New DBTableField("security", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("dockingCostPerVolume", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("maxShipVolumeDockable", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("officeRentalCost", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("operationID", FieldType.tinyint_type, 0, True))
+        Table.Add(New DBTableField("stationTypeID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("constellationID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("regionID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("stationName", FieldType.nvarchar_type, 100, True))
+        Table.Add(New DBTableField("x", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("y", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("z", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("reprocessingEfficiency", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("reprocessingStationsTake", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("reprocessingHangarFlag", FieldType.tinyint_type, 0, True))
+
+        Call UpdateDB.CreateTable(TableName, Table)
+
+        ' Create indexes
+        IndexFields = New List(Of String)
+        IndexFields.Add("regionID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_RID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("solarSystemID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_SSID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("constellationID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_CID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("operationID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_OID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("stationTypeID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_STID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("corporationID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_CPID", IndexFields)
+
+        ' See if we only want to build the table and indexes
+        If Not Params.InsertRecords Then
+            Exit Sub
+        End If
+
+        ' Start processing
+        Call InitGridRow(Params.RowLocation)
+
+        Try
+            ' Parse the input text
+            YAMLRecords = DS.Deserialize(Of List(Of staStation))(New StringReader(File.ReadAllText(YAMLFile)))
+        Catch ex As Exception
+            Call ShowErrorMessage(ex)
+        End Try
+
+        TotalRecords = YAMLRecords.Count
+
+        ' Process Data
+        For Each DataField In YAMLRecords
+            DataFields = New List(Of DBField)
+
+            ' Build the insert list
+            DataFields.Add(UpdateDB.BuildDatabaseField("stationID", DataField.stationID, FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("[security]", DataField.[security], FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("dockingCostPerVolume", DataField.dockingCostPerVolume, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("maxShipVolumeDockable", DataField.maxShipVolumeDockable, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("officeRentalCost", DataField.officeRentalCost, FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("operationID", DataField.operationID, FieldType.tinyint_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("stationTypeID", DataField.stationTypeID, FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", DataField.corporationID, FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("solarSystemID", DataField.solarSystemID, FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("constellationID", DataField.constellationID, FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("regionID", DataField.regionID, FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("stationName", DataField.stationName, FieldType.nvarchar_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("reprocessingEfficiency", DataField.reprocessingEfficiency, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("reprocessingStationsTake", DataField.reprocessingStationsTake, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("reprocessingHangarFlag", DataField.reprocessingHangarFlag, FieldType.tinyint_type))
+
+            Call UpdateDB.InsertRecord(TableName, DataFields)
+
+            ' Update grid progress
+            Call UpdateGridRowProgress(Params.RowLocation, Count, TotalRecords)
+            Count += 1 ' Count after so we never get to 100 until finished
+
+        Next
+
+        Call FinalizeGridRow(Params.RowLocation)
+
+    End Sub
+
+End Class
+
+Public Class staStation
+    Public Property stationID As Object
+    Public Property security As Object
+    Public Property dockingCostPerVolume As Object
+    Public Property maxShipVolumeDockable As Object
+    Public Property officeRentalCost As Object
+    Public Property operationID As Object
+    Public Property stationTypeID As Object
+    Public Property corporationID As Object
+    Public Property solarSystemID As Object
+    Public Property constellationID As Object
+    Public Property regionID As Object
+    Public Property stationName As Object
+    Public Property x As Object
+    Public Property y As Object
+    Public Property z As Object
+    Public Property reprocessingEfficiency As Object
+    Public Property reprocessingStationsTake As Object
+    Public Property reprocessingHangarFlag As Object
+End Class

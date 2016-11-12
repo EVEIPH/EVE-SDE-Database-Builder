@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EVEIPH Version="Version 1.0.0.0">
+  <LastUpdated>11/12/2016 2:55:39 PM</LastUpdated>
+  <result>
+    <rowset name="filelist" key="version" columns="Name,Version,MD5,URL">
+      <row Name="EVE SDE Database Builder.exe" Version="Version 1.0.0.0" MD5="ab4ea3343520ce576ca225dad5e921d5" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe" />
+      <row Name="MySql.Data.dll" Version="6.9.9.0" MD5="6d6db0b5361eb55673a82fb21fd79140" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/MySql.Data.dll" />
+      <row Name="Npgsql.dll" Version="3.1.8.0" MD5="fdfb2c488d2b9f93a0c829e799f191f0" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/Npgsql.dll" />
+      <row Name="System.Data.SQLite.dll" Version="1.0.103.0" MD5="d9b7b52979fff03cae467e8087ad77a3" URL="System.Data.SQLite.dll" />
+      <row Name="System.Data.SQLite.EF6.dll" Version="1.0.103.0" MD5="c3fe2c3305d8da0f99a45496a1954c23" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/System.Data.SQLite.EF6.dll" />
+      <row Name="System.Data.SQLite.Linq.dll" Version="1.0.103.0" MD5="9c4136c2e33ff6f6dd7bd107e31a023e" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/System.Data.SQLite.Linq.dll" />
+      <row Name="YamlDotNet.dll" Version="4.0.0" MD5="fda941deed93356f347dea2f0ae07579" URL="YamlDotNet.dll" />
+    </rowset>
+  </result>
+</EVEIPH>
