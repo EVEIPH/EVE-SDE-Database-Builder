@@ -2010,6 +2010,10 @@ CancelImportProcessing:
         f1.ShowDialog()
     End Sub
 
+    Private Sub CheckForUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheckForUpdatesToolStripMenuItem.Click
+        Call CheckForUpdates(True)
+    End Sub
+
 #End Region
 
     ' Predicate for sorting a list of grid file items

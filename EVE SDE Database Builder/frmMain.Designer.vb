@@ -80,6 +80,7 @@ Partial Class frmMain
         Me.DeveloperToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrepareFilesForUpdateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BuildBinaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CheckForUpdatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlMain.SuspendLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbSelectDBType.SuspendLayout()
@@ -555,7 +556,7 @@ Partial Class frmMain
         '
         'AboutToolStripMenuItem
         '
-        Me.AboutToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem1})
+        Me.AboutToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckForUpdatesToolStripMenuItem, Me.AboutToolStripMenuItem1})
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(52, 20)
         Me.AboutToolStripMenuItem.Text = "About"
@@ -584,6 +585,12 @@ Partial Class frmMain
         Me.BuildBinaryToolStripMenuItem.Name = "BuildBinaryToolStripMenuItem"
         Me.BuildBinaryToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.BuildBinaryToolStripMenuItem.Text = "Build Binary"
+        '
+        'CheckForUpdatesToolStripMenuItem
+        '
+        Me.CheckForUpdatesToolStripMenuItem.Name = "CheckForUpdatesToolStripMenuItem"
+        Me.CheckForUpdatesToolStripMenuItem.Size = New System.Drawing.Size(243, 22)
+        Me.CheckForUpdatesToolStripMenuItem.Text = "Check for Updates"
         '
         'frmMain
         '
@@ -677,4 +684,5 @@ Partial Class frmMain
     Friend WithEvents AboutToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents PrepareFilesForUpdateToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents BuildBinaryToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CheckForUpdatesToolStripMenuItem As ToolStripMenuItem
 End Class
