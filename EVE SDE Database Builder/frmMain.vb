@@ -262,8 +262,10 @@ Public Class frmMain
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Update files first
-        Call CheckForUpdates(False)
+        ' Update files first unless dev 
+        If Not File.Exists("Developer.txt") Then
+            Call CheckForUpdates(False)
+        End If
 
         FirstLoad = True
 
@@ -1405,9 +1407,11 @@ CancelImportProcessing:
         File.Copy(LatestFilesFolder & SQLiteEF6DLL, FinalBinaryFolderPath & SQLiteEF6DLL)
         File.Copy(LatestFilesFolder & SQLiteLinqDLL, FinalBinaryFolderPath & SQLiteLinqDLL)
         File.Copy(LatestFilesFolder & YamlDotNetDLL, FinalBinaryFolderPath & YamlDotNetDLL)
+        File.Copy(LatestFilesFolder & MainEXEManifest, FinalBinaryFolderPath & MainEXEManifest)
+        File.Copy(LatestFilesFolder & UpdaterEXEManifest, FinalBinaryFolderPath & UpdaterEXEManifest)
 
         ' Delete the file if it already exists
-        File.Delete(FinalBinaryZip)
+        File.Delete(FinalBinaryZipPath & FinalBinaryZip)
         ' Compress the whole file for download
         Call ZipFile.CreateFromDirectory(FinalBinaryFolderPath, FinalBinaryZipPath & FinalBinaryZip, CompressionLevel.Optimal, False)
 
