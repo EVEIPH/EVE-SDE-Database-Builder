@@ -3,6 +3,7 @@
 Public Module Globals
 
     Public CancelImport As Boolean = False
+    Public frmErrorText As String = ""
 
     ''' <summary>
     ''' Displays error message from Try/Catch Exceptions
@@ -16,6 +17,27 @@ Public Module Globals
             End If
             Call MsgBox(msg, vbExclamation, Application.ProductName)
         End If
+    End Sub
+
+    ''' <summary>
+    ''' Writes a sent message to the Errors.log file
+    ''' </summary>
+    ''' <param name="ErrorMsg">Message to write to log file</param>
+    Public Sub WriteMsgToLog(ByVal ErrorMsg As String)
+        Dim FilePath As String = "Errors.log"
+        Dim AllText() As String
+
+        If Not IO.File.Exists(FilePath) Then
+            Dim sw As IO.StreamWriter = IO.File.CreateText(FilePath)
+            sw.Close()
+        End If
+
+        ' This is an easier way to get all of the strings in the file.
+        AllText = IO.File.ReadAllLines(FilePath)
+        ' This will append the string to the end of the file.
+        My.Computer.FileSystem.WriteAllText(FilePath, CStr(Now) & ", " & ErrorMsg & Environment.NewLine, True)
+
+
     End Sub
 
     ' Initializes the main form grid 
