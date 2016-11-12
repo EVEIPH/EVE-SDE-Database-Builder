@@ -56,7 +56,7 @@ Public Class frmMain
     Private LocalCulture As New CultureInfo("en-US")
 
     ' Keeps an array of threads if we need to abort update
-    Private ThreadsArray As List(Of ThreadList) = New List(Of ThreadList)
+    Private ThreadsArray As List(Of ThreadList)
 
     ' For use with updating the grid with files
     Public Structure FileListItem
@@ -426,6 +426,8 @@ ExitProc:
 
         ' Set up the importfile list
         ImportFileList = GetImportFileList(ImportTranslationData)
+
+        ThreadsArray = New List(Of ThreadList)
 
         ' Reset the third column so it updates properly
         Call ResetProgressColumn()
