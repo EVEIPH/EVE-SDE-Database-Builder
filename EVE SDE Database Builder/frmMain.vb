@@ -1254,7 +1254,7 @@ CancelImportProcessing:
         ' Loop through the settings sent and output each name and value
         Using writer As XmlWriter = XmlWriter.Create(LatestVersionXML, XMLSettings)
             writer.WriteStartDocument()
-            writer.WriteStartElement("EVEIPH") ' Root.
+            writer.WriteStartElement("EVESDEDB") ' Root.
             writer.WriteAttributeString("Version", VersionNumber)
             writer.WriteStartElement("LastUpdated")
             writer.WriteString(CStr(Now))

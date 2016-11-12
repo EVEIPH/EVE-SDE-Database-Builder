@@ -184,7 +184,7 @@ Public Class frmUpdaterMain
             ' Load the server xml file to check for updates 
             m_xmld.Load(ServerXMLLastUpdatePath)
 
-            m_nodelist = m_xmld.SelectNodes("/EVEIPH/result/rowset/row")
+            m_nodelist = m_xmld.SelectNodes("/EVESDEDB/result/rowset/row")
 
             ' Loop through the nodes 
             For Each m_node In m_nodelist
