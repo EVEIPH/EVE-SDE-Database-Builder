@@ -79,6 +79,7 @@ Partial Class frmMain
         Me.AboutToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeveloperToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrepareFilesForUpdateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.BuildBinaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlMain.SuspendLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbSelectDBType.SuspendLayout()
@@ -567,7 +568,7 @@ Partial Class frmMain
         '
         'DeveloperToolStripMenuItem
         '
-        Me.DeveloperToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PrepareFilesForUpdateToolStripMenuItem})
+        Me.DeveloperToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PrepareFilesForUpdateToolStripMenuItem, Me.BuildBinaryToolStripMenuItem})
         Me.DeveloperToolStripMenuItem.Name = "DeveloperToolStripMenuItem"
         Me.DeveloperToolStripMenuItem.Size = New System.Drawing.Size(72, 20)
         Me.DeveloperToolStripMenuItem.Text = "Developer"
@@ -577,6 +578,12 @@ Partial Class frmMain
         Me.PrepareFilesForUpdateToolStripMenuItem.Name = "PrepareFilesForUpdateToolStripMenuItem"
         Me.PrepareFilesForUpdateToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.PrepareFilesForUpdateToolStripMenuItem.Text = "Prepare Files for Update"
+        '
+        'BuildBinaryToolStripMenuItem
+        '
+        Me.BuildBinaryToolStripMenuItem.Name = "BuildBinaryToolStripMenuItem"
+        Me.BuildBinaryToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
+        Me.BuildBinaryToolStripMenuItem.Text = "Build Binary"
         '
         'frmMain
         '
@@ -669,4 +676,5 @@ Partial Class frmMain
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AboutToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents PrepareFilesForUpdateToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents BuildBinaryToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -120,7 +120,11 @@ Public Class frmUpdaterMain
 
     End Sub
 
-    ' This event handler is where the time-consuming work is done.
+    ''' <summary>
+    ''' This event handler is where the time-consuming work is done.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub BGWorker_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles BGWorker.DoWork
         worker = CType(sender, BackgroundWorker)
         Dim ProgressCounter As Integer
@@ -162,6 +166,8 @@ Public Class frmUpdaterMain
         Dim HaveNewItemPricesFields As Boolean = False
         Dim HaveNewOwnedBPTable As Boolean = False
 
+        Dim Updater As New ProgramUpdater
+
         'Create a variable tracking times
         Dim Count As Long = 0
         Dim Counter As Long = 0
@@ -178,7 +184,7 @@ Public Class frmUpdaterMain
         Me.Invoke(UpdateStatusDelegate, False, "Checking for Updates...")
 
         ' Get the newest update file from server
-        ServerXMLLastUpdatePath = DownloadFileFromServer(XMLUpdateFileURL, UPDATES_FOLDER & LocalXMLFileName)
+        ServerXMLLastUpdatePath = Updater.DownloadFileFromServer(XMLUpdateFileURL, UPDATES_FOLDER & LocalXMLFileName)
 
         If ServerXMLLastUpdatePath <> "" Then
             ' Load the server xml file to check for updates 
@@ -240,14 +246,14 @@ Public Class frmUpdaterMain
             End If
 
             ' All files other than the DB and Updater are run from the Root folder - Images and db a special exception above
-            LocalFileMD5 = MD5CalcFile(ROOT_FOLDER & ServerFileList(i).Name)
+            LocalFileMD5 = Updater.MD5CalcFile(ROOT_FOLDER & ServerFileList(i).Name)
 
             ' Compare the MD5's and see if we download the new file
             If LocalFileMD5 <> ServerFileList(i).MD5 Then
 
                 ' Need to update, download to updates folder for later update
                 Me.Invoke(UpdateStatusDelegate, True, "")
-                CheckFile = DownloadFileFromServer(ServerFileList(i).URL, UPDATES_FOLDER & ServerFileList(i).Name)
+                CheckFile = Updater.DownloadFileFromServer(ServerFileList(i).URL, UPDATES_FOLDER & ServerFileList(i).Name)
 
                 If (worker.CancellationPending = True) Then
                     e.Cancel = True
@@ -266,15 +272,15 @@ Public Class frmUpdaterMain
                         Dim infoReader As System.IO.FileInfo
                         infoReader = My.Computer.FileSystem.GetFileInfo(CheckFile)
                         ' Still bad MD5 or the file is 0 bytes
-                        If MD5CalcFile(CheckFile) <> ServerFileList(i).MD5 Or infoReader.Length = 0 Then
-                            CheckFile = DownloadFileFromServer(ServerFileList(i).URL, UPDATES_FOLDER & ServerFileList(i).Name)
+                        If Updater.MD5CalcFile(CheckFile) <> ServerFileList(i).MD5 Or infoReader.Length = 0 Then
+                            CheckFile = Updater.DownloadFileFromServer(ServerFileList(i).URL, UPDATES_FOLDER & ServerFileList(i).Name)
 
                             If (worker.CancellationPending = True) Then
                                 e.Cancel = True
                                 Exit Sub
                             End If
 
-                            If MD5CalcFile(CheckFile) <> ServerFileList(i).MD5 Or CheckFile = "" Then
+                            If Updater.MD5CalcFile(CheckFile) <> ServerFileList(i).MD5 Or CheckFile = "" Then
                                 ProgramErrorLocation = "Download Corrupted."
                                 Exit Sub
                             End If
@@ -381,7 +387,11 @@ RevertToOldFileVersions:
 
     End Sub
 
-    ' This event handler updates the progress.
+    ''' <summary>
+    ''' This event handler updates the progress.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub BGWorker_ProgressChanged(ByVal sender As System.Object, ByVal e As ProgressChangedEventArgs) Handles BGWorker.ProgressChanged
 
         Dim safedelegate As New UpdatePGBarSafe(AddressOf UpdateProgressBar)
@@ -389,14 +399,21 @@ RevertToOldFileVersions:
 
     End Sub
 
-    ' Shows message box with message sent
+    ''' <summary>
+    ''' Shows message box with message sent
+    ''' </summary>
+    ''' <param name="LabelText">Text to show in the notify box</param>
     Private Sub ShowNotifyBox(LabelText As String)
         Dim f1 As New frmNotify
         f1.lblNotify.Text = LabelText
         f1.ShowDialog()
     End Sub
 
-    ' This event handler deals with the results of the background operation.
+    ''' <summary>
+    ''' This event handler deals with the results of the background operation.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub BGWorker_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As RunWorkerCompletedEventArgs) Handles BGWorker.RunWorkerCompleted
         Dim ErrorText As String = ""
 
@@ -472,6 +489,9 @@ RevertToOldFileVersions:
 
     End Sub
 
+    ''' <summary>
+    ''' Deletes all remaining files that we used
+    ''' </summary>
     Private Sub CleanUpOLDFiles()
         Dim ImageDir As DirectoryInfo
 
@@ -483,6 +503,11 @@ RevertToOldFileVersions:
         Next
     End Sub
 
+    ''' <summary>
+    ''' Cancel the operation
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub btnCancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnCancel.Click
         If BGWorker.WorkerSupportsCancellation = True Then
             ' Cancel the asynchronous operation.
@@ -490,7 +515,11 @@ RevertToOldFileVersions:
         End If
     End Sub
 
-    ' When the form is shown, run the updates
+    ''' <summary>
+    ''' When the form is shown, run the updates
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub frmUpdaterMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
 
         Me.Refresh()
@@ -508,106 +537,10 @@ RevertToOldFileVersions:
 
     End Sub
 
-    ' Downloads the sent file from server and saves it to the root directory as the sent file name
-    Public Function DownloadFileFromServer(ByVal DownloadURL As String, ByVal FileName As String) As String
-        'Creating the request and getting the response
-        Dim Response As HttpWebResponse
-        Dim Request As HttpWebRequest
-
-        ' File sizes for progress bar
-        Dim FileSize As Double
-
-        ' For reading in chunks of data
-        Dim readBytes(4095) As Byte
-        ' Save in root directory
-        Dim writeStream As New FileStream(FileName, FileMode.Create)
-        Dim bytesread As Integer
-
-        'Replacement for Stream.Position (webResponse stream doesn't support seek)
-        Dim nRead As Long
-
-        worker.ReportProgress(0)
-
-        Try 'Checks if the file exist
-            Request = DirectCast(HttpWebRequest.Create(DownloadURL), HttpWebRequest)
-            'Request.Proxy = GetProxyData()
-            Request.Credentials = CredentialCache.DefaultCredentials ' Added 9/27 to attempt to fix error: (407) Proxy Authentication Required.
-            Request.Timeout = 50000
-            Response = CType(Request.GetResponse, HttpWebResponse)
-        Catch ex As Exception
-            ' Set as empty and return
-            writeStream.Close()
-            Return ""
-        End Try
-
-        ' Get size
-        FileSize = Response.ContentLength()
-
-        ' Loop through and get the file in chunks, save out
-        Do
-            Application.DoEvents()
-
-            If worker.CancellationPending Then 'If user abort download
-                Exit Do
-            End If
-
-            bytesread = Response.GetResponseStream.Read(readBytes, 0, 4096)
-
-            ' No more bytes to read
-            If bytesread = 0 Then Exit Do
-
-            nRead = nRead + bytesread
-            ' Update progress 
-            worker.ReportProgress((nRead * 100) / FileSize)
-
-            writeStream.Write(readBytes, 0, bytesread)
-        Loop
-
-        'Close the streams
-        Response.GetResponseStream.Close()
-        writeStream.Close()
-
-        Return FileName
-
-    End Function
-
-    ' MD5 Hash - specify the path to a file and this routine will calculate your hash
-    Public Function MD5CalcFile(ByVal filepath As String) As String
-
-        ' open file (as read-only)
-        If File.Exists(filepath) Then
-            Using reader As New System.IO.FileStream(filepath, IO.FileMode.Open, IO.FileAccess.Read)
-                Using md5 As New System.Security.Cryptography.MD5CryptoServiceProvider
-
-                    ' hash contents of this stream
-                    Dim hash() As Byte = md5.ComputeHash(reader)
-
-                    ' return formatted hash
-                    Return ByteArrayToString(hash)
-
-                End Using
-            End Using
-        End If
-
-        ' Something went wrong
-        Return ""
-
-    End Function
-
-    ' MD5 Hash - utility function to convert a byte array into a hex string
-    Private Function ByteArrayToString(ByVal arrInput() As Byte) As String
-
-        Dim sb As New System.Text.StringBuilder(arrInput.Length * 2)
-
-        For i As Integer = 0 To arrInput.Length - 1
-            sb.Append(arrInput(i).ToString("X2"))
-        Next
-
-        Return sb.ToString().ToLower
-
-    End Function
-
-    ' Writes a sent message to a log file
+    ''' <summary>
+    ''' Writes a message to a log file
+    ''' </summary>
+    ''' <param name="ErrorMsg">Message to write to log</param>
     Public Sub WriteMsgToLog(ByVal ErrorMsg As String)
         Dim FilePath As String = "EVEIPH.log"
         Dim AllText() As String

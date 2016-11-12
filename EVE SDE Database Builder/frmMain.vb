@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Globalization ' For culture info
 Imports System.Xml
+Imports System.IO.Compression
 
 Public Class frmMain
     Private FirstLoad As Boolean
@@ -1178,50 +1179,55 @@ CancelImportProcessing:
         Call CopyFilesBuildXML()
     End Sub
 
+    Private Sub BuildBinaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BuildBinaryToolStripMenuItem.Click
+        Call BuildBinaryFile()
+    End Sub
+
     ' Copies all the files from directories and then builds the xml file and saves it here for upload to github
     Private Sub CopyFilesBuildXML()
         Dim NewFilesAdded As Boolean = False
+        Dim Updater As New ProgramUpdater
 
         On Error Resume Next
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
-        If MD5CalcFile(MainEXEFile) <> MD5CalcFile(LatestFilesFolder & MainEXEFile) Then
+        If Updater.MD5CalcFile(MainEXEFile) <> Updater.MD5CalcFile(LatestFilesFolder & MainEXEFile) Then
             File.Copy(MainEXEFile, LatestFilesFolder & MainEXEFile, True)
             NewFilesAdded = True
         End If
 
-        If MD5CalcFile(UpdaterEXEFile) <> MD5CalcFile(LatestFilesFolder & UpdaterEXEFile) Then
+        If Updater.MD5CalcFile(UpdaterEXEFile) <> Updater.MD5CalcFile(LatestFilesFolder & UpdaterEXEFile) Then
             File.Copy(UpdaterEXEFile, LatestFilesFolder & UpdaterEXEFile, True)
             NewFilesAdded = True
         End If
 
-        If MD5CalcFile(MySQLDLL) <> MD5CalcFile(LatestFilesFolder & MySQLDLL) Then
+        If Updater.MD5CalcFile(MySQLDLL) <> Updater.MD5CalcFile(LatestFilesFolder & MySQLDLL) Then
             File.Copy(MySQLDLL, LatestFilesFolder & MySQLDLL, True)
             NewFilesAdded = True
         End If
 
-        If MD5CalcFile(PostgreSQLDLL) <> MD5CalcFile(LatestFilesFolder & PostgreSQLDLL) Then
+        If Updater.MD5CalcFile(PostgreSQLDLL) <> Updater.MD5CalcFile(LatestFilesFolder & PostgreSQLDLL) Then
             File.Copy(PostgreSQLDLL, LatestFilesFolder & PostgreSQLDLL, True)
             NewFilesAdded = True
         End If
 
-        If MD5CalcFile(SQLiteBaseDLL) <> MD5CalcFile(LatestFilesFolder & SQLiteBaseDLL) Then
+        If Updater.MD5CalcFile(SQLiteBaseDLL) <> Updater.MD5CalcFile(LatestFilesFolder & SQLiteBaseDLL) Then
             File.Copy(SQLiteBaseDLL, LatestFilesFolder & SQLiteBaseDLL, True)
             NewFilesAdded = True
         End If
 
-        If MD5CalcFile(SQLiteEF6DLL) <> MD5CalcFile(LatestFilesFolder & SQLiteEF6DLL) Then
+        If Updater.MD5CalcFile(SQLiteEF6DLL) <> Updater.MD5CalcFile(LatestFilesFolder & SQLiteEF6DLL) Then
             File.Copy(SQLiteEF6DLL, LatestFilesFolder & SQLiteEF6DLL, True)
             NewFilesAdded = True
         End If
 
-        If MD5CalcFile(SQLiteLinqDLL) <> MD5CalcFile(LatestFilesFolder & SQLiteLinqDLL) Then
+        If Updater.MD5CalcFile(SQLiteLinqDLL) <> Updater.MD5CalcFile(LatestFilesFolder & SQLiteLinqDLL) Then
             File.Copy(SQLiteLinqDLL, LatestFilesFolder & SQLiteLinqDLL, True)
             NewFilesAdded = True
         End If
 
-        If MD5CalcFile(YamlDotNetDLL) <> MD5CalcFile(LatestFilesFolder & YamlDotNetDLL) Then
+        If Updater.MD5CalcFile(YamlDotNetDLL) <> Updater.MD5CalcFile(LatestFilesFolder & YamlDotNetDLL) Then
             File.Copy(YamlDotNetDLL, LatestFilesFolder & YamlDotNetDLL, True)
             NewFilesAdded = True
         End If
@@ -1240,9 +1246,12 @@ CancelImportProcessing:
 
     End Sub
 
-    ' Writes the sent settings to the sent file name
+    ''' <summary>
+    ''' Writes the sent settings to the final update file name
+    ''' </summary>
     Private Sub WriteLatestXMLFile()
         Dim VersionNumber As String = String.Format("Version {0}", My.Application.Info.Version.ToString)
+        Dim Updater As New ProgramUpdater
 
         ' Create XmlWriterSettings.
         Dim XMLSettings As XmlWriterSettings = New XmlWriterSettings()
@@ -1270,56 +1279,56 @@ CancelImportProcessing:
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", MainEXEFile)
             writer.WriteAttributeString("Version", VersionNumber)
-            writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & MainEXEFile))
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & MainEXEFile))
             writer.WriteAttributeString("URL", MainEXEFileURL)
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", UpdaterEXEFile)
             writer.WriteAttributeString("Version", "1.0")
-            writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & UpdaterEXEFile))
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & UpdaterEXEFile))
             writer.WriteAttributeString("URL", UpdaterEXEFileURL)
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", MySQLDLL)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(MySQLDLL).FileVersion)
-            writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & MySQLDLL))
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & MySQLDLL))
             writer.WriteAttributeString("URL", MySQLDLLURL)
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", PostgreSQLDLL)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(PostgreSQLDLL).FileVersion)
-            writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & PostgreSQLDLL))
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & PostgreSQLDLL))
             writer.WriteAttributeString("URL", PostgreSQLDLLURL)
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", SQLiteBaseDLL)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteBaseDLL).FileVersion)
-            writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & SQLiteBaseDLL))
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteBaseDLL))
             writer.WriteAttributeString("URL", SQLiteBaseDLLURL)
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", SQLiteEF6DLL)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteEF6DLL).FileVersion)
-            writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & SQLiteEF6DLL))
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteEF6DLL))
             writer.WriteAttributeString("URL", SQLiteEF6DLLURL)
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", SQLiteLinqDLL)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteLinqDLL).FileVersion)
-            writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & SQLiteLinqDLL))
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteLinqDLL))
             writer.WriteAttributeString("URL", SQLiteLinqDLLURL)
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", YamlDotNetDLL)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(YamlDotNetDLL).FileVersion)
-            writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & YamlDotNetDLL))
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & YamlDotNetDLL))
             writer.WriteAttributeString("URL", YamlDotNetDLLURL)
             writer.WriteEndElement()
 
@@ -1337,41 +1346,54 @@ CancelImportProcessing:
 
     End Sub
 
-    ' MD5 Hash - specify the path to a file and this routine will calculate your hash
-    Public Function MD5CalcFile(ByVal filepath As String) As String
+    ''' <summary>
+    ''' Builds the binary file for downloading and installing the program to run
+    ''' </summary>
+    Private Sub BuildBinaryFile()
+        ' Build this in the working directory
+        Dim FinalBinaryFolderPath As String = LatestFilesFolder & "Temp\"
+        Dim FinalBinaryZipPath As String = LatestFilesFolder
+        Dim FinalBinaryZip As String = "EVE SDE Database Builder Install.zip"
 
-        ' Open file (as read-only) - If it's not there, return ""
-        If IO.File.Exists(filepath) Then
-            Using reader As New System.IO.FileStream(filepath, IO.FileMode.Open, IO.FileAccess.Read)
-                Using md5 As New System.Security.Cryptography.MD5CryptoServiceProvider
+        Application.UseWaitCursor = True
+        Application.DoEvents()
 
-                    ' hash contents of this stream
-                    Dim hash() As Byte = md5.ComputeHash(reader)
-
-                    ' return formatted hash
-                    Return ByteArrayToString(hash)
-
-                End Using
-            End Using
+        ' Make folder to put files in and zip
+        If Directory.Exists(FinalBinaryFolderPath) Then
+            Directory.Delete(FinalBinaryFolderPath, True)
         End If
 
-        ' Something went wrong
-        Return ""
+        Directory.CreateDirectory(FinalBinaryFolderPath)
 
-    End Function
+        ' Copy all these files from the media file directory (should be most up to date) to the working directory to make the zip
+        File.Copy(LatestFilesFolder & LatestVersionXML, FinalBinaryFolderPath & LatestVersionXML)
+        File.Copy(LatestFilesFolder & MainEXEFile, FinalBinaryFolderPath & MainEXEFile)
+        File.Copy(LatestFilesFolder & UpdaterEXEFile, FinalBinaryFolderPath & UpdaterEXEFile)
+        File.Copy(LatestFilesFolder & MySQLDLL, FinalBinaryFolderPath & MySQLDLL)
+        File.Copy(LatestFilesFolder & PostgreSQLDLL, FinalBinaryFolderPath & PostgreSQLDLL)
+        File.Copy(LatestFilesFolder & SQLiteBaseDLL, FinalBinaryFolderPath & SQLiteBaseDLL)
+        File.Copy(LatestFilesFolder & SQLiteEF6DLL, FinalBinaryFolderPath & SQLiteEF6DLL)
+        File.Copy(LatestFilesFolder & SQLiteLinqDLL, FinalBinaryFolderPath & SQLiteLinqDLL)
+        File.Copy(LatestFilesFolder & YamlDotNetDLL, FinalBinaryFolderPath & YamlDotNetDLL)
 
-    ' MD5 Hash - utility function to convert a byte array into a hex string
-    Private Function ByteArrayToString(ByVal arrInput() As Byte) As String
+        ' Delete the file if it already exists
+        File.Delete(FinalBinaryZip)
+        ' Compress the whole file for download
+        Call ZipFile.CreateFromDirectory(FinalBinaryFolderPath, FinalBinaryZipPath & FinalBinaryZip, CompressionLevel.Optimal, False)
 
-        Dim sb As New System.Text.StringBuilder(arrInput.Length * 2)
+        Application.UseWaitCursor = False
+        Application.DoEvents()
 
-        For i As Integer = 0 To arrInput.Length - 1
-            sb.Append(arrInput(i).ToString("X2"))
-        Next
+        ' Clean up working folder
+        If Directory.Exists(FinalBinaryFolderPath) Then
+            Directory.Delete(FinalBinaryFolderPath, True)
+        End If
 
-        Return sb.ToString().ToLower
+        Application.DoEvents()
 
-    End Function
+        MsgBox("Binary Built", vbInformation, "Complete")
+
+    End Sub
 
 #End Region
 
@@ -1994,7 +2016,7 @@ Public Class ProgressColumn
 End Class
 
 Public Class ProgressCell
-        Inherits DataGridViewImageCell
+    Inherits DataGridViewImageCell
     Protected Overrides Function GetFormattedValue(ByVal value As Object, ByVal rowIndex As Integer, ByRef cellStyle As DataGridViewCellStyle,
                                                    ByVal valueTypeConverter As System.ComponentModel.TypeConverter,
                                                    ByVal formattedValueTypeConverter As System.ComponentModel.TypeConverter,
