@@ -29,14 +29,14 @@ Public Class frmMain
     Private Const LatestVersionXML As String = "LatestVersionESDEDB.xml"
 
     ' File URLs
-    Private MainEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe"
-    Private UpdaterEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/ESDEDB%20Updater.exe"
-    Private MySQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/MySql.Data.dll"
-    Private PostgreSQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/Npgsql.dll"
-    Private SQLiteBaseDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/System.Data.SQLite.dll"
-    Private SQLiteEF6DLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/System.Data.SQLite.EF6.dll"
-    Private SQLiteLinqDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/System.Data.SQLite.Linq.dll"
-    Private YamlDotNetDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/YamlDotNet.dll"
+    Private MainEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe"
+    Private UpdaterEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe"
+    Private MySQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/MySql.Data.dll"
+    Private PostgreSQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Npgsql.dll"
+    Private SQLiteBaseDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.dll"
+    Private SQLiteEF6DLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.EF6.dll"
+    Private SQLiteLinqDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.Linq.dll"
+    Private YamlDotNetDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/YamlDotNet.dll"
 
     ' For setting the number of threads to use
     Public SelectedThreads As Integer

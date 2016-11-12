@@ -206,7 +206,7 @@ Public Class frmUpdaterMain
         If File.Exists(ROOT_FOLDER & LocalXMLFileName) Then
             ' Load the local xml file to check for updates for the DB and images
             m_xmld.Load(ROOT_FOLDER & LocalXMLFileName)
-            m_nodelist = m_xmld.SelectNodes("/EVEIPH/result/rowset/row")
+            m_nodelist = m_xmld.SelectNodes("/EVESDEDB/result/rowset/row")
 
             ' Loop through the nodes 
             For Each m_node In m_nodelist
