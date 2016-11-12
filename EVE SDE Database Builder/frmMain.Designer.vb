@@ -76,11 +76,12 @@ Partial Class frmMain
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SetThreadsUsedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CheckForUpdatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeveloperToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrepareFilesForUpdateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BuildBinaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CheckForUpdatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.pnlMain.SuspendLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbSelectDBType.SuspendLayout()
@@ -499,6 +500,7 @@ Partial Class frmMain
         '
         'gbFilePathSelect
         '
+        Me.gbFilePathSelect.Controls.Add(Me.Button1)
         Me.gbFilePathSelect.Controls.Add(Me.btnCheckNoGridItems)
         Me.gbFilePathSelect.Controls.Add(Me.btnCheckAllGridItems)
         Me.gbFilePathSelect.Controls.Add(Me.lblMediaFire)
@@ -561,6 +563,12 @@ Partial Class frmMain
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(52, 20)
         Me.AboutToolStripMenuItem.Text = "About"
         '
+        'CheckForUpdatesToolStripMenuItem
+        '
+        Me.CheckForUpdatesToolStripMenuItem.Name = "CheckForUpdatesToolStripMenuItem"
+        Me.CheckForUpdatesToolStripMenuItem.Size = New System.Drawing.Size(243, 22)
+        Me.CheckForUpdatesToolStripMenuItem.Text = "Check for Updates"
+        '
         'AboutToolStripMenuItem1
         '
         Me.AboutToolStripMenuItem1.Name = "AboutToolStripMenuItem1"
@@ -586,11 +594,14 @@ Partial Class frmMain
         Me.BuildBinaryToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.BuildBinaryToolStripMenuItem.Text = "Build Binary"
         '
-        'CheckForUpdatesToolStripMenuItem
+        'Button1
         '
-        Me.CheckForUpdatesToolStripMenuItem.Name = "CheckForUpdatesToolStripMenuItem"
-        Me.CheckForUpdatesToolStripMenuItem.Size = New System.Drawing.Size(243, 22)
-        Me.CheckForUpdatesToolStripMenuItem.Text = "Check for Updates"
+        Me.Button1.Location = New System.Drawing.Point(379, 0)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(72, 31)
+        Me.Button1.TabIndex = 8
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'frmMain
         '
@@ -685,4 +696,5 @@ Partial Class frmMain
     Friend WithEvents PrepareFilesForUpdateToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents BuildBinaryToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CheckForUpdatesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Button1 As Button
 End Class

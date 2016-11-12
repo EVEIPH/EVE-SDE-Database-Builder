@@ -1352,7 +1352,7 @@ CancelImportProcessing:
 
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", SQLiteInteropDLL)
-            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteInteropDLL).FileVersion)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo("x86\" & SQLiteInteropDLL).FileVersion)
             writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteInteropDLL))
             writer.WriteAttributeString("URL", SQLiteInteropDLLURL)
             writer.WriteEndElement()
