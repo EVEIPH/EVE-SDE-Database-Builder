@@ -26,6 +26,7 @@ Public Class frmMain
     Private Const SQLiteEF6DLL As String = "System.Data.SQLite.EF6.dll"
     Private Const SQLiteLinqDLL As String = "System.Data.SQLite.Linq.dll"
     Private Const YamlDotNetDLL As String = "YamlDotNet.dll"
+    Private Const SQLiteInteropDLL As String = "SQLite.Interop.dll"
     Private Const MainEXEManifest As String = "EVE SDE Database Builder.exe.manifest"
     Private Const UpdaterEXEManifest As String = "ESDEDB Updater.exe.manifest"
 
@@ -39,6 +40,7 @@ Public Class frmMain
     Private SQLiteBaseDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.dll"
     Private SQLiteEF6DLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.EF6.dll"
     Private SQLiteLinqDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.Linq.dll"
+    Private SQLiteInteropDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/SQLite.Interop.dll"
     Private YamlDotNetDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/YamlDotNet.dll"
     Private MainEXEManifestURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe.manifest"
     Private UpdaterEXEManifestURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe.manifest"
@@ -1235,6 +1237,11 @@ CancelImportProcessing:
             NewFilesAdded = True
         End If
 
+        If Updater.MD5CalcFile(SQLiteInteropDLL) <> Updater.MD5CalcFile(LatestFilesFolder & SQLiteInteropDLL) Then
+            File.Copy(SQLiteInteropDLL, LatestFilesFolder & SQLiteInteropDLL, True)
+            NewFilesAdded = True
+        End If
+
         If Updater.MD5CalcFile(YamlDotNetDLL) <> Updater.MD5CalcFile(LatestFilesFolder & YamlDotNetDLL) Then
             File.Copy(YamlDotNetDLL, LatestFilesFolder & YamlDotNetDLL, True)
             NewFilesAdded = True
@@ -1344,6 +1351,13 @@ CancelImportProcessing:
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", SQLiteInteropDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteInteropDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteInteropDLL))
+            writer.WriteAttributeString("URL", SQLiteInteropDLLURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", YamlDotNetDLL)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(YamlDotNetDLL).FileVersion)
             writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & YamlDotNetDLL))
@@ -1406,6 +1420,7 @@ CancelImportProcessing:
         File.Copy(LatestFilesFolder & SQLiteBaseDLL, FinalBinaryFolderPath & SQLiteBaseDLL)
         File.Copy(LatestFilesFolder & SQLiteEF6DLL, FinalBinaryFolderPath & SQLiteEF6DLL)
         File.Copy(LatestFilesFolder & SQLiteLinqDLL, FinalBinaryFolderPath & SQLiteLinqDLL)
+        File.Copy(LatestFilesFolder & SQLiteInteropDLL, FinalBinaryFolderPath & SQLiteInteropDLL)
         File.Copy(LatestFilesFolder & YamlDotNetDLL, FinalBinaryFolderPath & YamlDotNetDLL)
         File.Copy(LatestFilesFolder & MainEXEManifest, FinalBinaryFolderPath & MainEXEManifest)
         File.Copy(LatestFilesFolder & UpdaterEXEManifest, FinalBinaryFolderPath & UpdaterEXEManifest)
