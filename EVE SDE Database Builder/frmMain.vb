@@ -18,6 +18,7 @@ Public Class frmMain
     ' For deploying the files to XML for updates
     Private LatestFilesFolder As String
     Private Const MainEXEFile As String = "EVE SDE Database Builder.exe"
+    Private Const UpdaterEXEFile As String = "ESDEDB Updater.exe"
     Private Const MySQLDLL As String = "MySql.Data.dll"
     Private Const PostgreSQLDLL As String = "Npgsql.dll"
     Private Const SQLiteBaseDLL As String = "System.Data.SQLite.dll"
@@ -29,6 +30,7 @@ Public Class frmMain
 
     ' File URLs
     Private MainEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe"
+    Private UpdaterEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe"
     Private MySQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/MySql.Data.dll"
     Private PostgreSQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/Npgsql.dll"
     Private SQLiteBaseDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/System.Data.SQLite.dll"
