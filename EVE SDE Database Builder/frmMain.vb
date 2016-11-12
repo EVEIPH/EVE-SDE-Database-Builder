@@ -30,7 +30,7 @@ Public Class frmMain
 
     ' File URLs
     Private MainEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe"
-    Private UpdaterEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe"
+    Private UpdaterEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/ESDEDB%20Updater.exe"
     Private MySQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/MySql.Data.dll"
     Private PostgreSQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/Npgsql.dll"
     Private SQLiteBaseDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/System.Data.SQLite.dll"
@@ -1191,6 +1191,11 @@ CancelImportProcessing:
             NewFilesAdded = True
         End If
 
+        If MD5CalcFile(UpdaterEXEFile) <> MD5CalcFile(LatestFilesFolder & UpdaterEXEFile) Then
+            File.Copy(UpdaterEXEFile, LatestFilesFolder & UpdaterEXEFile, True)
+            NewFilesAdded = True
+        End If
+
         If MD5CalcFile(MySQLDLL) <> MD5CalcFile(LatestFilesFolder & MySQLDLL) Then
             File.Copy(MySQLDLL, LatestFilesFolder & MySQLDLL, True)
             NewFilesAdded = True
@@ -1267,6 +1272,13 @@ CancelImportProcessing:
             writer.WriteAttributeString("Version", VersionNumber)
             writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & MainEXEFile))
             writer.WriteAttributeString("URL", MainEXEFileURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", UpdaterEXEFile)
+            writer.WriteAttributeString("Version", "1.0")
+            writer.WriteAttributeString("MD5", MD5CalcFile(LatestFilesFolder & UpdaterEXEFile))
+            writer.WriteAttributeString("URL", UpdaterEXEFileURL)
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")

@@ -188,18 +188,15 @@ DownloadError:
     Public Function IsProgramUpdatable() As UpdateCheckResult
         Dim LocalMD5 As String = ""
         Dim ServerMD5 As String = ""
-        Dim XMLFile As String = ""
 
         Try
 
-            XMLFile = XMLLatestVersionFileName
-
             ' Get the hash of the local XML
-            LocalMD5 = MD5CalcFile(UserWorkingFolder & XMLFile)
+            LocalMD5 = MD5CalcFile(XMLLatestVersionFileName)
 
             If ServerXMLLastUpdatePath <> "" Then
                 ' Get the hash of the server XML
-                ServerMD5 = MD5CalcFile(UpdaterFilePath & XMLFile)
+                ServerMD5 = MD5CalcFile(UpdaterFilePath & XMLLatestVersionFileName)
             Else
                 Return UpdateCheckResult.UpdateError
             End If
