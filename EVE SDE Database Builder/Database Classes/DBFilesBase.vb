@@ -71,7 +71,7 @@ Public Class DBFilesBase
     Public Sub SetCSVDirectory(ByRef FileDirectory As String)
 
         If Directory.Exists(FileDirectory) Then
-            Call Directory.Delete(FileDirectory)
+            Call Directory.Delete(FileDirectory, True)
         End If
 
         Dim DS As New DirectorySecurity

@@ -75,13 +75,13 @@ Partial Class frmMain
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SetThreadsUsedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CheckForUpdatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeveloperToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrepareFilesForUpdateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BuildBinaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlMain.SuspendLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbSelectDBType.SuspendLayout()
@@ -93,7 +93,7 @@ Partial Class frmMain
         '
         'btnBuildDatabase
         '
-        Me.btnBuildDatabase.Location = New System.Drawing.Point(81, 675)
+        Me.btnBuildDatabase.Location = New System.Drawing.Point(81, 626)
         Me.btnBuildDatabase.Name = "btnBuildDatabase"
         Me.btnBuildDatabase.Size = New System.Drawing.Size(90, 30)
         Me.btnBuildDatabase.TabIndex = 2
@@ -103,7 +103,7 @@ Partial Class frmMain
         'pnlMain
         '
         Me.pnlMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblStatus, Me.pgMain})
-        Me.pnlMain.Location = New System.Drawing.Point(0, 712)
+        Me.pnlMain.Location = New System.Drawing.Point(0, 659)
         Me.pnlMain.Name = "pnlMain"
         Me.pnlMain.Size = New System.Drawing.Size(540, 22)
         Me.pnlMain.TabIndex = 6
@@ -151,7 +151,7 @@ Partial Class frmMain
         Me.dgMain.Location = New System.Drawing.Point(8, 336)
         Me.dgMain.Name = "dgMain"
         Me.dgMain.RowHeadersVisible = False
-        Me.dgMain.Size = New System.Drawing.Size(526, 330)
+        Me.dgMain.Size = New System.Drawing.Size(526, 287)
         Me.dgMain.TabIndex = 1
         '
         'FileSelect
@@ -233,7 +233,7 @@ Partial Class frmMain
         '
         'btnSaveSettings
         '
-        Me.btnSaveSettings.Location = New System.Drawing.Point(273, 675)
+        Me.btnSaveSettings.Location = New System.Drawing.Point(273, 626)
         Me.btnSaveSettings.Name = "btnSaveSettings"
         Me.btnSaveSettings.Size = New System.Drawing.Size(90, 30)
         Me.btnSaveSettings.TabIndex = 4
@@ -517,7 +517,7 @@ Partial Class frmMain
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(177, 675)
+        Me.btnCancel.Location = New System.Drawing.Point(177, 626)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(90, 30)
         Me.btnCancel.TabIndex = 3
@@ -526,7 +526,7 @@ Partial Class frmMain
         '
         'btnClose
         '
-        Me.btnClose.Location = New System.Drawing.Point(369, 675)
+        Me.btnClose.Location = New System.Drawing.Point(369, 626)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(90, 30)
         Me.btnClose.TabIndex = 5
@@ -554,6 +554,12 @@ Partial Class frmMain
         Me.SetThreadsUsedToolStripMenuItem.Name = "SetThreadsUsedToolStripMenuItem"
         Me.SetThreadsUsedToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
         Me.SetThreadsUsedToolStripMenuItem.Text = "Set Threads Used"
+        '
+        'ExitToolStripMenuItem
+        '
+        Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
+        Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'AboutToolStripMenuItem
         '
@@ -593,17 +599,11 @@ Partial Class frmMain
         Me.BuildBinaryToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.BuildBinaryToolStripMenuItem.Text = "Build Binary"
         '
-        'ExitToolStripMenuItem
-        '
-        Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
-        Me.ExitToolStripMenuItem.Text = "Exit"
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(540, 734)
+        Me.ClientSize = New System.Drawing.Size(540, 681)
         Me.Controls.Add(Me.gbSelectDBType)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.btnCancel)

@@ -1167,7 +1167,7 @@ Public Class YAMLUniverse
         invNamesLDB = Nothing
         Call MapJumpsData.CloseDB()
         MapJumpsData = Nothing
-        Call Directory.Delete(LocalDBsLocation)
+        Call Directory.Delete(LocalDBsLocation, True)
     End Sub
 
 End Class
