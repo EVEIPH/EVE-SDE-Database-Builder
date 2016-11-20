@@ -118,10 +118,6 @@ Public Class postgreSQLDB
         Dim DBRef As New NpgsqlConnection
         DBRef = DBConnectionRef(MainDatabase)
 
-        If IsNothing(SQL) Then
-            Application.DoEvents()
-        End If
-
         Dim Command As New NpgsqlCommand(SQL, DBRef)
         Command.ExecuteNonQuery()
         Command.Dispose()

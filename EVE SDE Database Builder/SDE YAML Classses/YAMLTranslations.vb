@@ -35,6 +35,12 @@ Public Class YAMLTranslations
 
     End Sub
 
+    ''' <summary>
+    ''' Imports the trnTranslationLanguages table into the database
+    ''' </summary>
+    ''' <param name="Params">Import parameters</param>
+    ''' <param name="ImportTable">If we want to import the table or not. If not, then table imported for local use.</param>
+    ''' <param name="ShowProgress">Do we show progress of import or not</param>
     Public Sub ImportTranslationLanguages(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True,
                                           Optional ByVal ShowProgress As Boolean = True)
         Dim DSB = New DeserializerBuilder()
@@ -127,6 +133,11 @@ Cancel:
 
     End Sub
 
+    ''' <summary>
+    ''' Imports the translations.yaml file and inserts all records into the trnTranslationColumns table
+    ''' </summary>
+    ''' <param name="Params">Import paramenters</param>
+    ''' <param name="ImportTable">If we want to import the table, true, else false. If false, then we are importing the table for local use only</param>
     Public Sub ImportTranslationColumns(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True)
         Dim DSB = New DeserializerBuilder()
         DSB.IgnoreUnmatchedProperties()
@@ -181,6 +192,14 @@ Cancel:
 
     End Sub
 
+    ''' <summary>
+    ''' Saves the records from trnTranslationColumns into the table
+    ''' </summary>
+    ''' <param name="trnColRecord">Parsed list of trnTranslationColumns from yaml</param>
+    ''' <param name="RowLocation">What row the file is in the main grid for updating</param>
+    ''' <param name="ImportText">Text to show our progress on the form</param>
+    ''' <param name="UpdateGridProgressbar">If we want to update the grid progress bar, then true, else the main progressbar</param>
+    ''' <param name="ShowProgress">If we want to show progress at all.</param>
     Private Sub InsertTranslationColumnsRecords(ByVal trnColRecord As List(Of trnTranslationColumn), ByVal RowLocation As Integer, ByVal ImportText As String,
                                                 UpdateGridProgressbar As Boolean, Optional ByVal ShowProgress As Boolean = True)
         Dim DataFields As List(Of DBField)
@@ -224,7 +243,7 @@ Cancel:
                 If UpdateGridProgressbar Then
                     Call UpdateGridRowProgress(RowLocation, Count, TotalRecords)
                 Else
-                    Call UpdateMainProgressBar(Count, "Importing " & trnTranslationLanguagesFile)
+                    Call UpdateMainProgressBar(Count, "Importing " & trnTranslationColumnsFile)
                 End If
             End If
 
@@ -247,6 +266,11 @@ Cancel:
 
     End Sub
 
+    ''' <summary>
+    ''' Imports the translations.yaml file and inserts all records into the trnTranslationColumns and trnTranslations tables
+    ''' </summary>
+    ''' <param name="Params">Import paramenters</param>
+    ''' <param name="ImportTable">If we want to import the table, true, else false. If false, then we are importing the table for local use only</param>
     Public Sub ImportTranslations(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True)
         Dim DSB = New DeserializerBuilder()
         DSB.IgnoreUnmatchedProperties()
@@ -269,6 +293,7 @@ Cancel:
         If ImportTable Then
             Call UpdateDB.CreateTable(trnTranslationsTable, Table)
         End If
+
         Call TranslationTablesDB.CreateTable(trnTranslationsTable, Table)
 
         ' Create Index
@@ -280,6 +305,7 @@ Cancel:
         If ImportTable Then
             Call UpdateDB.CreateIndex(trnTranslationsTable, "IDX_" & trnTranslationsTable & "_TCID_KID_LID", IndexFields, False)
         End If
+
         Call TranslationTablesDB.CreateIndex(trnTranslationsTable, "IDX_" & trnTranslationsTable & "_TCID_KID_LID", IndexFields, False)
 
         Try
@@ -299,6 +325,14 @@ Cancel:
 
     End Sub
 
+    ''' <summary>
+    ''' Saves the records from trnTranslations into the table
+    ''' </summary>
+    ''' <param name="trnRecord">Parsed list of trnTranslations from yaml</param>
+    ''' <param name="RowLocation">What row the file is in the main grid for updating</param>
+    ''' <param name="ImportText">Text to show our progress on the form</param>
+    ''' <param name="UpdateGridProgressbar">If we want to update the grid progress bar, then true, else the main progressbar</param>
+    ''' <param name="ShowProgress">If we want to show progress at all.</param>
     Private Sub InsertTranslationsRecords(ByVal trnRecord As List(Of trnTranslation), ByVal RowLocation As Integer, ByVal ImportText As String,
                                           Optional UpdateGridProgressbar As Boolean = True, Optional ByVal ShowProgress As Boolean = True)
         Dim DataFields As List(Of DBField)
@@ -312,7 +346,7 @@ Cancel:
             If UpdateGridProgressbar Then
                 Call InitGridRow(RowLocation)
             Else
-                Call InitalizeMainProgressBar(TotalRecords, "Importing " & trnTranslationColumnsFile)
+                Call InitalizeMainProgressBar(TotalRecords, "Importing " & trnTranslationsFile)
             End If
         End If
 
@@ -334,7 +368,7 @@ Cancel:
                 If UpdateGridProgressbar Then
                     Call UpdateGridRowProgress(RowLocation, Count, TotalRecords)
                 Else
-                    Call UpdateMainProgressBar(Count, "Importing " & trnTranslationLanguagesFile)
+                    Call UpdateMainProgressBar(Count, "Importing " & trnTranslationsFile)
                 End If
             End If
 
@@ -357,7 +391,14 @@ Cancel:
 
     End Sub
 
-    ' Inserts sent data into the temp translation lists for later import
+    ''' <summary>
+    ''' Inserts sent data (single record with all translations) into the temp translation lists for later import. For use with typeIDs.yaml, categoryIDs.yaml, and groupIDs.yaml
+    ''' </summary>
+    ''' <param name="ID">masterID field value (e.g. if masterID is 'typeID' then keyID is the typeID number</param>
+    ''' <param name="TranslationMasterID">masterID field name (e.g. typeID)</param>
+    ''' <param name="TranslationColumnName">Name of the column/field that will be translated when looked up (e.g. typeName)</param>
+    ''' <param name="TranslationTableName">Name of the table with the translation field</param>
+    ''' <param name="TranslationDataList">List of translations</param>
     Public Sub InsertTranslationData(ByVal ID As String, ByVal TranslationMasterID As String, ByVal TranslationColumnName As String,
                                      ByVal TranslationTableName As String, ByVal TranslationDataList As List(Of TranslationData))
         Dim TempTranslation As trnTranslation
@@ -443,7 +484,16 @@ Cancel:
 
     End Sub
 
-    ' Searches the local tables for the correct translation for the data sent in the local database of translation tables (not updated)
+    ''' <summary>
+    ''' Searches the local tables for the correct translation for the data sent in the local database of translation tables (not updated)
+    ''' </summary>
+    ''' <param name="tableName">Table name to search</param>
+    ''' <param name="columnName">Column name in search table</param>
+    ''' <param name="masterID">Field name that contains the ID to look up for a translation - the link number</param>
+    ''' <param name="keyID">Value of the masterID field (e.g. if masterID is 'typeID' then keyID is the typeID number)</param>
+    ''' <param name="LanguageID">Language code we are searching for</param>
+    ''' <param name="DefaultText">If not found, what text to return</param>
+    ''' <returns></returns>
     Public Function TranslateData(ByVal tableName As String, ByVal columnName As String, ByVal masterID As String, ByVal keyID As Integer,
                                   ByVal LanguageID As LanguageCode, ByVal DefaultText As Object) As String
         Dim WhereValues As New List(Of String)
@@ -491,14 +541,13 @@ Cancel:
 
     End Function
 
-    Protected Overrides Sub Finalize()
-        MyBase.Finalize()
-    End Sub
-
+    ''' <summary>
+    ''' Closes local db's and cleans up any new file folders
+    ''' </summary>
     Public Sub Close()
         Call TranslationTablesDB.CloseDB()
         TranslationTablesDB = Nothing
-        Call Directory.Delete(LocalDBPath,true)
+        Call Directory.Delete(LocalDBPath, True)
     End Sub
 
 End Class
