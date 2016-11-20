@@ -316,6 +316,7 @@ Public Class frmMain
         gbSelectDBType.Enabled = False
         gbFilePathSelect.Enabled = False
         MenuStrip1.Enabled = False
+        dgMain.ReadOnly = True
         btnClose.Enabled = False
         btnCancel.Enabled = True
         btnCancel.Focus()
@@ -406,6 +407,7 @@ ExitProc:
         MenuStrip1.Enabled = True
         btnClose.Enabled = True
         btnCancel.Enabled = False
+        dgMain.ReadOnly = False
         Call ClearMainProgressBar()
         btnBuildDatabase.Focus()
 
@@ -882,8 +884,8 @@ ExitProc:
                         End If
                     Next
 
-                    ' Only run if we haven't reached the max threads they wanted to run yet
-                    If ActiveThreads < SelectedThreads Then
+                    ' Only run if we haven't gone over the max threads they wanted to run yet
+                    If ActiveThreads <= SelectedThreads Then
                         Call ImportFile(ThreadsArray(i).T, ThreadsArray(i).Params)
                         ThreadStarted = True
                     Else
@@ -1497,6 +1499,11 @@ CancelImportProcessing:
                     TotalFileList.Add(TempFile)
                 Next
 
+            Catch ex As Exception
+                Call ShowErrorMessage(ex)
+            End Try
+
+            Try
                 Dim FSD_DI As New DirectoryInfo(UserApplicationSettings.SDEDirectory & FSDPath)
                 Dim FSD_FilesList As FileInfo() = FSD_DI.GetFiles()
 
@@ -1505,7 +1512,11 @@ CancelImportProcessing:
                     TempFile.Checked = GetGridCheckValue(YAMLFSDFile.Name)
                     TotalFileList.Add(TempFile)
                 Next
+            Catch ex As Exception
+                Call ShowErrorMessage(ex)
+            End Try
 
+            Try
                 Dim LM_FSD_DI As New DirectoryInfo(UserApplicationSettings.SDEDirectory & FSDLandMarksPath)
                 Dim LM_FSD_FilesList As FileInfo() = LM_FSD_DI.GetFiles()
 
@@ -1516,8 +1527,6 @@ CancelImportProcessing:
                 Next
             Catch ex As Exception
                 Call ShowErrorMessage(ex)
-                Return False
-                Exit Function
             End Try
 
         End If
