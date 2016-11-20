@@ -56,7 +56,7 @@ Partial Class frmThreadSelect
         Me.lblNotify.Size = New System.Drawing.Size(185, 62)
         Me.lblNotify.TabIndex = 4
         Me.lblNotify.Text = "Select the number of Threads you want to use to run the import. Select Max Thread" &
-    "s for no limit or set a number from 1 to 20."
+    "s for no limit or set a number from 1 to 24."
         Me.lblNotify.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'rbtnMaxThreads
@@ -84,7 +84,7 @@ Partial Class frmThreadSelect
         'lstNumThreads
         '
         Me.lstNumThreads.FormattingEnabled = True
-        Me.lstNumThreads.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"})
+        Me.lstNumThreads.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"})
         Me.lstNumThreads.Location = New System.Drawing.Point(155, 97)
         Me.lstNumThreads.Name = "lstNumThreads"
         Me.lstNumThreads.Size = New System.Drawing.Size(37, 30)

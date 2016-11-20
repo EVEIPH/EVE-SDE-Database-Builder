@@ -81,6 +81,7 @@ Partial Class frmMain
         Me.DeveloperToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrepareFilesForUpdateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BuildBinaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlMain.SuspendLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbSelectDBType.SuspendLayout()
@@ -543,10 +544,10 @@ Partial Class frmMain
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SetThreadsUsedToolStripMenuItem})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SetThreadsUsedToolStripMenuItem, Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
-        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
-        Me.FileToolStripMenuItem.Text = "Settings"
+        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+        Me.FileToolStripMenuItem.Text = "File"
         '
         'SetThreadsUsedToolStripMenuItem
         '
@@ -592,6 +593,12 @@ Partial Class frmMain
         Me.BuildBinaryToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.BuildBinaryToolStripMenuItem.Text = "Build Binary"
         '
+        'ExitToolStripMenuItem
+        '
+        Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
+        Me.ExitToolStripMenuItem.Text = "Exit"
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -606,8 +613,10 @@ Partial Class frmMain
         Me.Controls.Add(Me.pnlMain)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.dgMain)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
+        Me.MaximizeBox = False
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "EVE SDE Database Builder"
@@ -685,4 +694,5 @@ Partial Class frmMain
     Friend WithEvents PrepareFilesForUpdateToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents BuildBinaryToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CheckForUpdatesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
 End Class

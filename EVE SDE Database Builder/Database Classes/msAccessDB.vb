@@ -1,6 +1,7 @@
 ﻿
 Imports System.IO
 Imports DAO
+Imports System.Collections.Concurrent
 
 ''' <summary>
 ''' Class to create a Microsoft Access database and insert data into it.
@@ -11,7 +12,7 @@ Public Class msAccessDB
     Private DB As Database
     Private DBE As DBEngine
 
-    Private BulkInsertTablesData As List(Of BulkInsertData)
+    Private BulkInsertTablesData As ConcurrentQueue(Of BulkInsertData)
 
     ' For inserting bulk data
     Private Structure BulkInsertData
@@ -33,7 +34,7 @@ Public Class msAccessDB
         Call InitalizeMainProgressBar(0, "Initializing Database..")
 
         DBE = New DBEngine
-        BulkInsertTablesData = New List(Of BulkInsertData)
+        BulkInsertTablesData = New ConcurrentQueue(Of BulkInsertData)
         CSVDirectory = ""
 
         Dim PasswordString As String = ""
@@ -88,17 +89,6 @@ Public Class msAccessDB
     ''' <param name="SQL">SQL query to execute.</param>
     Public Sub ExecuteNonQuerySQL(ByVal SQL As String)
         DB.Execute(SQL)
-    End Sub
-
-    ''' <summary>
-    ''' Sets the CSV Directory for bulk inserts. Will create directory if it doesn't exist.
-    ''' </summary>
-    ''' <param name="FileDirectory">Directory where the bulk insert CSV files will be stored.</param>
-    Public Sub SetCSVDirectory(ByRef FileDirectory As String)
-        If Not Directory.Exists(FileDirectory) Then
-            Directory.CreateDirectory(FileDirectory)
-        End If
-        CSVDirectory = FileDirectory
     End Sub
 
     ''' <summary>
@@ -270,7 +260,7 @@ Public Class msAccessDB
         TempData.TableSQL = String.Format("INSERT INTO {0} ({1}) SELECT {1} FROM [Text;FMT=CSVDelimited;HDR=Yes;Database={2}].[{0}.csv]", TableName, FieldList, CSVDirectory)
         TempData.SchemaFile = SchemaString
 
-        BulkInsertTablesData.Add(TempData)
+        BulkInsertTablesData.Enqueue(TempData)
 
     End Sub
 

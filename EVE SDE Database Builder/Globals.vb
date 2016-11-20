@@ -5,6 +5,9 @@ Public Module Globals
     Public CancelImport As Boolean = False
     Public frmErrorText As String = ""
 
+    Public AllSettings As New ProgramSettings
+    Public UserApplicationSettings As ApplicationSettings
+
     ''' <summary>
     ''' Displays error message from Try/Catch Exceptions
     ''' </summary>
@@ -46,7 +49,7 @@ Public Module Globals
 
         Dim f1 As frmMain = DirectCast(My.Application.OpenForms.Item("frmMain"), frmMain)
         f1.Invoke(New InitRow(AddressOf f1.InitGridRow), Postion)
-
+        Application.DoEvents()
     End Sub
 
     ' Updates the main form grid
@@ -55,7 +58,7 @@ Public Module Globals
 
         Dim f1 As frmMain = DirectCast(My.Application.OpenForms.Item("frmMain"), frmMain)
         f1.Invoke(New UpdateRowProgress(AddressOf f1.UpdateGridRowProgress), Postion, Count, TotalRecords)
-
+        Application.DoEvents()
     End Sub
 
     ' Finalizes the main form grid
@@ -64,7 +67,7 @@ Public Module Globals
 
         Dim f1 As frmMain = DirectCast(My.Application.OpenForms.Item("frmMain"), frmMain)
         f1.Invoke(New FinalizeRow(AddressOf f1.FinalizeGridRow), Postion)
-
+        Application.DoEvents()
     End Sub
 
     ' Initializes the progressbar on the main form
@@ -73,7 +76,7 @@ Public Module Globals
 
         Dim f1 As frmMain = DirectCast(My.Application.OpenForms.Item("frmMain"), frmMain)
         f1.Invoke(New InitMainProgress(AddressOf f1.InitalizeProgress), MaxCount, UpdateText)
-
+        Application.DoEvents()
     End Sub
 
     ' Clears the progress bar and label on the main form
@@ -82,7 +85,7 @@ Public Module Globals
 
         Dim f1 As frmMain = DirectCast(My.Application.OpenForms.Item("frmMain"), frmMain)
         f1.Invoke(New ClearMainProgress(AddressOf f1.ClearProgress))
-
+        Application.DoEvents()
     End Sub
 
     ' Updates the main progress bar and label on the main form
@@ -91,7 +94,7 @@ Public Module Globals
 
         Dim f1 As frmMain = DirectCast(My.Application.OpenForms.Item("frmMain"), frmMain)
         f1.Invoke(New UpdateMainProgress(AddressOf f1.UpdateProgress), Count, UpdateText)
-
+        Application.DoEvents()
     End Sub
 
 End Module

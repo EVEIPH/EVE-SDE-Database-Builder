@@ -1,4 +1,6 @@
-﻿
+﻿Imports System.Security.AccessControl
+Imports System.IO
+
 ''' <summary>
 ''' Base class for all database classes, which stores common functions and variables
 ''' </summary>
@@ -7,6 +9,7 @@ Public Class DBFilesBase
     Protected Const SPACE As String = " "
     Protected Const COMMA As String = ","
     Protected Const SEMICOLON As String = ";"
+    Protected Const NULL As String = "NULL"
 
     Protected MainDatabase As String
     Private SelectedDBType As DatabaseType
@@ -42,8 +45,8 @@ Public Class DBFilesBase
     ''' <param name="CheckString">String to check and modify if needed</param>
     ''' <returns>Updated string for use.</returns>
     Protected Function BuildSQLInsertStringValue(ByVal CheckString As String) As String
-        If CheckString = "null" Then
-            Return "null"
+        If CheckString.ToUpper = NULL Then
+            Return NULL
         Else
             If SelectedDBType = DatabaseType.CSV Then
                 If CheckString.Contains("""") Then
@@ -62,6 +65,23 @@ Public Class DBFilesBase
     End Function
 
     ''' <summary>
+    ''' Sets the CSV Directory for bulk inserts. Will create directory if it doesn't exist and give it full read permissions.
+    ''' </summary>
+    ''' <param name="FileDirectory">Directory where the bulk insert CSV files will be stored.</param>
+    Public Sub SetCSVDirectory(ByRef FileDirectory As String)
+
+        If Directory.Exists(FileDirectory) Then
+            Call Directory.Delete(FileDirectory)
+        End If
+
+        Dim DS As New DirectorySecurity
+        DS.AddAccessRule(New FileSystemAccessRule("Everyone", FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
+        Directory.CreateDirectory(FileDirectory, DS)
+        CSVDirectory = FileDirectory
+
+    End Sub
+
+    ''' <summary>
     ''' Formats data sent for correct inserts into the tables to include the correct type and null values
     ''' </summary>
     ''' <param name="FieldName">Field Name to insert</param>
@@ -74,7 +94,7 @@ Public Class DBFilesBase
         ' Format the field value and return a DB field
         If IsNothing(FieldValue) Or IsDBNull(FieldValue) Then
             ' This is null
-            ReturnFieldValue = "null"
+            ReturnFieldValue = NULL
         Else
             If Trim(CStr(FieldValue)) <> "" Then
                 Select Case FieldDataType
@@ -89,11 +109,11 @@ Public Class DBFilesBase
                 End Select
             Else
                 ' Set empty strings to null as well
-                ReturnFieldValue = "null"
+                ReturnFieldValue = NULL
             End If
         End If
 
-        If ReturnFieldValue = "null" And SelectedDBType = DatabaseType.CSV Then
+        If ReturnFieldValue = NULL And SelectedDBType = DatabaseType.CSV Then
             ' Just set to empty string - formatted with the text delimiter
             ReturnFieldValue = ""
         End If

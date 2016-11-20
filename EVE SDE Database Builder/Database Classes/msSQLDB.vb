@@ -162,9 +162,7 @@ Public Class msSQLDB
                         SQL &= "varchar(" & FieldLength & ")"
                     Case FieldType.text_type
                         SQL &= "text"
-                    Case FieldType.double_type
-                        SQL &= "double"
-                    Case FieldType.float_type
+                    Case FieldType.float_type, FieldType.double_type
                         SQL &= "float"
                     Case FieldType.real_type
                         SQL &= "real"

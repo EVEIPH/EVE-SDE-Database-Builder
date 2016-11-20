@@ -1,6 +1,7 @@
 ﻿
 Imports System.IO
 Imports Npgsql
+Imports System.Collections.Concurrent
 
 ''' <summary>
 ''' Class to create a postgreSQLDB and insert data into it.
@@ -8,7 +9,7 @@ Imports Npgsql
 Public Class postgreSQLDB
     Inherits DBFilesBase
 
-    Private BulkInsertTablesData As List(Of BulkInsertData)
+    Private BulkInsertTablesData As ConcurrentQueue(Of BulkInsertData)
 
     ' Save the database information for later connections
     Private DBServerName As String
@@ -39,7 +40,7 @@ Public Class postgreSQLDB
 
         Dim DB As New NpgsqlConnection
 
-        BulkInsertTablesData = New List(Of BulkInsertData)
+        BulkInsertTablesData = New ConcurrentQueue(Of BulkInsertData)
         CSVDirectory = ""
 
         Call InitalizeMainProgressBar(0, "Initializing Database..")
@@ -90,7 +91,7 @@ Public Class postgreSQLDB
     Private Function DBConnectionRef(ByVal DatabaseName As String) As NpgsqlConnection
 
         ' Open the connection for reference
-        Dim DBRef As New NpgsqlConnection(String.Format("Server={0};Port={1};Userid={2};password={3};Database={4};",
+        Dim DBRef As New NpgsqlConnection(String.Format("Server={0};Port={1};Userid={2};password={3};Database={4};Timeout=30;CommandTimeout=30",
                                                         DBServerName, DBPort, DBUserName, DBUserPassword, DatabaseName))
         DBRef.Open()
 
@@ -117,22 +118,15 @@ Public Class postgreSQLDB
         Dim DBRef As New NpgsqlConnection
         DBRef = DBConnectionRef(MainDatabase)
 
+        If IsNothing(SQL) Then
+            Application.DoEvents()
+        End If
+
         Dim Command As New NpgsqlCommand(SQL, DBRef)
         Command.ExecuteNonQuery()
         Command.Dispose()
         Call CloseDB(DBRef)
 
-    End Sub
-
-    ''' <summary>
-    ''' Sets the CSV Directory for bulk inserts. Will create directory if it doesn't exist.
-    ''' </summary>
-    ''' <param name="FileDirectory">Directory where the bulk insert CSV files will be stored.</param>
-    Public Sub SetCSVDirectory(ByRef FileDirectory As String)
-        If Not Directory.Exists(FileDirectory) Then
-            Directory.CreateDirectory(FileDirectory)
-        End If
-        CSVDirectory = FileDirectory
     End Sub
 
     ''' <summary>
@@ -263,7 +257,7 @@ Public Class postgreSQLDB
         TempData.BulkImportSQL = String.Format("COPY ""{0}"" FROM '{1}/{0}.csv'  DELIMITER ',' HEADER QUOTE '""' CSV;", TableName, CSVDirectory.Replace("\", "/"))
         TempData.TableName = TableName
 
-        BulkInsertTablesData.Add(TempData)
+        BulkInsertTablesData.Enqueue(TempData)
 
     End Sub
 
@@ -337,6 +331,7 @@ Public Class postgreSQLDB
 
         For i = 0 To BulkInsertTablesData.Count - 1
             Call UpdateMainProgressBar(i, "Bulk Loading " & BulkInsertTablesData(i).TableName & "...")
+            Debug.Print(BulkInsertTablesData(i).TableName)
             Application.DoEvents()
 
             Call BeginSQLTransaction()

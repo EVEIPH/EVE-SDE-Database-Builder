@@ -1,13 +1,14 @@
-﻿
+﻿Imports System.Collections.Concurrent
+
 ''' <summary>
 ''' Class to save a local database using System.Data classes
 ''' </summary>
 Public Class LocalDatabase
 
-    Private DataTablesList As New List(Of DataTable)
+    Private DataTablesList As New ConcurrentQueue(Of DataTable)
 
     Public Function GetTables() As List(Of DataTable)
-        Return DataTablesList
+        Return DataTablesList.ToList
     End Function
 
     ''' <summary>
@@ -47,7 +48,7 @@ Public Class LocalDatabase
             Next
             ' Insert the table in the list for reference
             DT.TableName = TableNameRef
-            DataTablesList.Add(DT)
+            DataTablesList.Enqueue(DT)
         End If
 
         ' Add a row to the existing table
@@ -60,7 +61,7 @@ Public Class LocalDatabase
                 TempRecordFieldValue = SentRecord(i).FieldValue
             End If
 
-            If TempRecordFieldValue = "null" Then
+            If TempRecordFieldValue.ToUpper = "NULL" Then
                 Data(i) = DBNull.Value
             ElseIf SentRecord(i).FieldType = FieldType.bit_type Then
                 ' Convert to true/false for bits since bulk insert doesn't accept 0/1
@@ -86,7 +87,7 @@ Public Class LocalDatabase
         Dim ReturnTable As DataTable
         Dim TempList As New List(Of DataTable)
 
-        TempList = DataTablesList.ToList() ' Copy this as other threads might be changing it
+        TempList = GetTables()
 
         ' Find the table if it is in the list and return a reference to it
         For Each ReturnTable In TempList

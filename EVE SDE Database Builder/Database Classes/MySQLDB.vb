@@ -1,6 +1,7 @@
 ﻿
 Imports System.IO
 Imports MySql.Data.MySqlClient
+Imports System.Collections.Concurrent
 
 ' Class to support MySQL Server Database
 ''' <summary>
@@ -9,7 +10,7 @@ Imports MySql.Data.MySqlClient
 Public Class MySQLDB
     Inherits DBFilesBase
 
-    Private BulkInsertTablesData As List(Of BulkInsertData)
+    Private BulkInsertTablesData As ConcurrentQueue(Of BulkInsertData)
 
     ' Save the database information for later connections
     Private DBServerName As String
@@ -40,7 +41,7 @@ Public Class MySQLDB
 
         Dim DB As New MySqlConnection
 
-        BulkInsertTablesData = New List(Of BulkInsertData)
+        BulkInsertTablesData = New ConcurrentQueue(Of BulkInsertData)
         CSVDirectory = ""
 
         Call InitalizeMainProgressBar(0, "Initializing Database..")
@@ -260,7 +261,7 @@ Public Class MySQLDB
                                  CSVDirectory.Replace("\", "/"), TableName, FieldList)
         TempData.TableName = TableName
 
-        BulkInsertTablesData.Add(TempData)
+        BulkInsertTablesData.Enqueue(TempData)
 
     End Sub
 

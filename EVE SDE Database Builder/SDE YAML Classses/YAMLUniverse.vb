@@ -34,10 +34,34 @@ Public Class YAMLUniverse
     Private ThreadsArray As List(Of Thread) = New List(Of Thread)
 
     Private invNamesLDB As SQLiteDB ' for searching
+    Private MapJumpsData As SQLiteDB = Nothing ' for building the mapJump tables
+
+    Private LocalDBsLocation As String = ""
+    Private BaseYAMLPath As String = ""
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
         FilePath = YAMLFilePath
+
+        ' Set the local db location 
+        LocalDBsLocation = YAMLFilePath & "UniverseTemp\"
+
+        ' Clean up the directory if there
+        If Directory.Exists(LocalDBsLocation) Then
+            Call Directory.Delete(LocalDBsLocation, True)
+        End If
+
+        BaseYAMLPath = YAMLFilePath
+
+        ' walk back directory until it's the "sde" for later use
+        Do Until BaseYAMLPath.Substring(Len(BaseYAMLPath) - 3) = "sde"
+            BaseYAMLPath = Directory.GetParent(BaseYAMLPath).FullName
+        Loop
+
+        ' Delete anything there
+        On Error Resume Next
+        Call Directory.Delete(LocalDBsLocation, True)
+
     End Sub
 
     ''' <summary>
@@ -54,9 +78,6 @@ Public Class YAMLUniverse
 
         Dim RegionID As Integer
         Dim ConstellationID As Integer
-
-        ' Load up invNames in a local database for searching the names of items in the universe files
-        Call LoadinvNames(Params.ImportLanguageCode)
 
         ' Build all the tables to insert map data into. This includes the following tables:
         ' - mapCelestialStatistics
@@ -78,12 +99,12 @@ Public Class YAMLUniverse
         Call CreatemapSolarSystemsTable()
 
         Call CreatemapCelestialStatisticsTable()
-        Call CreatemapDenormalizeTable()
+        Call CreatemapDenormalizeTable(UpdateDB)
 
         Call CreatemapLocationWormholeClasses()
         Call CreatemapLocationScenesTable()
 
-        Call CreatemapJumpsTable()
+        Call CreatemapJumpsTable(UpdateDB)
 
         Call CreatemapDisallowedAnchorCategories()
         Call CreatemapDisallowedAnchorGroups()
@@ -93,6 +114,12 @@ Public Class YAMLUniverse
         If Not Params.InsertRecords Then
             Exit Sub
         End If
+
+        ' Load up invNames in a local database for searching the names of items in the universe files
+        Call LoadinvNames(Params.ImportLanguageCode)
+
+        ' Build the maps database
+        Call CreateMapDatabase()
 
         ' Start processing
         Call InitGridRow(Params.RowLocation)
@@ -138,12 +165,18 @@ Public Class YAMLUniverse
         ' Finally, set the indexes (this will speed up inserts)
         Call CreateUniverseIndexes()
 
-        ' Close the local DB
+        ' Close local db
         Call invNamesLDB.CloseDB()
+        Call MapJumpsData.CloseDB()
+
+        ' Cleanup local db files
+        Call Directory.Delete(LocalDBsLocation, True)
 
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
+
+#Region "Local Databases"
 
     ''' <summary>
     ''' Loads a local database with the invNames data for searching item names in the Universe files
@@ -151,7 +184,7 @@ Public Class YAMLUniverse
     ''' <param name="LangCode">Language to import the data in (not used for invNames)</param>
     Private Sub LoadinvNames(ByVal LangCode As String)
         Dim invNamesData As New List(Of invName)
-        Dim InvNames As New YAMLinvNames(YAMLinvNames.invNamesFile, frmMain.UserApplicationSettings.SDEDirectory & frmMain.BSDPath, Nothing, Nothing)
+        Dim InvNames As New YAMLinvNames(YAMLinvNames.invNamesFile, BaseYAMLPath & "\bsd\", Nothing, Nothing)
         Dim ImportParams As ImportParameters
         Dim DataFields As List(Of DBField)
 
@@ -161,8 +194,7 @@ Public Class YAMLUniverse
         ImportParams.RowLocation = 0
 
         invNamesData = InvNames.ImportFile(ImportParams)
-
-        invNamesLDB = New SQLiteDB(frmMain.UserApplicationSettings.SDEDirectory & "\" & "temp" & "\invNames.sqlite", True)
+        invNamesLDB = New SQLiteDB(LocalDBsLocation & "invNames.sqlite", LocalDBsLocation, True)
 
         ' Build table
         Dim Table As New List(Of DBTableField)
@@ -177,8 +209,8 @@ Public Class YAMLUniverse
             DataFields = New List(Of DBField)
 
             ' Simple insert into local table
-            DataFields.Add(UpdateDB.BuildDatabaseField("itemID", DataRecord.itemID, FieldType.bigint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("itemName", DataRecord.itemName, FieldType.nvarchar_type))
+            DataFields.Add(invNamesLDB.BuildDatabaseField("itemID", DataRecord.itemID, FieldType.bigint_type))
+            DataFields.Add(invNamesLDB.BuildDatabaseField("itemName", DataRecord.itemName, FieldType.nvarchar_type))
 
             Call invNamesLDB.InsertRecord(invNamesTableName, DataFields)
         Next
@@ -189,7 +221,6 @@ Public Class YAMLUniverse
 
     End Sub
 
-
     ''' <summary>
     ''' Returns the string name for the itemID sent
     ''' </summary>
@@ -197,20 +228,144 @@ Public Class YAMLUniverse
     ''' <returns></returns>
     Private Function GetItemName(ByVal ItemID As Integer) As String
         Dim WhereClause As List(Of String)
-        Dim Result As New Object
+        Dim Result As New List(Of List(Of Object))
 
         ' See if the record is there
         WhereClause = New List(Of String)
         WhereClause.Add("itemID =" & ItemID)
+        Dim SelectClause As New List(Of String)
+        SelectClause.Add("itemName")
 
-        Result = invNamesLDB.SelectSingleValuefromTable("itemName", invNamesTableName, WhereClause)
-        If IsNothing(Result) Then
+        Result = invNamesLDB.SelectfromTable(SelectClause, invNamesTableName, WhereClause)
+
+        If IsNothing(Result(0)(0)) Then
             Return ""
         Else
-            Return CStr(Result)
+            Return CStr(Result(0)(0))
         End If
 
     End Function
+
+    ''' <summary>
+    ''' Creates the local map database for building the jumps tables after all data is imported
+    ''' </summary>
+    Private Sub CreateMapDatabase()
+
+        ' Open the database
+        MapJumpsData = New SQLiteDB(LocalDBsLocation & "MapJumpsData.sqlite", LocalDBsLocation, True)
+
+        ' Build the tables we need on this db
+        Call CreatemapDenormalizeTable(MapJumpsData)
+        Call CreatemapJumpsTable(MapJumpsData)
+
+    End Sub
+
+    ''' <summary>
+    ''' Creates the mapJumpsTables (mapSolarSystemJumps, mapConstellationJumps, mapRegionJumps)
+    ''' </summary>
+    Private Sub CreateMapJumpTables()
+        Dim WhereClause As New List(Of String)
+        Dim Result As New List(Of List(Of Object))
+        Dim SelectClause As New List(Of String)
+        Dim DataFields As New List(Of DBField)
+
+        ' Create the tables on the new dB
+        Call CreatemapRegionJumpsTable()
+        Call CreatemapConstellationJumpsTable()
+        Call CreatemapSolarSystemJumpsTable()
+
+        Call MapJumpsData.BeginSQLiteTransaction()
+
+        Dim SQL = "CREATE TABLE " & mapSolarSystemJumps_Table & " AS SELECT MD1.regionID AS fromRegionID, MD1.constellationID AS fromConstellationID, MD1.solarSystemID AS fromSolarSystemID, "
+        SQL &= "MD2.solarSystemID As toSolarSystemID, MD2.constellationID As toConstellationID, MD2.regionID As toRegionID "
+        SQL &= "FROM mapDenormalize AS MD1, mapDenormalize AS MD2, mapJumps WHERE mapJumps.stargateID = MD1.itemID AND MD2.itemID = mapJumps.destinationID"
+
+        ' Do an insert via SQL for each table, the first will be the base to query others
+        MapJumpsData.ExecuteNonQuerySQL(SQL)
+
+        SQL = "CREATE TABLE " & mapConstellationJumps_Table & " AS SELECT fromRegionID, fromConstellationID, toConstellationID, toRegionID FROM mapSolarSystemJumps "
+        SQL &= "GROUP BY fromConstellationID, toConstellationID, fromRegionID, toRegionID"
+
+        MapJumpsData.ExecuteNonQuerySQL(SQL)
+
+        SQL = "CREATE TABLE " & mapRegionJumps_Table & " AS SELECT fromRegionID, toRegionID FROM mapSolarSystemJumps GROUP BY fromRegionID, toRegionID"
+        MapJumpsData.ExecuteNonQuerySQL(SQL)
+
+        ' Now select the data from the three new tables and insert into the current DB
+        ' mapSolarSystemJumps
+        SelectClause = New List(Of String)
+        WhereClause = New List(Of String)
+        SelectClause.Add("fromRegionID")
+        SelectClause.Add("fromConstellationID")
+        SelectClause.Add("fromSolarSystemID")
+        SelectClause.Add("toSolarSystemID")
+        SelectClause.Add("toConstellationID")
+        SelectClause.Add("toRegionID")
+
+        Result = MapJumpsData.SelectfromTable(SelectClause, mapSolarSystemJumps_Table, WhereClause)
+
+        ' Insert each row
+        For i = 0 To Result.Count - 1
+            DataFields = New List(Of DBField)
+            ' Build each record
+            DataFields.Add(UpdateDB.BuildDatabaseField("fromRegionID", Result(i)(0), FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("fromConstellationID", Result(i)(1), FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("fromSolarSystemID", Result(i)(2), FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("toSolarSystemID", Result(i)(3), FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("toConstellationID", Result(i)(4), FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("toRegionID", Result(i)(5), FieldType.int_type))
+
+            Call UpdateDB.InsertRecord(mapSolarSystemJumps_Table, DataFields)
+
+        Next
+
+        ' mapConstellationJumps
+        SelectClause = New List(Of String)
+        WhereClause = New List(Of String)
+        SelectClause.Add("fromRegionID")
+        SelectClause.Add("fromConstellationID")
+        SelectClause.Add("toConstellationID")
+        SelectClause.Add("toRegionID")
+
+        Result = MapJumpsData.SelectfromTable(SelectClause, mapConstellationJumps_Table, WhereClause)
+
+        ' Insert each row
+        For i = 0 To Result.Count - 1
+            DataFields = New List(Of DBField)
+            ' Build each record
+            DataFields.Add(UpdateDB.BuildDatabaseField("fromRegionID", Result(i)(0), FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("fromConstellationID", Result(i)(1), FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("toConstellationID", Result(i)(2), FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("toRegionID", Result(i)(3), FieldType.int_type))
+
+            Call UpdateDB.InsertRecord(mapConstellationJumps_Table, DataFields)
+
+        Next
+
+        ' mapRegionJumps
+        SelectClause = New List(Of String)
+        WhereClause = New List(Of String)
+        SelectClause.Add("fromRegionID")
+        SelectClause.Add("toRegionID")
+
+        Result = MapJumpsData.SelectfromTable(SelectClause, mapRegionJumps_Table, WhereClause)
+
+        ' Insert each row
+        For i = 0 To Result.Count - 1
+            DataFields = New List(Of DBField)
+            ' Build each record
+            DataFields.Add(UpdateDB.BuildDatabaseField("fromRegionID", Result(i)(0), FieldType.int_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("toRegionID", Result(i)(1), FieldType.int_type))
+
+            Call UpdateDB.InsertRecord(mapRegionJumps_Table, DataFields)
+
+        Next
+
+        Call MapJumpsData.CommitSQLiteTransaction()
+
+    End Sub
+
+#End Region
 
     ''' <summary>
     ''' Import the region file and return region ID to use for later inserts
@@ -226,7 +381,6 @@ Public Class YAMLUniverse
 
         Dim YAMLRecord As New region
         Dim DataFields As New List(Of DBField)
-        Dim dirInfo As New DirectoryInfo(DirectoryPath) ' For getting the name of the region
 
         Try
             ' Parse the input text
@@ -283,7 +437,6 @@ Public Class YAMLUniverse
 
         Dim YAMLRecord As New constellation
         Dim DataFields As New List(Of DBField)
-        Dim dirInfo As New DirectoryInfo(DirectoryPath) ' For getting the name of the constellation
 
         Try
             ' Parse the input text
@@ -336,7 +489,6 @@ Public Class YAMLUniverse
 
         Dim YAMLRecord As New solarSystem
         Dim DataFields As New List(Of DBField)
-        Dim dirInfo As New DirectoryInfo(DirectoryPath) ' For getting the name of the system
         Dim i As Integer = 0
 
         Try
@@ -391,8 +543,17 @@ Public Class YAMLUniverse
                     ' Simple insert into mapJumps
                     DataFields.Add(UpdateDB.BuildDatabaseField("stargateID", Gate.Key, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("destinationID", Gate.Value.destination, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("typeID", Gate.Value.typeID, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("x", Gate.Value.position(0), FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("y", Gate.Value.position(1), FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("z", Gate.Value.position(2), FieldType.real_type))
 
                     Call UpdateDB.InsertRecord(mapJumps_Table, DataFields)
+
+                    ' Also add to the local db too
+                    If Not IsNothing(MapJumpsData) Then
+                        Call MapJumpsData.InsertRecord(mapJumps_Table, DataFields)
+                    End If
 
                     ' Add the others stargate data to map denormalize
                     Call SavemapDenormalizeItem(Gate.Key, Gate.Value.typeID, YAMLRecord.solarSystemID, SystemConstellationID, SystemRegionID,
@@ -529,43 +690,43 @@ Public Class YAMLUniverse
                 ' Must have this field and either stats or attributes to insert a record
                 DataFields.Add(UpdateDB.BuildDatabaseField("celestialID", CelestialID, FieldType.int_type))
                 If Not IsNothing(Stats) Then
-                    DataFields.Add(UpdateDB.BuildDatabaseField("temperature", .temperature, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("temperature", .temperature, FieldType.double_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("spectralClass", .spectralClass, FieldType.varchar_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("luminosity", .luminosity, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("age", .age, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("life", .life, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("orbitRadius", .orbitRadius, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("eccentricity", .eccentricity, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("massDust", .massDust, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("massGas", .massGas, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("luminosity", .luminosity, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("age", .age, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("life", .life, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("orbitRadius", .orbitRadius, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("eccentricity", .eccentricity, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("massDust", .massDust, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("massGas", .massGas, FieldType.double_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("fragmented", .fragmented, FieldType.bit_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("density", .density, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("surfaceGravity", .surfaceGravity, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("escapeVelocity", .escapeVelocity, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("orbitPeriod", .orbitPeriod, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("rotationRate", .rotationRate, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("density", .density, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("surfaceGravity", .surfaceGravity, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("escapeVelocity", .escapeVelocity, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("orbitPeriod", .orbitPeriod, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("rotationRate", .rotationRate, FieldType.double_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("locked", .locked, FieldType.bit_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("pressure", .pressure, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("radius", .radius, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("pressure", .pressure, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("radius", .radius, FieldType.double_type))
                 Else
-                    DataFields.Add(New DBField("temperature", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("temperature", NullValue, FieldType.double_type))
                     DataFields.Add(New DBField("spectralClass", NullValue, FieldType.varchar_type))
-                    DataFields.Add(New DBField("luminosity", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("age", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("life", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("orbitRadius", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("eccentricity", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("massDust", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("massGas", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("luminosity", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("age", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("life", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("orbitRadius", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("eccentricity", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("massDust", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("massGas", NullValue, FieldType.double_type))
                     DataFields.Add(New DBField("fragmented", NullValue, FieldType.bit_type))
-                    DataFields.Add(New DBField("density", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("surfaceGravity", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("escapeVelocity", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("orbitPeriod", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("rotationRate", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("density", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("surfaceGravity", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("escapeVelocity", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("orbitPeriod", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("rotationRate", NullValue, FieldType.double_type))
                     DataFields.Add(New DBField("locked", NullValue, FieldType.bit_type))
-                    DataFields.Add(New DBField("pressure", NullValue, FieldType.real_type))
-                    DataFields.Add(New DBField("radius", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("pressure", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("radius", NullValue, FieldType.double_type))
                 End If
                 If Not IsNothing(Attributes) Then
                     DataFields.Add(UpdateDB.BuildDatabaseField("heightMap1", Attributes.heightMap1, FieldType.int_type))
@@ -663,32 +824,10 @@ Public Class YAMLUniverse
 
         Call UpdateDB.InsertRecord(mapDenormalize_Table, DataFields)
 
-    End Sub
-
-    ''' <summary>
-    ''' Creates the mapJumpsTables (mapSolarSystemJumps, mapConstellationJumps, mapRegionJumps)
-    ''' </summary>
-    Public Sub CreateMapJumpTables()
-
-        ' Create the tables
-        Call CreatemapRegionJumpsTable()
-        Call CreatemapConstellationJumpsTable()
-        Call CreatemapSolarSystemJumpsTable()
-
-        Dim SQL = "INSERT INTO " & mapSolarSystemJumps_Table & " SELECT MD1.regionID AS fromRegionID, MD1.constellationID AS fromConstellationID, MD1.solarSystemID AS fromSolarSystemID, "
-        SQL &= "MD2.solarSystemID As toSolarSystemID, MD2.constellationID As toConstellationID, MD2.regionID As toRegionID "
-        SQL &= "FROM mapDenormalize AS MD1, mapDenormalize AS MD2, mapJumps WHERE mapJumps.stargateID = MD1.itemID AND MD2.itemID = mapJumps.destinationID"
-
-        ' Do an insert via SQL for each table, the first will be the base to query others
-        UpdateDB.ExecuteNonQuerySQL(SQL)
-
-        SQL = "INSERT INTO " & mapConstellationJumps_Table & " SELECT fromRegionID, fromConstellationID, toConstellationID, toRegionID FROM mapSolarSystemJumps "
-        SQL &= "GROUP BY fromConstellationID, toConstellationID, fromRegionID, toRegionID"
-
-        UpdateDB.ExecuteNonQuerySQL(SQL)
-
-        SQL = "INSERT INTO " & mapRegionJumps_Table & " SELECT fromRegionID, toRegionID FROM mapSolarSystemJumps GROUP BY fromRegionID, toRegionID"
-        UpdateDB.ExecuteNonQuerySQL(SQL)
+        ' Also add to the local db too
+        If Not IsNothing(MapJumpsData) Then
+            Call MapJumpsData.InsertRecord(mapDenormalize_Table, DataFields)
+        End If
 
     End Sub
 
@@ -699,24 +838,24 @@ Public Class YAMLUniverse
         Dim Table As New List(Of DBTableField)
 
         Table.Add(New DBTableField("celestialID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("temperature", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("temperature", FieldType.double_type, 0, True))
         Table.Add(New DBTableField("spectralClass", FieldType.varchar_type, 10, True))
-        Table.Add(New DBTableField("luminosity", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("age", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("life", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("orbitRadius", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("eccentricity", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("massDust", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("massGas", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("luminosity", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("age", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("life", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("orbitRadius", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("eccentricity", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("massDust", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("massGas", FieldType.double_type, 0, True))
         Table.Add(New DBTableField("fragmented", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("density", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("surfaceGravity", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("escapeVelocity", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("orbitPeriod", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("rotationRate", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("density", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("surfaceGravity", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("escapeVelocity", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("orbitPeriod", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("rotationRate", FieldType.double_type, 0, True))
         Table.Add(New DBTableField("locked", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("pressure", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("radius", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("pressure", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("radius", FieldType.double_type, 0, True))
         Table.Add(New DBTableField("heightMap1", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("heightMap2", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("population", FieldType.bit_type, 0, True))
@@ -767,9 +906,10 @@ Public Class YAMLUniverse
     End Sub
 
     ''' <summary>
-    ''' Creates the mapDenormalize Table
+    ''' Creates the mapDenormalize Table on the referenced DB
+    ''' <param name="ReferenceDB">DB to create the table on</param>
     ''' </summary>
-    Private Sub CreatemapDenormalizeTable()
+    Private Sub CreatemapDenormalizeTable(ByRef ReferenceDB As Object)
         Dim Table As New List(Of DBTableField)
 
         Table.Add(New DBTableField("itemID", FieldType.int_type, 0, False, True))
@@ -789,7 +929,7 @@ Public Class YAMLUniverse
         Table.Add(New DBTableField("celestialIndex", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("orbitIndex", FieldType.int_type, 0, True))
 
-        Call UpdateDB.CreateTable(mapDenormalize_Table, Table)
+        Call ReferenceDB.CreateTable(mapDenormalize_Table, Table)
 
     End Sub
 
@@ -834,18 +974,19 @@ Public Class YAMLUniverse
 
     ''' <summary>
     ''' Creates the mapJumps Table
+    ''' <param name="ReferenceDB">DB to create the table on</param>
     ''' </summary>
-    Private Sub CreatemapJumpsTable()
+    Private Sub CreatemapJumpsTable(ByRef ReferenceDB As Object)
         Dim Table As New List(Of DBTableField)
 
         Table.Add(New DBTableField("stargateID", FieldType.int_type, 0, False, True))
         Table.Add(New DBTableField("destinationID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("x", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("y", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("z", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
 
-        Call UpdateDB.CreateTable(mapJumps_Table, Table)
+        Call ReferenceDB.CreateTable(mapJumps_Table, Table)
 
     End Sub
 
@@ -1019,21 +1160,14 @@ Public Class YAMLUniverse
         IndexFields.Add("regionID")
         Call UpdateDB.CreateIndex(mapDenormalize_Table, "IDX_" & mapDenormalize_Table & "_RID", IndexFields)
 
-        'IndexFields = New List(Of String)
-        'IndexFields.Add("groupID")
-        'IndexFields.Add("solarSystemID")
-        'Call UpdateDB.CreateIndex(mapDenormalize_Table, "IDX_" & mapDenormalize_Table & "_GID_SID", IndexFields)
+    End Sub
 
-        'IndexFields = New List(Of String)
-        'IndexFields.Add("groupID")
-        'IndexFields.Add("constellationID")
-        'Call UpdateDB.CreateIndex(mapDenormalize_Table, "IDX_" & mapDenormalize_Table & "_GID_CID", IndexFields)
-
-        'IndexFields = New List(Of String)
-        'IndexFields.Add("groupID")
-        'IndexFields.Add("regionID")
-        'Call UpdateDB.CreateIndex(mapDenormalize_Table, "IDX_" & mapDenormalize_Table & "_GID_RID", IndexFields)
-
+    Public Sub Close()
+        Call invNamesLDB.CloseDB()
+        invNamesLDB = Nothing
+        Call MapJumpsData.CloseDB()
+        MapJumpsData = Nothing
+        Call Directory.Delete(LocalDBsLocation)
     End Sub
 
 End Class

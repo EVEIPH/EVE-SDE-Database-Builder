@@ -16,16 +16,27 @@ Public Class YAMLTranslations
 
     ' Local copies of the translation data tables
     Public TranslationTables As New LocalDatabase ' for final loading and passing to databases for inserts
-    Public TranslationTablesDB As SQLiteDB ' for searching
+    Private TranslationTablesDB As SQLiteDB ' for searching
+    Private LocalDBPath As String = ""
 
-    Public Sub New(ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByVal LocalDBPath As String)
+    Public Sub New(ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByVal DBPath As String)
         ' The file name doesn't matter for transations, they are set below also translations will use a local db and then insert for searching
         MyBase.New("", YAMLFilePath, DatabaseRef, Nothing)
+        Dim TempPath = DBPath & "\TranslationTemp\"
+
+        ' Clean up the directory if there
+        If Directory.Exists(TempPath) Then
+            Call Directory.Delete(TempPath, True)
+        End If
+
         ' Init local db
-        TranslationTablesDB = New SQLiteDB(LocalDBPath, True)
+        TranslationTablesDB = New SQLiteDB(TempPath & "TranslationTemp.sqlite", TempPath, True)
+        LocalDBPath = TempPath
+
     End Sub
 
-    Public Sub ImportTranslationLanguages(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True, Optional ByVal ShowProgress As Boolean = True)
+    Public Sub ImportTranslationLanguages(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True,
+                                          Optional ByVal ShowProgress As Boolean = True)
         Dim DSB = New DeserializerBuilder()
         DSB.IgnoreUnmatchedProperties()
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
@@ -48,6 +59,7 @@ Public Class YAMLTranslations
         If ImportTable Then
             Call UpdateDB.CreateTable(trnTranslationLanguagesTable, Table)
         End If
+
         Call TranslationTablesDB.CreateTable(trnTranslationLanguagesTable, Table)
 
         Try
@@ -354,8 +366,9 @@ Cancel:
         Dim TranslationsList As New List(Of trnTranslation)
         Dim TranslationColumnsList As New List(Of trnTranslationColumn)
 
-        Dim Result As New Object
+        Dim Result As New List(Of List(Of Object))
         Dim WhereClause As List(Of String)
+        Dim SelectClause As New List(Of String)
 
         Dim TranslationColumnID As Integer
 
@@ -364,14 +377,19 @@ Cancel:
         WhereClause.Add("tableName='" & TranslationTableName & "'")
         WhereClause.Add("columnName='" & TranslationColumnName & "'")
         WhereClause.Add("masterID ='" & TranslationMasterID & "'")
-        Result = TranslationTablesDB.SelectSingleValuefromTable("tcID", trnTranslationColumnsTable, WhereClause)
 
-        If IsNothing(Result) Then
+        SelectClause.Add("tcID")
+
+        Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)
+
+        If Result.Count = 0 Then
             ' Look up the max and add one to it
             WhereClause = New List(Of String)
-            TranslationColumnID = CInt(TranslationTablesDB.SelectSingleValuefromTable("Max(tcID)", trnTranslationColumnsTable, WhereClause)) + 1
+            SelectClause = New List(Of String)
+            SelectClause.Add("Max(tcID)")
+            TranslationColumnID = CInt(TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)(0)(0)) + 1
         Else
-            TranslationColumnID = CInt(Result)
+            TranslationColumnID = CInt(Result(0)(0))
         End If
 
         For Each entry In TranslationDataList
@@ -381,9 +399,12 @@ Cancel:
             WhereClause.Add("keyID =" & ID)
             WhereClause.Add("languageID='" & entry.TranslationCode & "'")
 
-            Result = TranslationTablesDB.SelectSingleValuefromTable("tcID", trnTranslationsTable, WhereClause)
+            SelectClause = New List(Of String)
+            SelectClause.Add("tcID")
 
-            If IsNothing(Result) Then
+            Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationsTable, WhereClause)
+
+            If Result.Count = 0 Then
                 ' No data found, insert
                 TempTranslation = New trnTranslation
                 TempTranslation.tcID = TranslationColumnID
@@ -401,9 +422,11 @@ Cancel:
             WhereClause.Add("tableName='" & TranslationTableName & "'")
             WhereClause.Add("tcID =" & TranslationColumnID)
 
-            Result = TranslationTablesDB.SelectSingleValuefromTable("tcID", trnTranslationColumnsTable, WhereClause)
+            SelectClause.Add("tcID")
 
-            If IsNothing(Result) Then
+            Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)
+
+            If Result.Count = 0 Then
                 ' No data found, insert
                 TempTranslationColumn = New trnTranslationColumn
                 TempTranslationColumn.tcID = TranslationColumnID
@@ -425,7 +448,8 @@ Cancel:
                                   ByVal LanguageID As LanguageCode, ByVal DefaultText As Object) As String
         Dim WhereValues As New List(Of String)
         Dim ReturnValue As Object
-        Dim Result As Object
+        Dim Result As List(Of List(Of Object))
+        Dim SelectClause As New List(Of String)
 
         If IsNothing(DefaultText) Then
             DefaultText = ""
@@ -437,27 +461,32 @@ Cancel:
         WhereValues.Add("columnName='" & columnName & "'")
         WhereValues.Add("masterID='" & masterID & "'")
 
-        Result = TranslationTablesDB.SelectSingleValuefromTable("tcID", trnTranslationColumnsTable, WhereValues)
+        SelectClause.Add("tcID")
 
-        If Not IsNothing(Result) Then
-            ReturnValue = Result.ToString()
-        Else
+        Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereValues)
+
+        If Result.Count = 0 Then
             Return DefaultText
+        Else
+            ReturnValue = Result(0)(0).ToString()
         End If
 
         ' Try to look up the text now
         WhereValues = New List(Of String)
         Dim NameTranslation As New ImportLanguage(LanguageID)
-        WhereValues.Add("tcID=" & CStr(ReturnValue))
+        WhereValues.Add("tcID=" & CStr(Result(0)(0)))
         WhereValues.Add("keyID=" & keyID)
         WhereValues.Add("languageID='" & NameTranslation.GetCurrentLanguageID & "'")
 
-        Result = TranslationTablesDB.SelectSingleValuefromTable("text", trnTranslationsTable, WhereValues)
+        SelectClause = New List(Of String)
+        SelectClause.Add("text")
 
-        If Not IsNothing(Result) Then
-            Return Result.ToString()
-        Else
+        Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationsTable, WhereValues)
+
+        If Result.Count = 0 Then
             Return DefaultText
+        Else
+            Return Result(0)(0).ToString()
         End If
 
     End Function
@@ -469,6 +498,7 @@ Cancel:
     Public Sub Close()
         Call TranslationTablesDB.CloseDB()
         TranslationTablesDB = Nothing
+        Call Directory.Delete(LocalDBPath,true)
     End Sub
 
 End Class

@@ -12,6 +12,7 @@ Public Class CSVDB
 
     Private DELIMITER As String = ""
     Private Const CSVExtention As String = ".csv"
+    Private UseNullforBlanks As Boolean = False
 
     ''' <summary>
     ''' Constructor class for a CSV "database". 
@@ -20,7 +21,7 @@ Public Class CSVDB
     ''' <param name="Success">True if the database successfully created.</param>
     ''' <param name="AllowDirectoryFullAccess">Optional boolean to allow access to the full directory to allow other DB classes access to the folder</param>
     ''' <param name="ExportasSSV">Export the data in Semi-colon separated values for EU users</param>
-    Public Sub New(ByVal DatabaseFileNameandPath As String, ByRef Success As Boolean,
+    Public Sub New(ByVal DatabaseFileNameandPath As String, ByRef Success As Boolean, ByVal InsertNullforBlankValues As Boolean,
                    Optional ByVal AllowDirectoryFullAccess As Boolean = False, Optional ByVal ExportasSSV As Boolean = False)
         MyBase.New(DatabaseFileNameandPath, DatabaseType.CSV)
 
@@ -49,6 +50,8 @@ Public Class CSVDB
             Else
                 DELIMITER = COMMA
             End If
+
+            UseNullforBlanks = InsertNullforBlankValues
 
             Success = True
 
@@ -190,6 +193,11 @@ Public Class CSVDB
                 ' Need to format for comma as a decimal
                 Field.FieldValue = ConvertUStoEUDecimal(Field.FieldValue)
             End If
+
+            If UseNullforBlanks And Field.FieldValue = "" Then
+                Field.FieldValue = NULL
+            End If
+
             OutputText = OutputText & Field.FieldValue & DELIMITER
         Next
 

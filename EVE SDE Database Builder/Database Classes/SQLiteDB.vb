@@ -8,7 +8,7 @@ Imports System.IO
 Public Class SQLiteDB
     Inherits DBFilesBase
 
-    Private DB As SQLiteConnection ' keep open for all updates
+    Public DB As New SQLiteConnection ' keep open for all updates
     Private DBFileNameandPath As String ' For later use if needed
 
     ''' <summary>
@@ -16,13 +16,19 @@ Public Class SQLiteDB
     ''' or replaces the existing file and inserts all data into it.
     ''' </summary>
     ''' <param name="DatabaseFileNameandPath">Name and path of the database file to create.</param>
+    ''' <param name="DBPath">Path where the database file will be</param>
     ''' <param name="Success">True if the database successfully created.</param>
-    Public Sub New(ByVal DatabaseFileNameandPath As String, ByRef Success As Boolean)
+    Public Sub New(ByVal DatabaseFileNameandPath As String, ByVal DBPath As String, ByRef Success As Boolean)
         MyBase.New(DatabaseFileNameandPath, DatabaseType.SQLite)
 
         Call InitalizeMainProgressBar(0, "Initializing Database..")
 
         Try
+
+            ' Make sure the folder is there
+            If Not Directory.Exists(DBPath) Then
+                Directory.CreateDirectory(DBPath)
+            End If
 
             ' Build a new database if it doesn't exist
             If Not File.Exists(DatabaseFileNameandPath) Then
@@ -119,49 +125,58 @@ Public Class SQLiteDB
     ''' <summary>
     ''' Runs a single select value for the table and where values sent.
     ''' </summary>
-    ''' <param name="SelectFieldValue">Field to select - i.e. SELECT X FROM, field is 'X'</param>
+    ''' <param name="SelectFieldValues">Fields to select - i.e. SELECT X FROM, field is 'X'</param>
     ''' <param name="SelectTableName">Table name to select from</param>
     ''' <param name="SelectWhereClause">List of where clauses such as WHERE Y = 3</param>
-    ''' <returns></returns>
-    Public Function SelectSingleValuefromTable(ByVal SelectFieldValue As String, ByVal SelectTableName As String, ByVal SelectWhereClause As List(Of String)) As Object
+    ''' <returns>List of objects to match the field values</returns>
+    Public Function SelectfromTable(ByVal SelectFieldValues As List(Of String), ByVal SelectTableName As String, ByVal SelectWhereClause As List(Of String)) As List(Of List(Of Object))
         Dim SQLQuery As SQLiteCommand
         Dim SQLReader As SQLiteDataReader
-        Dim ReturnValue As Object
+        Dim ReturnValues As New List(Of List(Of Object))
+        Dim SelectClause As String = ""
+        Dim SelectFieldCount As Integer = SelectFieldValues.Count
+        Dim TempRecord As New List(Of Object)
 
-        Dim SQL As String = String.Format("SELECT {0} FROM {1}", SelectFieldValue, SelectTableName)
+        ' Build select query
+        For i = 0 To SelectFieldValues.Count - 1
+            SelectClause &= SelectFieldValues(i) & ","
+        Next
+
+        ' Remove last comma
+        SelectClause = SelectClause.Substring(0, Len(SelectClause) - 1)
+
+        Dim SQL As String = String.Format("SELECT {0} FROM {1}", SelectClause, SelectTableName)
 
         ' Add the WHERE clauses
-        If SelectWhereClause.Count > 0 Then
-            SQL &= " WHERE "
-            For i = 0 To SelectWhereClause.Count - 1
-                SQL &= String.Format("{0} AND ", SelectWhereClause(i))
-            Next
+        If Not IsNothing(SelectWhereClause) Then
+            If SelectWhereClause.Count > 0 Then
+                SQL &= " WHERE "
+                For i = 0 To SelectWhereClause.Count - 1
+                    SQL &= String.Format("{0} AND ", SelectWhereClause(i))
+                Next
 
-            ' Strip last AND
-            SQL = SQL.Substring(0, Len(SQL) - 5)
+                ' Strip last AND
+                SQL = SQL.Substring(0, Len(SQL) - 5)
+            End If
         End If
-
         ' See if the query returns data
         SQLQuery = New SQLiteCommand(SQL, DB)
         SQLReader = SQLQuery.ExecuteReader
-        SQLReader.Read()
 
-        If SQLReader.HasRows Then
-            If Not IsDBNull(SQLReader.GetValue(0)) Then
-                ReturnValue = SQLReader.GetValue(0)
-            Else
-                ReturnValue = Nothing
-            End If
-        Else
-            ReturnValue = Nothing
-        End If
+        While SQLReader.Read()
+            TempRecord = New List(Of Object)
+            For i = 0 To SelectFieldCount - 1
+                TempRecord.Add(SQLReader.GetValue(i))
+            Next
+            ReturnValues.Add(TempRecord)
+        End While
 
         SQLReader.Close()
         SQLReader = Nothing
         SQLQuery.Dispose()
         SQLQuery = Nothing
 
-        Return ReturnValue
+        Return ReturnValues
 
     End Function
 
@@ -171,11 +186,14 @@ Public Class SQLiteDB
     ''' <param name="TableName">Table you want to drop</param>
     Private Sub DropTable(TableName As String)
         Dim WhereValues As New List(Of String)
+        Dim SelectValues As New List(Of String)
+
+        SelectValues.Add("name")
         WhereValues.Add("type='table'")
         WhereValues.Add("name='" & TableName & "'")
-        Dim ReturnValue As Object = SelectSingleValuefromTable("name", "sqlite_master", WhereValues)
+        Dim ReturnValue As Object = SelectfromTable(SelectValues, "sqlite_master", WhereValues)
 
-        If IsNothing(ReturnValue) Then
+        If ReturnValue.count = 0 Then
             ReturnValue = False
         Else
             ReturnValue = True
@@ -185,6 +203,7 @@ Public Class SQLiteDB
         If ReturnValue Then
             Call ExecuteNonQuerySQL("DROP TABLE " & TableName)
         End If
+
     End Sub
 
     ''' <summary>
@@ -328,7 +347,11 @@ Public Class SQLiteDB
 
         For Each Field In Record
             Fields = Fields & Field.FieldName & COMMA
-            FieldValues = FieldValues & Field.FieldValue & COMMA
+            If Field.FieldValue = "" Then
+                FieldValues = FieldValues & NULL & COMMA
+            Else
+                FieldValues = FieldValues & Field.FieldValue & COMMA
+            End If
         Next
 
         ' Strip the last commas

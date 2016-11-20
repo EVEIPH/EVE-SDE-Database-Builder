@@ -8,7 +8,7 @@ Public Class YAMLFilesBase
     Protected UpdateDB As Object ' The database object for the class used to insert data into the database
     Protected Translator As YAMLTranslations ' Ref for storing translation data in the trn tables
 
-    Public NullValue As String = "null"
+    Public NullValue As String = "NULL"
 
     Public Const MaxFieldLen As Integer = -1
 
