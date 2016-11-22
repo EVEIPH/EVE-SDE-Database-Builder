@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E6410129-A482-4EA1-92FB-524E0203EA19}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>EVE_SDE_Database_Builder.My.MyApplication</StartupObject>
+    <RootNamespace>EVE_SDE_Database_Builder</RootNamespace>
+    <AssemblyName>EVE SDE Database Builder</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>EVE SDE Database Builder.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>EVE SDE Database Builder.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>..\Root Directory\</OutputPath>
+    <DocumentationFile>EVE SDE Database Builder.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>..\Root Directory\</OutputPath>
+    <DocumentationFile>EVE SDE Database Builder.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>2876_64.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.1.8.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.3.1.8\lib\net451\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.103.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.103\lib\net46\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.103.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.103\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.103.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.103\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="YamlDotNet, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.4.0.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Database Classes\CSVDB.vb" />
+    <Compile Include="Database Classes\DBFilesBase.vb" />
+    <Compile Include="Database Classes\postgreSQLDB.vb" />
+    <Compile Include="Database Classes\MySQLDB.vb" />
+    <Compile Include="Database Classes\msAccessDB.vb" />
+    <Compile Include="frmAbout.Designer.vb">
+      <DependentUpon>frmAbout.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmAbout.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmError.designer.vb">
+      <DependentUpon>frmError.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmError.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmThreadSelect.Designer.vb">
+      <DependentUpon>frmThreadSelect.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmThreadSelect.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Globals.vb" />
+    <Compile Include="frmMain.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.vb">
+      <DependentUpon>frmMain.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Database Classes\msSQLDB.vb" />
+    <Compile Include="ImportLanguage.vb" />
+    <Compile Include="Database Classes\LocalDatabase.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ProgramSettings.vb" />
+    <Compile Include="ProgramUpdater.vb" />
+    <Compile Include="SDE YAML Classses\YAMLblueprints.vb" />
+    <Compile Include="SDE YAML Classses\YAMLUniverse.vb" />
+    <Compile Include="SDE YAML Classses\YAMLtypeIDs.vb" />
+    <Compile Include="SDE YAML Classses\YAMLtournamentRuleSets.vb" />
+    <Compile Include="SDE YAML Classses\YAMLskins.vb" />
+    <Compile Include="SDE YAML Classses\YAMLskinMaterials.vb" />
+    <Compile Include="SDE YAML Classses\YAMLskinLicenses.vb" />
+    <Compile Include="SDE YAML Classses\YAMLgroupIDs.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcertificates.vb" />
+    <Compile Include="SDE YAML Classses\YAMLeveGraphics.vb" />
+    <Compile Include="SDE YAML Classses\YAMLeveIcons.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcategoryIDs.vb" />
+    <Compile Include="SDE YAML Classses\YAMLwarCombatZoneSystems.vb" />
+    <Compile Include="SDE YAML Classses\YAMLwarCombatZones.vb" />
+    <Compile Include="SDE YAML Classses\YAMLstaStationTypes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLstaStations.vb" />
+    <Compile Include="SDE YAML Classses\YAMLstaServices.vb" />
+    <Compile Include="SDE YAML Classses\YAMLstaOperationServices.vb" />
+    <Compile Include="SDE YAML Classses\YAMLstaOperations.vb" />
+    <Compile Include="SDE YAML Classses\YAMLramInstallationTypeContents.vb" />
+    <Compile Include="SDE YAML Classses\YAMLramAssemblyLineTypes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLramAssemblyLineTypeDetailPerGroup.vb" />
+    <Compile Include="SDE YAML Classses\YAMLramAssemblyLineTypeDetailPerCategory.vb" />
+    <Compile Include="SDE YAML Classses\YAMLramAssemblyLineStations.vb" />
+    <Compile Include="SDE YAML Classses\YAMLramActivities.vb" />
+    <Compile Include="SDE YAML Classses\YAMLplanetSchematicsTypeMap.vb" />
+    <Compile Include="SDE YAML Classses\YAMLplanetSchematicsPinMap.vb" />
+    <Compile Include="SDE YAML Classses\YAMLplanetSchematics.vb" />
+    <Compile Include="SDE YAML Classses\YAMLmapUniverse.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvUniqueNames.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvTypeReactions.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvTypeMaterials.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvPositions.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvMetaTypes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvMetaGroups.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvMarketGroups.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvItems.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvFlags.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvControlTowerResources.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvControlTowerResourcePurposes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvContrabandTypes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLagtAgents.vb" />
+    <Compile Include="SDE YAML Classses\YAMLagtAgentTypes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLagtResearchAgents.vb" />
+    <Compile Include="SDE YAML Classses\YAMLFilesBase.vb" />
+    <Compile Include="SDE YAML Classses\YAMLchrAncestries.vb" />
+    <Compile Include="SDE YAML Classses\YAMLchrAttributes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLchrBloodLines.vb" />
+    <Compile Include="SDE YAML Classses\YAMLchrFactions.vb" />
+    <Compile Include="SDE YAML Classses\YAMLchrRaces.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcrpActivities.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporationDivisions.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporationResearchFields.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporations.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporationTrades.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcrpNPCDivisions.vb" />
+    <Compile Include="SDE YAML Classses\YAMLdgmAttributeCategories.vb" />
+    <Compile Include="SDE YAML Classses\YAMLdgmAttributeTypes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLdgmEffects.vb" />
+    <Compile Include="SDE YAML Classses\YAMLdgmExpressions.vb" />
+    <Compile Include="SDE YAML Classses\YAMLdgmTypeAttributes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLdgmTypeEffects.vb" />
+    <Compile Include="SDE YAML Classses\YAMLlandmarks.vb" />
+    <Compile Include="SDE YAML Classses\YAMLeveUnits.vb" />
+    <Compile Include="SDE YAML Classses\YAMLinvNames.vb" />
+    <Compile Include="SDE YAML Classses\YAMLTranslations.vb" />
+    <Compile Include="Database Classes\SQLiteDB.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmAbout.resx">
+      <DependentUpon>frmAbout.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmError.resx">
+      <DependentUpon>frmError.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmThreadSelect.resx">
+      <DependentUpon>frmThreadSelect.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="2876_64.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="DAO">
+      <Guid>{00025E01-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.103\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net46\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.103\build\net46\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
