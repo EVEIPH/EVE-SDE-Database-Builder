@@ -4,7 +4,7 @@ Service References/*
 *.suo
 *.user
 Root Directory/*
-EVE SDE Database Builder.vbproj
+#EVE SDE Database Builder.vbproj
 
 # NuGet Packages
 *.nupkg
