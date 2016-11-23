@@ -220,7 +220,7 @@ Public Class YAMLtypeIDs
 
         Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
         Table.Add(New DBTableField("groupID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("typeName", FieldType.nvarchar_type, 100, True))
+        Table.Add(New DBTableField("typeName", FieldType.nvarchar_type, 500, True))
         Table.Add(New DBTableField("description", FieldType.text_type, MaxFieldLen, True))
         Table.Add(New DBTableField("mass", FieldType.float_type, 0, True))
         Table.Add(New DBTableField("volume", FieldType.float_type, 0, True))

@@ -36,7 +36,7 @@ Public Class YAMLgroupIDs
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("groupID", FieldType.int_type, 0, False, True))
         Table.Add(New DBTableField("categoryID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("groupName", FieldType.nvarchar_type, 100, True))
+        Table.Add(New DBTableField("groupName", FieldType.nvarchar_type, 500, True))
         Table.Add(New DBTableField("published", FieldType.bit_type, -1, True))
         Table.Add(New DBTableField("anchorable", FieldType.bit_type, -1, True))
         Table.Add(New DBTableField("anchored", FieldType.bit_type, -1, True))

@@ -31,7 +31,7 @@ Public Class YAMLchrFactions
         ' Build table
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("factionID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("factionName", FieldType.varchar_type, 1000, True))
+        Table.Add(New DBTableField("factionName", FieldType.varchar_type, 100, True))
         Table.Add(New DBTableField("description", FieldType.varchar_type, 1500, True))
         Table.Add(New DBTableField("raceIDs", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
