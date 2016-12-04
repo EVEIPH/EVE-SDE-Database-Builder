@@ -35,7 +35,6 @@ Partial Class frmMain
         Me.FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Progress = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtServerName = New System.Windows.Forms.TextBox()
-        Me.lblServerName = New System.Windows.Forms.Label()
         Me.lblFinalDBPath = New System.Windows.Forms.Label()
         Me.btnSelectFinalDBPath = New System.Windows.Forms.Button()
         Me.lblFinalDBFolder = New System.Windows.Forms.Label()
@@ -48,6 +47,7 @@ Partial Class frmMain
         Me.FBDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.gbSelectDBType = New System.Windows.Forms.GroupBox()
         Me.gbOptions = New System.Windows.Forms.GroupBox()
+        Me.lblServerName = New System.Windows.Forms.Label()
         Me.txtPort = New System.Windows.Forms.TextBox()
         Me.lblPort = New System.Windows.Forms.Label()
         Me.rbtnSQLiteDB = New System.Windows.Forms.RadioButton()
@@ -179,15 +179,6 @@ Partial Class frmMain
         Me.txtServerName.Size = New System.Drawing.Size(100, 20)
         Me.txtServerName.TabIndex = 10
         '
-        'lblServerName
-        '
-        Me.lblServerName.Location = New System.Drawing.Point(21, 95)
-        Me.lblServerName.Name = "lblServerName"
-        Me.lblServerName.Size = New System.Drawing.Size(72, 13)
-        Me.lblServerName.TabIndex = 9
-        Me.lblServerName.Text = "Server Name:"
-        Me.lblServerName.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
         'lblFinalDBPath
         '
         Me.lblFinalDBPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
@@ -280,6 +271,7 @@ Partial Class frmMain
         '
         'gbOptions
         '
+        Me.gbOptions.Controls.Add(Me.lblServerName)
         Me.gbOptions.Controls.Add(Me.txtPort)
         Me.gbOptions.Controls.Add(Me.lblPort)
         Me.gbOptions.Controls.Add(Me.rbtnSQLiteDB)
@@ -291,7 +283,6 @@ Partial Class frmMain
         Me.gbOptions.Controls.Add(Me.txtPassword)
         Me.gbOptions.Controls.Add(Me.chkEUFormat)
         Me.gbOptions.Controls.Add(Me.txtUserName)
-        Me.gbOptions.Controls.Add(Me.lblServerName)
         Me.gbOptions.Controls.Add(Me.rbtnMySQL)
         Me.gbOptions.Controls.Add(Me.lblDBName)
         Me.gbOptions.Controls.Add(Me.rbtnPostgreSQL)
@@ -303,6 +294,15 @@ Partial Class frmMain
         Me.gbOptions.TabIndex = 0
         Me.gbOptions.TabStop = False
         Me.gbOptions.Text = "Database Type:"
+        '
+        'lblServerName
+        '
+        Me.lblServerName.Location = New System.Drawing.Point(6, 95)
+        Me.lblServerName.Name = "lblServerName"
+        Me.lblServerName.Size = New System.Drawing.Size(87, 13)
+        Me.lblServerName.TabIndex = 17
+        Me.lblServerName.Text = "Server Name:"
+        Me.lblServerName.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'txtPort
         '
@@ -651,7 +651,6 @@ Partial Class frmMain
     Friend WithEvents btnSelectFinalDBPath As Button
     Friend WithEvents lblFinalDBFolder As Label
     Friend WithEvents txtServerName As TextBox
-    Friend WithEvents lblServerName As Label
     Friend WithEvents FBDialog As FolderBrowserDialog
     Friend WithEvents FileSelect As DataGridViewCheckBoxColumn
     Friend WithEvents FileName As DataGridViewTextBoxColumn
@@ -695,4 +694,5 @@ Partial Class frmMain
     Friend WithEvents BuildBinaryToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CheckForUpdatesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents lblServerName As Label
 End Class

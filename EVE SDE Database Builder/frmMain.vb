@@ -1790,6 +1790,12 @@ CancelImportProcessing:
             lblDBName.Text = "Database Name:"
         End If
 
+        If rbtnSQLServer.Checked Then
+            lblServerName.Text = "Instance Name:"
+        Else
+            lblServerName.Text = "Server Name:"
+        End If
+
         If Not FirstLoad Then
             Call LoadFormSettings()
         End If

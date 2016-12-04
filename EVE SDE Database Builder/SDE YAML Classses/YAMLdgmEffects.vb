@@ -6,6 +6,7 @@ Public Class YAMLdgmEffects
     Inherits YAMLFilesBase
 
     Public Const dgmEffectsFile As String = "dgmEffects.yaml"
+    Public Const dgmEffectsModifierInfoTable As String = "dgmEffectsModifierInfo" ' Special table to store modifierInfo string, which is in yaml
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -27,6 +28,8 @@ Public Class YAMLdgmEffects
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
+
+        Dim TempModInfoDB As New LocalDatabase
 
         ' Build table
         Dim Table As New List(Of DBTableField)
@@ -58,9 +61,27 @@ Public Class YAMLdgmEffects
         Table.Add(New DBTableField("npcUsageChanceAttributeID", FieldType.smallint_type, 0, True))
         Table.Add(New DBTableField("npcActivationChanceAttributeID", FieldType.smallint_type, 0, True))
         Table.Add(New DBTableField("fittingUsageChanceAttributeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("modifierInfo", FieldType.varchar_type, -1, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
+
+        Table = New List(Of DBTableField)
+
+        Table.Add(New DBTableField("effectID", FieldType.smallint_type, 0, True))
+        Table.Add(New DBTableField("func", FieldType.varchar_type, 50, True))
+        Table.Add(New DBTableField("modifiedAttributeID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("modifyingAttributeID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("operator", FieldType.int_type, 0, True))
+
+        Call UpdateDB.CreateTable(dgmEffectsModifierInfoTable, Table)
+
+        ' Create unique index
+        Dim IndexFields As New List(Of String)
+        IndexFields.Add("effectID")
+        IndexFields.Add("func")
+        IndexFields.Add("modifiedAttributeID")
+        IndexFields.Add("modifyingAttributeID")
+        IndexFields.Add("operator")
+        Call UpdateDB.CreateIndex(dgmEffectsModifierInfoTable, "IDX_" & dgmEffectsModifierInfoTable & "_EID", IndexFields, True)
 
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then
@@ -111,9 +132,36 @@ Public Class YAMLdgmEffects
             DataFields.Add(UpdateDB.BuildDatabaseField("npcUsageChanceAttributeID", DataField.npcUsageChanceAttributeID, FieldType.smallint_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("npcActivationChanceAttributeID", DataField.npcActivationChanceAttributeID, FieldType.smallint_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("fittingUsageChanceAttributeID", DataField.fittingUsageChanceAttributeID, FieldType.smallint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("modifierInfo", DataField.modifierInfo, FieldType.varchar_type))
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
+
+            If Not IsNothing(DataField.modifierInfo) Then
+                ' Store modifier string data into the new table
+                Dim DataFields2 As New List(Of DBField)
+                Dim ModifierRecord As New List(Of dgmEffectModifierInfo)
+
+                ' Parse out the data first
+                ModifierRecord = DS.Deserialize(Of List(Of dgmEffectModifierInfo))(DataField.modifierInfo)
+
+                If Not IsNothing(ModifierRecord) Then
+                    For Each Record In ModifierRecord
+                        DataFields2 = New List(Of DBField)
+
+                        DataFields2.Add(UpdateDB.BuildDatabaseField("effectID", DataField.effectID, FieldType.smallint_type))
+                        DataFields2.Add(UpdateDB.BuildDatabaseField("func", Record.func, FieldType.varchar_type))
+                        DataFields2.Add(UpdateDB.BuildDatabaseField("modifiedAttributeID", Record.modifiedAttributeID, FieldType.int_type))
+                        DataFields2.Add(UpdateDB.BuildDatabaseField("modifyingAttributeID", Record.modifyingAttributeID, FieldType.int_type))
+                        DataFields2.Add(UpdateDB.BuildDatabaseField("operator", Record.operator, FieldType.int_type))
+
+                        ' Check for duplicates
+                        If Not RecordinModinfoTable(TempModInfoDB.GetDataTable(dgmEffectsModifierInfoTable), DataFields2) Then
+                            Call TempModInfoDB.InsertRecord(dgmEffectsModifierInfoTable, DataFields2)
+                            Call UpdateDB.InsertRecord(dgmEffectsModifierInfoTable, DataFields2)
+                        End If
+
+                    Next
+                End If
+            End If
 
             ' Update grid progress
             Call UpdateGridRowProgress(Params.RowLocation, Count, TotalRecords)
@@ -123,6 +171,41 @@ Public Class YAMLdgmEffects
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
+
+    Private Function RecordinModinfoTable(ByRef ModInfoTableRef As DataTable, ByVal Record As List(Of DBField)) As Boolean
+        Dim SearchRow() As DataRow
+        Dim SearchString As String = ""
+
+        If ModInfoTableRef.Rows.Count > 0 Then
+
+            If Record(0).FieldValue = 5934 Then
+                Application.DoEvents()
+            End If
+
+            For i = 0 To Record.Count - 1
+                If Record(i).FieldValue = NullValue Then
+                    SearchString &= String.Format("{0} IS NULL", Record(i).FieldName)
+                Else
+                    SearchString &= String.Format("{0} = {1}", Record(i).FieldName, Record(i).FieldValue)
+                End If
+                SearchString &= " AND "
+            Next
+
+            ' Strip last AND
+            SearchString = SearchString.Substring(0, Len(SearchString) - 5)
+
+            SearchRow = ModInfoTableRef.Select(SearchString)
+
+            If SearchRow.Count > 0 Then
+                Return True
+            Else
+                Return False
+            End If
+        Else
+            Return False
+        End If
+
+    End Function
 
 End Class
 
@@ -157,4 +240,12 @@ Public Class dgmEffect
     Public Property fittingUsageChanceAttributeID As Object
     Public Property modifierInfo As Object
 
+End Class
+
+Public Class dgmEffectModifierInfo
+    Public Property domain As Object
+    Public Property func As Object
+    Public Property modifiedAttributeID As Object
+    Public Property modifyingAttributeID As Object
+    Public Property [operator] As Object
 End Class
