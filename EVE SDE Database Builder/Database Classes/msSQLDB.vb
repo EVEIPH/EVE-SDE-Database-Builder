@@ -30,8 +30,7 @@ Public Class msSQLDB
             MainDatabase = DatabaseName
             DBServerName = InstanceName
 
-            Conn = New SqlConnection(String.Format("Server={0}\{1};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=60;",
-                                             Environment.MachineName, InstanceName))
+            Conn = New SqlConnection(String.Format("Server={0};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=60;", InstanceName))
             SqlConnection.ClearAllPools()
             Conn.Open()
 
@@ -67,8 +66,8 @@ Public Class msSQLDB
     Private Function DBConnectionRef() As SqlConnection
 
         ' Open the connection for reference
-        Dim DBRef As New SqlConnection(String.Format("Server={0}\{1};Database={2};Trusted_Connection=True;Connection Timeout=600;",
-                                             Environment.MachineName, DBServerName, MainDatabase))
+        Dim DBRef As New SqlConnection(String.Format("Server={0};Database={1};Trusted_Connection=True;Connection Timeout=600;",
+                                             DBServerName, MainDatabase))
         DBRef.Open()
 
         Return DBRef
