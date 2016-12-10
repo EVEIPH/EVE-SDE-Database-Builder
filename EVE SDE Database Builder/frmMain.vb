@@ -1906,6 +1906,10 @@ CancelImportProcessing:
                 MsgBox(Err.Description, vbExclamation, Application.ProductName)
             End Try
         End If
+
+        ' Load the file list since they just selected the folder
+        Call LoadFileListtoGrid()
+
     End Sub
 
     Private Sub btnSelectFinalDBPath_Click(sender As Object, e As EventArgs) Handles btnSelectFinalDBPath.Click
