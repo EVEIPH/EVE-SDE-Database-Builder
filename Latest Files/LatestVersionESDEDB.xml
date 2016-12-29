@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<EVESDEDB Version="Version 1.0.6207.23422">
-  <LastUpdated>12/29/2016 1:00:59 PM</LastUpdated>
+<EVESDEDB Version="Version 1.0.6207.23573">
+  <LastUpdated>12/29/2016 1:05:55 PM</LastUpdated>
   <result>
     <rowset name="filelist" key="version" columns="Name,Version,MD5,URL">
-      <row Name="EVE SDE Database Builder.exe" Version="Version 1.0.6207.23422" MD5="c2e85f88a110fbda9b84f8ecd75b8b7f" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe" />
+      <row Name="EVE SDE Database Builder.exe" Version="Version 1.0.6207.23573" MD5="9855cc7cdcd723d90a09eaeaa3135c14" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe" />
       <row Name="ESDEDB Updater.exe" Version="1.0" MD5="c702e29e68a5f30735a53d8c4dd013cc" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe" />
       <row Name="MySql.Data.dll" Version="6.9.9.0" MD5="6d6db0b5361eb55673a82fb21fd79140" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/MySql.Data.dll" />
       <row Name="Npgsql.dll" Version="3.1.8.0" MD5="fdfb2c488d2b9f93a0c829e799f191f0" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Npgsql.dll" />
