@@ -164,13 +164,15 @@ Public Class ProgramSettings
                     .SDEDirectory = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SDEDirectory", ""))
                     .DatabaseName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "DatabaseName", ""))
                     .FinalDBPath = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "FinalDBPath", ""))
-                    .SQLServerName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SQLServerName", ""))
+                    .SQLConnectionString = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SQLConnectionString", ""))
+                    .SQLPassword = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SQLPassword", ""))
+                    .SQLUserName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SQLUserName", ""))
                     .AccessPassword = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "AccessPassword", ""))
-                    .PostgreSQLServerName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "PostgreSQLServerName", ""))
+                    .PostgreSQLConnectionString = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "PostgreSQLConnectionString", ""))
                     .PostgreSQLUserName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "PostgreSQLUserName", ""))
                     .PostgreSQLPassword = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "PostgreSQLPassword", ""))
                     .PostgreSQLPort = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "PostgreSQLPort", DefaultpostgreSQLPort))
-                    .MySQLServerName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "MySQLServerName", ""))
+                    .MySQLConnectionString = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "MySQLConnectionString", ""))
                     .MySQLUserName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "MySQLUserName", ""))
                     .MySQLPassword = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "MySQLPassword", ""))
                     .CSVEUCheck = CBool(GetSettingValue(AppSettingsFileName, SettingTypes.TypeBoolean, AppSettingsFileName, "CSVEUCheck", DefaultEUCheck))
@@ -205,13 +207,15 @@ Public Class ProgramSettings
             .SDEDirectory = ""
             .DatabaseName = ""
             .FinalDBPath = ""
-            .SQLServerName = ""
+            .SQLConnectionString = ""
+            .SQLPassword = ""
+            .SQLUserName = ""
             .AccessPassword = ""
-            .PostgreSQLServerName = ""
+            .PostgreSQLConnectionString = ""
             .PostgreSQLUserName = ""
             .PostgreSQLPassword = ""
             .PostgreSQLPort = DefaultpostgreSQLPort
-            .MySQLServerName = ""
+            .MySQLConnectionString = ""
             .MySQLUserName = ""
             .MySQLPassword = ""
             .CSVEUCheck = DefaultEUCheck
@@ -226,25 +230,27 @@ Public Class ProgramSettings
 
     ' Saves the application settings to XML
     Public Sub SaveApplicationSettings(SentSettings As ApplicationSettings)
-        Dim ApplicationSettingsList(14) As Setting
+        Dim ApplicationSettingsList(16) As Setting
 
         Try
             With SentSettings
                 ApplicationSettingsList(0) = New Setting("SDEDirectory", .SDEDirectory)
                 ApplicationSettingsList(1) = New Setting("DatabaseName", .DatabaseName)
                 ApplicationSettingsList(2) = New Setting("FinalDBPath", .FinalDBPath)
-                ApplicationSettingsList(3) = New Setting("SQLServerName", .SQLServerName)
-                ApplicationSettingsList(4) = New Setting("AccessPassword", .AccessPassword)
-                ApplicationSettingsList(5) = New Setting("PostgreSQLServerName", .PostgreSQLServerName)
-                ApplicationSettingsList(6) = New Setting("PostgreSQLUserName", .PostgreSQLUserName)
-                ApplicationSettingsList(7) = New Setting("PostgreSQLPassword", .PostgreSQLPassword)
-                ApplicationSettingsList(8) = New Setting("PostgreSQLPort", .PostgreSQLPort)
-                ApplicationSettingsList(9) = New Setting("MySQLServerName", .MySQLServerName)
-                ApplicationSettingsList(10) = New Setting("MySQLUserName", .MySQLUserName)
-                ApplicationSettingsList(11) = New Setting("MySQLPassword", .MySQLPassword)
-                ApplicationSettingsList(12) = New Setting("CSVEUCheck", .CSVEUCheck)
-                ApplicationSettingsList(13) = New Setting("SelectedLanguage", .SelectedLanguage)
-                ApplicationSettingsList(14) = New Setting("SelectedDB", .SelectedDB)
+                ApplicationSettingsList(3) = New Setting("SQLConnectionString", .SQLConnectionString)
+                ApplicationSettingsList(4) = New Setting("SQLPassword", .SQLPassword)
+                ApplicationSettingsList(5) = New Setting("SQLUserName", .SQLUserName)
+                ApplicationSettingsList(6) = New Setting("AccessPassword", .AccessPassword)
+                ApplicationSettingsList(7) = New Setting("PostgreSQLConnectionString", .PostgreSQLConnectionString)
+                ApplicationSettingsList(8) = New Setting("PostgreSQLUserName", .PostgreSQLUserName)
+                ApplicationSettingsList(9) = New Setting("PostgreSQLPassword", .PostgreSQLPassword)
+                ApplicationSettingsList(10) = New Setting("PostgreSQLPort", .PostgreSQLPort)
+                ApplicationSettingsList(11) = New Setting("MySQLConnectionString", .MySQLConnectionString)
+                ApplicationSettingsList(12) = New Setting("MySQLUserName", .MySQLUserName)
+                ApplicationSettingsList(13) = New Setting("MySQLPassword", .MySQLPassword)
+                ApplicationSettingsList(14) = New Setting("CSVEUCheck", .CSVEUCheck)
+                ApplicationSettingsList(15) = New Setting("SelectedLanguage", .SelectedLanguage)
+                ApplicationSettingsList(16) = New Setting("SelectedDB", .SelectedDB)
             End With
 
             Call WriteSettingsToFile(AppSettingsFileName, ApplicationSettingsList, AppSettingsFileName)
@@ -275,16 +281,18 @@ Public Structure ApplicationSettings
     ' Used for all Access, SQLite, and CSV dbs
     Dim FinalDBPath As String
 
-    Dim SQLServerName As String
+    Dim SQLConnectionString As String
+    Dim SQLUserName As String
+    Dim SQLPassword As String
 
     Dim AccessPassword As String
 
-    Dim PostgreSQLServerName As String
+    Dim PostgreSQLConnectionString As String
     Dim PostgreSQLUserName As String
     Dim PostgreSQLPassword As String
     Dim PostgreSQLPort As String
 
-    Dim MySQLServerName As String
+    Dim MySQLConnectionString As String
     Dim MySQLUserName As String
     Dim MySQLPassword As String
 

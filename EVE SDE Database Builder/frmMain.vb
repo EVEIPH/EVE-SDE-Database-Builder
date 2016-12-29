@@ -97,16 +97,18 @@ Public Class frmMain
                 .AccessPassword = txtPassword.Text
             ElseIf rbtnSQLServer.Checked Then
                 .SelectedDB = rbtnSQLServer.Text
-                .SQLServerName = txtServerName.Text
+                .SQLConnectionString = txtServerName.Text
+                .SQLPassword = txtPassword.Text
+                .SQLUserName = txtUserName.Text
             ElseIf rbtnMySQL.Checked Then
                 .SelectedDB = rbtnMySQL.Text
                 .MySQLPassword = txtPassword.Text
-                .MySQLServerName = txtServerName.Text
+                .MySQLConnectionString = txtServerName.Text
                 .MySQLUserName = txtUserName.Text
             ElseIf rbtnPostgreSQL.Checked Then
                 .SelectedDB = rbtnPostgreSQL.Text
                 .PostgreSQLPassword = txtPassword.Text
-                .PostgreSQLServerName = txtServerName.Text
+                .PostgreSQLConnectionString = txtServerName.Text
                 .PostgreSQLUserName = txtUserName.Text
                 .PostgreSQLPort = txtPort.Text
             ElseIf rbtnSQLiteDB.Checked Then
@@ -343,7 +345,7 @@ Public Class frmMain
 
             ElseIf rbtnSQLServer.Checked Then ' Microsoft SQL Server
 
-                Dim NewSQLServerDB As New msSQLDB(.DatabaseName, .SQLServerName, WasSuccessful)
+                Dim NewSQLServerDB As New msSQLDB(.DatabaseName, .SQLConnectionString, .SQLPassword, .SQLUserName, WasSuccessful)
                 If WasSuccessful Then
                     Call BuildEVEDatabase(NewSQLServerDB, DatabaseType.SQLServer)
                 Else
@@ -370,7 +372,7 @@ Public Class frmMain
 
             ElseIf rbtnMySQL.Checked Then ' MySQL
 
-                Dim NewMySQLDB As New MySQLDB(.DatabaseName, .MySQLServerName, .MySQLUserName, .MySQLPassword, WasSuccessful)
+                Dim NewMySQLDB As New MySQLDB(.DatabaseName, .MySQLConnectionString, .MySQLUserName, .MySQLPassword, WasSuccessful)
 
                 If WasSuccessful Then
                     Call BuildEVEDatabase(NewMySQLDB, DatabaseType.MySQL)
@@ -380,7 +382,7 @@ Public Class frmMain
 
             ElseIf rbtnPostgreSQL.Checked Then ' postgreSQL
 
-                Dim NewPostgreSQLDB As New postgreSQLDB(.DatabaseName, .PostgreSQLServerName, .PostgreSQLUserName, .PostgreSQLPassword, .PostgreSQLPort, WasSuccessful)
+                Dim NewPostgreSQLDB As New postgreSQLDB(.DatabaseName, .PostgreSQLConnectionString, .PostgreSQLUserName, .PostgreSQLPassword, .PostgreSQLPort, WasSuccessful)
 
                 If WasSuccessful Then
                     Call BuildEVEDatabase(NewPostgreSQLDB, DatabaseType.PostgreSQL)
@@ -1074,7 +1076,7 @@ CancelImportProcessing:
             End If
         End If
 
-        If rbtnMySQL.Checked Or rbtnPostgreSQL.Checked Then ' Access password can be blank
+        If rbtnMySQL.Checked Or rbtnPostgreSQL.Checked Then ' Access and sqlserver password can be blank
             ' Check password
             If Trim(txtPassword.Text) = "" Then
                 Call MsgBox("You must select a password", vbInformation, Application.ProductName)
@@ -1819,9 +1821,9 @@ CancelImportProcessing:
                 txtUserName.Text = ""
                 txtPort.Text = ""
             ElseIf rbtnSQLServer.Checked Then
-                txtServerName.Text = .SQLServerName
-                txtPassword.Text = ""
-                txtUserName.Text = ""
+                txtServerName.Text = .SQLConnectionString
+                txtPassword.Text = .SQLPassword
+                txtUserName.Text = .SQLUserName
                 txtPort.Text = ""
             ElseIf rbtnCSV.Checked Then
                 chkEUFormat.Checked = .CSVEUCheck
@@ -1830,12 +1832,12 @@ CancelImportProcessing:
                 txtUserName.Text = ""
                 txtPort.Text = ""
             ElseIf rbtnMySQL.Checked Then
-                txtServerName.Text = .MySQLServerName
+                txtServerName.Text = .MySQLConnectionString
                 txtPassword.Text = .MySQLPassword
                 txtUserName.Text = .MySQLUserName
                 txtPort.Text = ""
             ElseIf rbtnPostgreSQL.Checked Then
-                txtServerName.Text = .PostgreSQLServerName
+                txtServerName.Text = .PostgreSQLConnectionString
                 txtPassword.Text = .PostgreSQLPassword
                 txtUserName.Text = .PostgreSQLUserName
                 txtPort.Text = .PostgreSQLPort
@@ -1869,7 +1871,7 @@ CancelImportProcessing:
 
     Private Sub rbtnSQLServer_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnSQLServer.CheckedChanged
         If rbtnSQLServer.Checked Then
-            Call SetFormObjects(True, False, False, False, False, False)
+            Call SetFormObjects(True, True, True, False, False, False)
         End If
     End Sub
 
@@ -2013,6 +2015,43 @@ CancelImportProcessing:
 
     End Class
 
+    Private Sub txtPassword_TextChanged(sender As Object, e As EventArgs) Handles txtPassword.TextChanged
+        If rbtnAccess.Checked Then
+            UserApplicationSettings.AccessPassword = txtPassword.Text
+        ElseIf rbtnMySQL.Checked Then
+            UserApplicationSettings.MySQLPassword = txtPassword.Text
+        ElseIf rbtnPostgreSQL.Checked Then
+            UserApplicationSettings.PostgreSQLPassword = txtPassword.Text
+        ElseIf rbtnSQLServer.Checked Then
+            UserApplicationSettings.SQLPassword = txtPassword.Text
+        End If
+    End Sub
+
+    Private Sub txtUserName_TextChanged(sender As Object, e As EventArgs) Handles txtUserName.TextChanged
+        If rbtnMySQL.Checked Then
+            UserApplicationSettings.MySQLUserName = txtUserName.Text
+        ElseIf rbtnPostgreSQL.Checked Then
+            UserApplicationSettings.PostgreSQLUserName = txtUserName.Text
+        ElseIf rbtnSQLServer.Checked Then
+            UserApplicationSettings.SQLUserName = txtUserName.Text
+        End If
+    End Sub
+
+    Private Sub txtServerName_TextChanged(sender As Object, e As EventArgs) Handles txtServerName.TextChanged
+        If rbtnMySQL.Checked Then
+            UserApplicationSettings.MySQLConnectionString = txtServerName.Text
+        ElseIf rbtnPostgreSQL.Checked Then
+            UserApplicationSettings.PostgreSQLConnectionString = txtServerName.Text
+        ElseIf rbtnSQLServer.Checked Then
+            UserApplicationSettings.SQLConnectionString = txtServerName.Text
+        End If
+    End Sub
+
+    Private Sub txtPort_TextChanged(sender As Object, e As EventArgs) Handles txtPort.TextChanged
+        If rbtnPostgreSQL.Checked Then
+            UserApplicationSettings.PostgreSQLPort = txtPort.Text
+        End If
+    End Sub
 End Class
 
 ' For updating the data grid view

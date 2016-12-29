@@ -54,14 +54,18 @@ Public Class LocalDatabase
         ' Add a row to the existing table
         For i = 0 To SentRecord.Count - 1
             ' if the record has apostrophes on the first and last character, strip them for local db use
-            If SentRecord(i).FieldValue.Substring(0, 1) = "'" And SentRecord(i).FieldValue.Substring(Len(SentRecord(i).FieldValue) - 1, 1) = "'" Then
-                ' Replace all the apostrophes
-                TempRecordFieldValue = Replace(SentRecord(i).FieldValue.Substring(1, Len(SentRecord(i).FieldValue) - 2), "''", "'")
+            If SentRecord(i).FieldValue <> "" Then
+                If SentRecord(i).FieldValue.Substring(0, 1) = "'" And SentRecord(i).FieldValue.Substring(Len(SentRecord(i).FieldValue) - 1, 1) = "'" Then
+                    ' Replace all the apostrophes
+                    TempRecordFieldValue = Replace(SentRecord(i).FieldValue.Substring(1, Len(SentRecord(i).FieldValue) - 2), "''", "'")
+                Else
+                    TempRecordFieldValue = SentRecord(i).FieldValue
+                End If
             Else
                 TempRecordFieldValue = SentRecord(i).FieldValue
             End If
 
-            If TempRecordFieldValue.ToUpper = "NULL" Then
+            If TempRecordFieldValue.ToUpper = "NULL" Or TempRecordFieldValue = "" Then
                 Data(i) = DBNull.Value
             ElseIf SentRecord(i).FieldType = FieldType.bit_type Then
                 ' Convert to true/false for bits since bulk insert doesn't accept 0/1

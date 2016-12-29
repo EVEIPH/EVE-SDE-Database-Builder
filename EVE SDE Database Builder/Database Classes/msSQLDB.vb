@@ -18,7 +18,8 @@ Public Class msSQLDB
     ''' <param name="DatabaseName">Name of the database to open or create.</param>
     ''' <param name="InstanceName">Name of the Microsoft SQL Server (e.g. localhost')</param>
     ''' <param name="Success">True if the database successfully created.</param>
-    Public Sub New(ByVal DatabaseName As String, ByVal InstanceName As String, ByRef Success As Boolean)
+    Public Sub New(ByVal DatabaseName As String, ByVal InstanceName As String,
+                   ByVal UserName As String, ByVal Password As String, ByRef Success As Boolean)
         MyBase.New(DatabaseName, DatabaseType.SQLServer)
 
         Dim Conn As New SqlConnection
@@ -30,7 +31,14 @@ Public Class msSQLDB
             MainDatabase = DatabaseName
             DBServerName = InstanceName
 
-            Conn = New SqlConnection(String.Format("Server={0};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=60;", InstanceName))
+            If UserName <> "" Then
+                ' Log in with user name and pass
+                Conn = New SqlConnection(String.Format("Server={0};User Id={1};Password={2};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=30;",
+                                                       InstanceName, UserName, Password))
+            Else
+                ' Use windows default connection
+                Conn = New SqlConnection(String.Format("Server={0};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=30;", InstanceName))
+            End If
             SqlConnection.ClearAllPools()
             Conn.Open()
 

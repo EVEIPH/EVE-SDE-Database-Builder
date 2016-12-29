@@ -175,20 +175,21 @@ Public Class YAMLdgmEffects
     Private Function RecordinModinfoTable(ByRef ModInfoTableRef As DataTable, ByVal Record As List(Of DBField)) As Boolean
         Dim SearchRow() As DataRow
         Dim SearchString As String = ""
+        Dim TempFieldValue As String = ""
 
         If ModInfoTableRef.Rows.Count > 0 Then
 
-            If Record(0).FieldValue = 5934 Then
-                Application.DoEvents()
-            End If
-
             For i = 0 To Record.Count - 1
-                If Record(i).FieldValue = NullValue Then
-                    SearchString &= String.Format("{0} IS NULL", Record(i).FieldName)
-                Else
-                    SearchString &= String.Format("{0} = {1}", Record(i).FieldName, Record(i).FieldValue)
+                If Record(i).FieldValue <> NullValue And Record(i).FieldValue <> "" Then
+                    ' If the search string is formatted for Excel input, then strip the second set of quotes
+                    If Record(i).FieldValue.Substring(0, 1) = """" Then
+                        TempFieldValue = "'" & Record(i).FieldValue.Substring(1, Len(Record(i).FieldValue) - 2) & "'"
+                    Else
+                        TempFieldValue = Record(i).FieldValue
+                    End If
+                    SearchString &= String.Format("{0} = {1}", Record(i).FieldName, TempFieldValue)
+                    SearchString &= " AND "
                 End If
-                SearchString &= " AND "
             Next
 
             ' Strip last AND
