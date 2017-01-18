@@ -405,7 +405,7 @@ Public Class YAMLtypeIDs
             Return FoundItem.PackagedVolume
         Else
             ' Look up group
-            PackagedGrouptoFind = New PackagedGroup With {.GroupID = TypeID, .PackagedVolume = 0}
+            PackagedGrouptoFind = New PackagedGroup With {.GroupID = GroupID, .PackagedVolume = 0}
             FoundGroup = PackagedGroups.Find(AddressOf FindPackagedVolumebyGroup)
 
             If FoundGroup IsNot Nothing Then
