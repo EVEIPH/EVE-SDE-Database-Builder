@@ -255,7 +255,7 @@ Public Class MySQLDB
 
         ' Insert the bulk data insert string for bulk insert later
         Dim TempData As BulkInsertData
-        TempData.BulkImportSQL = String.Format("LOAD DATA INFILE '{0}{1}.csv' INTO TABLE {1} " +
+        TempData.BulkImportSQL = String.Format("LOAD DATA LOCAL INFILE '{0}{1}.csv' INTO TABLE {1} " +
                                  "FIELDS TERMINATED BY ',' ENCLOSED BY '""' " +
                                  "LINES TERMINATED BY '\r\n' IGNORE 1 LINES {2}",
                                  CSVDirectory.Replace("\", "/"), TableName, FieldList)
