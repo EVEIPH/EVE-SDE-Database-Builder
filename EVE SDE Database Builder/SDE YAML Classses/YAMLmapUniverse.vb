@@ -72,12 +72,12 @@ Public Class YAMLmapUniverse
             DataFields.Add(UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.double_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.double_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.double_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("x_Min", DataField.x_Min, FieldType.double_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("x_Max", DataField.x_Max, FieldType.double_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("y_Min", DataField.y_Min, FieldType.double_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("y_Max", DataField.y_Max, FieldType.double_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("z_Min", DataField.z_Min, FieldType.double_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("z_Max", DataField.z_Max, FieldType.double_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("x_Min", DataField.xMin, FieldType.double_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("x_Max", DataField.xMax, FieldType.double_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("y_Min", DataField.yMin, FieldType.double_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("y_Max", DataField.yMax, FieldType.double_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("z_Min", DataField.zMin, FieldType.double_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("z_Max", DataField.zMax, FieldType.double_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("radius", DataField.radius, FieldType.double_type))
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
@@ -100,11 +100,11 @@ Public Class mapUniverse
     Public Property x As Object
     Public Property y As Object
     Public Property z As Object
-    Public Property x_Min As Object
-    Public Property x_Max As Object
-    Public Property y_Min As Object
-    Public Property y_Max As Object
-    Public Property z_Min As Object
-    Public Property z_Max As Object
+    Public Property xMin As Object
+    Public Property xMax As Object
+    Public Property yMin As Object
+    Public Property yMax As Object
+    Public Property zMin As Object
+    Public Property zMax As Object
     Public Property radius As Object
 End Class

@@ -7,12 +7,14 @@ Public Class YAMLblueprints
 
     Public Const blueprintsFile As String = "blueprints.yaml"
 
+    ' These are hard coded here but can be looked up in ramActivities
     Private Const ActivityManufacturing As Integer = 1
     Private Const ActivityResearchTime As Integer = 3
     Private Const ActivityResearchMaterial As Integer = 4
     Private Const ActivityCopying As Integer = 5
     Private Const ActivityReverseEngineering As Integer = 7
     Private Const ActivityInvention As Integer = 8
+    Private Const ActivityReaction As Integer = 11
 
     Private Const industryBlueprints_Table As String = "industryBlueprints"
     Private Const industryActivities_Table As String = "industryActivities"
@@ -114,6 +116,13 @@ Public Class YAMLblueprints
                     Call InsertBlueprintMaterials(.blueprintTypeID, .activities.research_time.materials, ActivityResearchTime)
                     Call InsertBlueprintSkills(.blueprintTypeID, .activities.research_time.skills, ActivityResearchTime)
                     Call InsertBlueprintProducts(.blueprintTypeID, .activities.research_time.products, ActivityResearchTime)
+                End If
+
+                If Not IsNothing(.activities.reaction) Then
+                    Call InsertBlueprintActivity(.blueprintTypeID, ActivityReaction, .activities.reaction.time)
+                    Call InsertBlueprintMaterials(.blueprintTypeID, .activities.reaction.materials, ActivityReaction)
+                    Call InsertBlueprintSkills(.blueprintTypeID, .activities.reaction.skills, ActivityReaction)
+                    Call InsertBlueprintProducts(.blueprintTypeID, .activities.reaction.products, ActivityReaction)
                 End If
             End With
 
@@ -295,6 +304,7 @@ Public Class Blueprint
         Public Property manufacturing As ManufacturingActivity
         Public Property research_material As ResearchMaterialActivity
         Public Property research_time As ResearchTimeActivity
+        Public Property reaction As ReactionActivity
     End Class
 
     Public Class CopyingActivity
@@ -326,6 +336,13 @@ Public Class Blueprint
     End Class
 
     Public Class ResearchTimeActivity
+        Public Property materials As List(Of Material)
+        Public Property products As List(Of Product)
+        Public Property skills As List(Of Skill)
+        Public Property time As Object
+    End Class
+
+    Public Class ReactionActivity
         Public Property materials As List(Of Material)
         Public Property products As List(Of Product)
         Public Property skills As List(Of Skill)

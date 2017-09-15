@@ -68,9 +68,12 @@ Public Class YAMLdgmEffects
 
         Table.Add(New DBTableField("effectID", FieldType.smallint_type, 0, True))
         Table.Add(New DBTableField("func", FieldType.varchar_type, 50, True))
+        Table.Add(New DBTableField("groupID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("modifiedAttributeID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("modifyingAttributeID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("operator", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("skillTypeID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("secondEffectID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(dgmEffectsModifierInfoTable, Table)
 
@@ -78,9 +81,12 @@ Public Class YAMLdgmEffects
         Dim IndexFields As New List(Of String)
         IndexFields.Add("effectID")
         IndexFields.Add("func")
+        IndexFields.Add("groupID")
         IndexFields.Add("modifiedAttributeID")
         IndexFields.Add("modifyingAttributeID")
         IndexFields.Add("operator")
+        IndexFields.Add("skillTypeID")
+        IndexFields.Add("secondEffectID")
         Call UpdateDB.CreateIndex(dgmEffectsModifierInfoTable, "IDX_" & dgmEffectsModifierInfoTable & "_EID", IndexFields, True)
 
         ' See if we only want to build the table and indexes
@@ -138,28 +144,33 @@ Public Class YAMLdgmEffects
             If Not IsNothing(DataField.modifierInfo) Then
                 ' Store modifier string data into the new table
                 Dim DataFields2 As New List(Of DBField)
-                Dim ModifierRecord As New List(Of dgmEffectModifierInfo)
+                Dim ModifierRecords As New List(Of dgmEffectModifierInfo)
 
                 ' Parse out the data first
-                ModifierRecord = DS.Deserialize(Of List(Of dgmEffectModifierInfo))(DataField.modifierInfo)
+                ModifierRecords = DS.Deserialize(Of List(Of dgmEffectModifierInfo))(DataField.modifierInfo)
 
-                If Not IsNothing(ModifierRecord) Then
-                    For Each Record In ModifierRecord
-                        DataFields2 = New List(Of DBField)
+                If Not IsNothing(ModifierRecords) Then
+                    If ModifierRecords.Count > 0 Then
+                        For Each Record In ModifierRecords
+                            DataFields2 = New List(Of DBField)
 
-                        DataFields2.Add(UpdateDB.BuildDatabaseField("effectID", DataField.effectID, FieldType.smallint_type))
-                        DataFields2.Add(UpdateDB.BuildDatabaseField("func", Record.func, FieldType.varchar_type))
-                        DataFields2.Add(UpdateDB.BuildDatabaseField("modifiedAttributeID", Record.modifiedAttributeID, FieldType.int_type))
-                        DataFields2.Add(UpdateDB.BuildDatabaseField("modifyingAttributeID", Record.modifyingAttributeID, FieldType.int_type))
-                        DataFields2.Add(UpdateDB.BuildDatabaseField("operator", Record.operator, FieldType.int_type))
+                            DataFields2.Add(UpdateDB.BuildDatabaseField("effectID", DataField.effectID, FieldType.smallint_type))
+                            DataFields2.Add(UpdateDB.BuildDatabaseField("func", Record.func, FieldType.varchar_type))
+                            DataFields2.Add(UpdateDB.BuildDatabaseField("groupID", Record.groupID, FieldType.int_type))
+                            DataFields2.Add(UpdateDB.BuildDatabaseField("modifiedAttributeID", Record.modifiedAttributeID, FieldType.int_type))
+                            DataFields2.Add(UpdateDB.BuildDatabaseField("modifyingAttributeID", Record.modifyingAttributeID, FieldType.int_type))
+                            DataFields2.Add(UpdateDB.BuildDatabaseField("operator", Record.operator, FieldType.int_type))
+                            DataFields2.Add(UpdateDB.BuildDatabaseField("skillTypeID", Record.skillTypeID, FieldType.int_type))
+                            DataFields2.Add(UpdateDB.BuildDatabaseField("secondEffectID", Record.effectID, FieldType.smallint_type))
 
-                        ' Check for duplicates
-                        If Not RecordinModinfoTable(TempModInfoDB.GetDataTable(dgmEffectsModifierInfoTable), DataFields2) Then
-                            Call TempModInfoDB.InsertRecord(dgmEffectsModifierInfoTable, DataFields2)
-                            Call UpdateDB.InsertRecord(dgmEffectsModifierInfoTable, DataFields2)
-                        End If
+                            ' Check for duplicates
+                            If Not RecordinModinfoTable(TempModInfoDB.GetDataTable(dgmEffectsModifierInfoTable), DataFields2) Then
+                                Call TempModInfoDB.InsertRecord(dgmEffectsModifierInfoTable, DataFields2)
+                                Call UpdateDB.InsertRecord(dgmEffectsModifierInfoTable, DataFields2)
+                            End If
 
-                    Next
+                        Next
+                    End If
                 End If
             End If
 
@@ -246,7 +257,10 @@ End Class
 Public Class dgmEffectModifierInfo
     Public Property domain As Object
     Public Property func As Object
+    Public Property groupID As Object
     Public Property modifiedAttributeID As Object
     Public Property modifyingAttributeID As Object
     Public Property [operator] As Object
+    Public Property skillTypeID As Object
+    Public Property effectID As Object
 End Class
