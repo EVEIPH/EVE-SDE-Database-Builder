@@ -9,6 +9,8 @@ Public Class msSQLDB
 
     ' Save the database name and instance for later
     Private DBServerName As String
+    Private DBUserName As String
+    Private DBPassword As String
     Private TempDB As New LocalDatabase ' for doing bulk inserts
 
     ''' <summary>
@@ -30,6 +32,8 @@ Public Class msSQLDB
             ' Set the DB Instance and Name data for later use
             MainDatabase = DatabaseName
             DBServerName = InstanceName
+            DBUserName = UserName
+            DBPassword = Password
 
             If UserName <> "" Then
                 ' Log in with user name and pass
@@ -74,8 +78,17 @@ Public Class msSQLDB
     Private Function DBConnectionRef() As SqlConnection
 
         ' Open the connection for reference
-        Dim DBRef As New SqlConnection(String.Format("Server={0};Database={1};Trusted_Connection=True;Connection Timeout=600;",
-                                             DBServerName, MainDatabase))
+        Dim DBRef As SqlConnection
+
+        If DBUserName <> "" Then
+            ' Log in with user name and pass
+            DBRef = New SqlConnection(String.Format("Server={0};User Id={1};Password={2};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=30;",
+                                                       DBServerName, DBUserName, DBPassword))
+        Else
+            ' Use windows default connection
+            DBRef = New SqlConnection(String.Format("Server={0};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=30;", DBUserName))
+        End If
+
         DBRef.Open()
 
         Return DBRef

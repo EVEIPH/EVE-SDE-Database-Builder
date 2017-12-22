@@ -345,7 +345,7 @@ Public Class frmMain
 
             ElseIf rbtnSQLServer.Checked Then ' Microsoft SQL Server
 
-                Dim NewSQLServerDB As New msSQLDB(.DatabaseName, .SQLConnectionString, .SQLPassword, .SQLUserName, WasSuccessful)
+                Dim NewSQLServerDB As New msSQLDB(.DatabaseName, .SQLConnectionString, .SQLUserName, .SQLPassword, WasSuccessful)
                 If WasSuccessful Then
                     Call BuildEVEDatabase(NewSQLServerDB, DatabaseType.SQLServer)
                 Else
