@@ -11,6 +11,7 @@ Public Class msSQLDB
     Private DBServerName As String
     Private DBUserName As String
     Private DBPassword As String
+    Private DBName As String
     Private TempDB As New LocalDatabase ' for doing bulk inserts
 
     ''' <summary>
@@ -34,14 +35,15 @@ Public Class msSQLDB
             DBServerName = InstanceName
             DBUserName = UserName
             DBPassword = Password
+            DBName = DatabaseName
 
             If UserName <> "" Then
                 ' Log in with user name and pass
-                Conn = New SqlConnection(String.Format("Server={0};User Id={1};Password={2};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=30;",
+                Conn = New SqlConnection(String.Format("Server={0};User Id={1};Password={2}; Initial Catalog=master; Integrated Security=False;Connection Timeout=30;",
                                                        InstanceName, UserName, Password))
             Else
                 ' Use windows default connection
-                Conn = New SqlConnection(String.Format("Server={0};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=30;", InstanceName))
+                Conn = New SqlConnection(String.Format("Server={0}; Initial Catalog=master; Integrated Security=True;Connection Timeout=30;", InstanceName))
             End If
             SqlConnection.ClearAllPools()
             Conn.Open()
@@ -82,11 +84,11 @@ Public Class msSQLDB
 
         If DBUserName <> "" Then
             ' Log in with user name and pass
-            DBRef = New SqlConnection(String.Format("Server={0};User Id={1};Password={2};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=30;",
-                                                       DBServerName, DBUserName, DBPassword))
+            DBRef = New SqlConnection(String.Format("Server={0};User Id={1};Password={2}; Initial Catalog={3}; Integrated Security=False;Connection Timeout=30;",
+                    DBServerName, DBUserName, DBPassword, DBName))
         Else
             ' Use windows default connection
-            DBRef = New SqlConnection(String.Format("Server={0};Trusted_Connection=True; Initial Catalog=master; Integrated Security=True;Connection Timeout=30;", DBServerName))
+            DBRef = New SqlConnection(String.Format("Server={0}; Initial Catalog={1}; Integrated Security=True;Connection Timeout=30;", DBUserName, DBName))
         End If
 
         DBRef.Open()
