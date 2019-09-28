@@ -644,13 +644,13 @@ ExitProc:
                         TempThreadList.T = New Thread(AddressOf INVItems.ImportFile)
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLinvMarketGroups.invMarketGroupsFile
-                        Dim INVMarketGroups As New YAMLinvMarketGroups(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
+                    Case YAMLmarketGroups.marketGroupsFile
+                        Dim INVMarketGroups As New YAMLmarketGroups(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVMarketGroups.ImportFile)
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
                     Case YAMLinvMetaGroups.invMetaGroupsFile
-                        Dim INVMetaGroups As New YAMLinvMetaGroups(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
+                        Dim INVMetaGroups As New YAMLinvMetaGroups(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVMetaGroups.ImportFile)
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
@@ -1010,8 +1010,8 @@ CancelImportProcessing:
         TempList.Add("dgmEffects.yaml")
         TempList.Add("eveUnits.yaml")
         TempList.Add("invCategories.yaml")
-        TempList.Add("invMarketGroups.yaml")
-        TempList.Add("invMetaGroups.yaml")
+        TempList.Add("marketGroups.yaml")
+        TempList.Add("metaGroups.yaml")
         TempList.Add("landmarks.staticdata")
         TempList.Add("planetSchematics.yaml")
         TempList.Add("ramActivities.yaml")

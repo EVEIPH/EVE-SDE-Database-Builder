@@ -5,7 +5,7 @@ Imports System.IO
 Public Class YAMLinvMetaGroups
     Inherits YAMLFilesBase
 
-    Public Const invMetaGroupsFile As String = "invMetaGroups.yaml"
+    Public Const invMetaGroupsFile As String = "metaGroups.yaml"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -22,18 +22,21 @@ Public Class YAMLinvMetaGroups
         Dim DS As New Deserializer
         DS = DSB.Build
 
-        Dim YAMLRecords As New List(Of invMetaGroup)
+        Dim YAMLRecords As New Dictionary(Of Long, metaGroup)
         Dim DataFields As List(Of DBField)
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
 
+        Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
+
         ' Build table
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("metaGroupID", FieldType.smallint_type, 0, False, True))
-        Table.Add(New DBTableField("metaGroupName", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 1000, True))
+        Table.Add(New DBTableField("descriptionID", FieldType.nvarchar_type, 1000, True))
         Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("iconSuffix", FieldType.nvarchar_type, 30, True))
+        Table.Add(New DBTableField("nameID", FieldType.nvarchar_type, 100, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -47,7 +50,7 @@ Public Class YAMLinvMetaGroups
 
         Try
             ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of invMetaGroup))(New StringReader(File.ReadAllText(YAMLFile)))
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of Long, metaGroup))(New StringReader(File.ReadAllText(YAMLFile)))
         Catch ex As Exception
             Call ShowErrorMessage(ex)
         End Try
@@ -58,11 +61,19 @@ Public Class YAMLinvMetaGroups
         For Each DataField In YAMLRecords
             DataFields = New List(Of DBField)
 
-            ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("metaGroupID", DataField.metaGroupID, FieldType.smallint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("metaGroupName", Translator.TranslateData(TableName, "metaGroupName", "metaGroupID", DataField.metaGroupID, Params.ImportLanguageCode, DataField.metaGroupName), FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("description", Translator.TranslateData(TableName, "description", "metaGroupID", DataField.metaGroupID, Params.ImportLanguageCode, DataField.description), FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("iconID", DataField.iconID, FieldType.int_type))
+            With DataField.Value
+                ' Build the insert list
+                DataFields.Add(UpdateDB.BuildDatabaseField("metaGroupID", DataField.Key, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("descriptionID", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("iconID", DataField.Value.iconID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("iconSuffix", DataField.Value.iconSuffix, FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("nameID", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
+
+                ' Insert the translated data into translation tables
+                Call Translator.InsertTranslationData(DataField.Key, "marketGroupID", "descriptionID", TableName, NameTranslation.GetAllTranslations(.descriptionID))
+                Call Translator.InsertTranslationData(DataField.Key, "marketGroupID", "nameID", TableName, NameTranslation.GetAllTranslations(.nameID))
+
+            End With
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 
@@ -78,9 +89,10 @@ Public Class YAMLinvMetaGroups
 
 End Class
 
-Public Class invMetaGroup
+Public Class metaGroup
     Public Property metaGroupID As Object
-    Public Property metaGroupName As Object
-    Public Property description As Object
+    Public Property descriptionID As Translations
     Public Property iconID As Object
+    Public Property iconSuffix As Object
+    Public Property nameID As Translations
 End Class

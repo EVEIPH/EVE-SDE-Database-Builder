@@ -1,6 +1,7 @@
 ﻿
 Imports YamlDotNet.Serialization
 Imports System.IO
+Imports Newtonsoft.Json
 
 Public Class YAMLstaStations
     Inherits YAMLFilesBase
@@ -28,6 +29,10 @@ Public Class YAMLstaStations
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
+
+        ' ESI
+        Dim StructureData As String = ""
+        Dim StationOutput As ESIStationData
 
         ' Build table
         Dim Table As New List(Of DBTableField)
@@ -110,6 +115,17 @@ Public Class YAMLstaStations
             DataFields.Add(UpdateDB.BuildDatabaseField("solarSystemID", DataField.solarSystemID, FieldType.int_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("constellationID", DataField.constellationID, FieldType.int_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("regionID", DataField.regionID, FieldType.int_type))
+            If DataField.stationName = "ToBeUpdated" Then
+                StructureData = GetPublicESIData("https://esi.evetech.net/latest/universe/stations/" & DataField.stationID & "/?datasource=tranquility", Nothing)
+                If IsNothing(StructureData) Then
+                    DataField.stationName = "Unknown Station Name"
+                Else
+                    ' Parse and pull name
+                    RetryCall = False
+                    StationOutput = JsonConvert.DeserializeObject(Of ESIStationData)(StructureData)
+                    DataField.stationName = StationOutput.stationName
+                End If
+            End If
             DataFields.Add(UpdateDB.BuildDatabaseField("stationName", DataField.stationName, FieldType.nvarchar_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.float_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.float_type))
@@ -130,6 +146,27 @@ Public Class YAMLstaStations
 
     End Sub
 
+End Class
+
+Public Class ESIStationData
+    <JsonProperty("max_dockable_ship_volume")> Public max_dockable_ship_volume As Double
+    <JsonProperty("name")> Public stationName As String
+    <JsonProperty("office_rental_cost")> Public office_rental_cost As Double
+    <JsonProperty("owner")> Public owner As Integer
+    <JsonProperty("position")> Public position As ESIPosition
+    <JsonProperty("race_id")> Public race_id As Integer
+    <JsonProperty("reprocessing_efficiency")> Public reprocessing_efficiency As Double
+    <JsonProperty("reprocessing_stations_take")> Public reprocessing_stations_take As Double
+    <JsonProperty("services")> Public services As List(Of String)
+    <JsonProperty("station_id")> Public station_id As Integer
+    <JsonProperty("system_id")> Public system_id As Integer
+    <JsonProperty("type_id")> Public type_id As Integer
+End Class
+
+Public Class ESIPosition
+    <JsonProperty("x")> Public x As Double
+    <JsonProperty("y")> Public y As Double
+    <JsonProperty("z")> Public z As Double
 End Class
 
 Public Class staStation

@@ -2,10 +2,10 @@
 Imports YamlDotNet.Serialization
 Imports System.IO
 
-Public Class YAMLinvMarketGroups
+Public Class YAMLmarketGroups
     Inherits YAMLFilesBase
 
-    Public Const invMarketGroupsFile As String = "invMarketGroups.yaml"
+    Public Const marketGroupsFile As String = "marketGroups.yaml"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -22,20 +22,22 @@ Public Class YAMLinvMarketGroups
         Dim DS As New Deserializer
         DS = DSB.Build
 
-        Dim YAMLRecords As New List(Of invMarketGroup)
+        Dim YAMLRecords As New Dictionary(Of Long, marketGroup)
         Dim DataFields As List(Of DBField)
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
 
+        Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
+
         ' Build table
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("marketGroupID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("parentGroupID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("marketGroupName", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 3000, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("descriptionID", FieldType.nvarchar_type, 3000, True))
         Table.Add(New DBTableField("hasTypes", FieldType.bit_type, 0, True))
+        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("nameID", FieldType.nvarchar_type, 100, True))
+        Table.Add(New DBTableField("parentGroupID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -49,7 +51,7 @@ Public Class YAMLinvMarketGroups
 
         Try
             ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of invMarketGroup))(New StringReader(File.ReadAllText(YAMLFile)))
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of Long, marketGroup))(New StringReader(File.ReadAllText(YAMLFile)))
         Catch ex As Exception
             Call ShowErrorMessage(ex)
         End Try
@@ -60,13 +62,20 @@ Public Class YAMLinvMarketGroups
         For Each DataField In YAMLRecords
             DataFields = New List(Of DBField)
 
-            ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("marketGroupID", DataField.marketGroupID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("parentGroupID", DataField.parentGroupID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("marketGroupName", Translator.TranslateData(TableName, "marketGroupName", "marketGroupID", DataField.marketGroupID, Params.ImportLanguageCode, DataField.marketGroupName), FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("description", Translator.TranslateData(TableName, "description", "marketGroupID", DataField.marketGroupID, Params.ImportLanguageCode, DataField.description), FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("iconID", DataField.iconID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("hasTypes", DataField.hasTypes, FieldType.bit_type))
+            With DataField.Value
+                ' Build the insert list
+                DataFields.Add(UpdateDB.BuildDatabaseField("marketGroupID", DataField.Key, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("descriptionID", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("hasTypes", DataField.Value.hasTypes, FieldType.bit_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("iconID", DataField.Value.iconID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("nameID", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("parentGroupID", .parentGroupID, FieldType.int_type))
+
+                ' Insert the translated data into translation tables
+                Call Translator.InsertTranslationData(DataField.Key, "marketGroupID", "descriptionID", TableName, NameTranslation.GetAllTranslations(.descriptionID))
+                Call Translator.InsertTranslationData(DataField.Key, "marketGroupID", "nameID", TableName, NameTranslation.GetAllTranslations(.nameID))
+
+            End With
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 
@@ -82,11 +91,11 @@ Public Class YAMLinvMarketGroups
 
 End Class
 
-Public Class invMarketGroup
+Public Class marketGroup
     Public Property marketGroupID As Object
-    Public Property parentGroupID As Object
-    Public Property marketGroupName As Object
-    Public Property description As Object
-    Public Property iconID As Object
+    Public Property descriptionID As Translations
     Public Property hasTypes As Object
+    Public Property iconID As Object
+    Public Property nameID As Translations
+    Public Property parentGroupID As Object
 End Class
