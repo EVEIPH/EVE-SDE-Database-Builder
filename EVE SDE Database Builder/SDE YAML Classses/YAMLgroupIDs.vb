@@ -81,7 +81,6 @@ Public Class YAMLgroupIDs
 
                 ' Insert the translated data into translation tables
                 Call Translator.InsertTranslationData(DataField.Key, "groupID", "groupName", TableName, NameTranslation.GetAllTranslations(.name))
-
             End With
 
             Call UpdateDB.InsertRecord(TableName, DataFields)

@@ -2,10 +2,10 @@
 Imports YamlDotNet.Serialization
 Imports System.IO
 
-Public Class YAMLinvMetaGroups
+Public Class YAMLmetaGroups
     Inherits YAMLFilesBase
 
-    Public Const invMetaGroupsFile As String = "metaGroups.yaml"
+    Public Const metaGroupsFile As String = "metaGroups.yaml"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -65,8 +65,8 @@ Public Class YAMLinvMetaGroups
                 ' Build the insert list
                 DataFields.Add(UpdateDB.BuildDatabaseField("metaGroupID", DataField.Key, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("descriptionID", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("iconID", DataField.Value.iconID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("iconSuffix", DataField.Value.iconSuffix, FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("iconSuffix", .iconSuffix, FieldType.nvarchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("nameID", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
 
                 ' Insert the translated data into translation tables

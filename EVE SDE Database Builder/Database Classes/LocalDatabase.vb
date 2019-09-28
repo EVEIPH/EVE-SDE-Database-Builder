@@ -19,7 +19,6 @@ Public Class LocalDatabase
     Public Sub InsertRecord(ByVal TableNameRef As String, ByVal SentRecord As List(Of DBField))
         ' Save data in new data table
         Dim DT As New DataTable
-        Dim RowofData As DataRow
         Dim DC As DataColumn
         Dim FT As Type
         Dim TempRecordFieldValue As String = ""
@@ -75,10 +74,9 @@ Public Class LocalDatabase
             End If
         Next
 
-        ' Add the data
-        RowofData = DT.NewRow
-        RowofData.ItemArray = Data
-        DT.Rows.Add(RowofData)
+        ' Add the new row
+        DT.NewRow.ItemArray = Data
+        DT.Rows.Add(DT.NewRow)
 
     End Sub
 

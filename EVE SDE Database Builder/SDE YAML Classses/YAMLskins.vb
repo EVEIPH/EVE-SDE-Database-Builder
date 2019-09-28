@@ -32,8 +32,10 @@ Public Class YAMLskins
         ' Build table
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("skinID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("skinDescription", FieldType.text_type, MaxFieldLen, True))
         Table.Add(New DBTableField("internalName", FieldType.varchar_type, 100, True))
         Table.Add(New DBTableField("skinMaterialID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("isStructureSkin", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("allowCCPDevs", FieldType.bit_type, 0, True))
         Table.Add(New DBTableField("visibleSerenity", FieldType.bit_type, 0, True))
@@ -71,8 +73,10 @@ Public Class YAMLskins
                 With DataField.Value
                     ' Build the insert list
                     DataFields.Add(UpdateDB.BuildDatabaseField("skinID", .skinID, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("skinDescription", .skinDescription, FieldType.text_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("internalName", .internalName, FieldType.varchar_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("skinMaterialID", .skinMaterialID, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("isStructureSkin", .isStructureSkin, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DF, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("allowCCPDevs", .allowCCPDevs, FieldType.bit_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("visibleSerenity", .visibleSerenity, FieldType.bit_type))
@@ -96,9 +100,11 @@ End Class
 
 Public Class skin
     Public Property skinID As Object
+    Public Property skinDescription As Object
     Public Property allowCCPDevs As Object
     Public Property internalName As Object
     Public Property skinMaterialID As Object
+    Public Property isStructureSkin As Object
     Public Property types As List(Of Object)
     Public Property visibleSerenity As Object
     Public Property visibleTranquility As Object

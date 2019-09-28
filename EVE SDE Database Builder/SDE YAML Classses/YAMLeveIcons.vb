@@ -6,6 +6,8 @@ Public Class YAMLeveIcons
     Inherits YAMLFilesBase
 
     Public Const eveIconsFile As String = "iconIDs.yaml"
+    Private Const eveIconsBackgroundsTableName As String = "eveIconsBackgrounds"
+    Private Const eveIconsForegroundsTableName As String = "eveIconsForegrounds"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -35,8 +37,11 @@ Public Class YAMLeveIcons
         Table.Add(New DBTableField("iconID", FieldType.int_type, 0, False, True))
         Table.Add(New DBTableField("iconFile", FieldType.varchar_type, 500, True))
         Table.Add(New DBTableField("description", FieldType.text_type, MaxFieldLen, True))
+        Table.Add(New DBTableField("obsolete", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
+
+        Call BuildIconInfoTables()
 
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then
@@ -64,8 +69,12 @@ Public Class YAMLeveIcons
                 DataFields.Add(UpdateDB.BuildDatabaseField("iconID", DataField.Key, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("iconFile", .iconFile, FieldType.varchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("description", .description, FieldType.text_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("obsolete", .obsolete, FieldType.int_type))
             End With
             Call UpdateDB.InsertRecord(TableName, DataFields)
+
+            Call InsertBackForeInfo(DataField.Key, "backgrounds", DataField.Value.backgrounds)
+            Call InsertBackForeInfo(DataField.Key, "foregrounds", DataField.Value.foregrounds)
 
             ' Update grid progress
             Call UpdateGridRowProgress(Params.RowLocation, Count, TotalRecords)
@@ -77,9 +86,65 @@ Public Class YAMLeveIcons
 
     End Sub
 
+    Private Sub InsertBackForeInfo(ByVal graphicID As Integer, ByVal iconDataType As String, ByVal iconData As List(Of Object))
+        Dim DataFields As List(Of DBField)
+
+        If Not IsNothing(iconData) Then
+            DataFields = New List(Of DBField)
+
+            ' Build the insert list for backfore types
+            If iconDataType = "backgrounds" Then
+                For Each BG In iconData
+                    DataFields = New List(Of DBField)
+                    DataFields.Add(UpdateDB.BuildDatabaseField("graphicID", graphicID, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("backgroundProperty", BG, FieldType.varchar_type))
+                    Call UpdateDB.InsertRecord(eveIconsBackgroundsTableName, DataFields)
+                Next
+            ElseIf iconDataType = "foregrounds" Then
+                For Each FG In iconData
+                    DataFields = New List(Of DBField)
+                    DataFields.Add(UpdateDB.BuildDatabaseField("graphicID", graphicID, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("foregroundProperty", FG, FieldType.varchar_type))
+                    Call UpdateDB.InsertRecord(eveIconsForegroundsTableName, DataFields)
+                Next
+            End If
+
+        End If
+    End Sub
+
+    Private Sub BuildIconInfoTables()
+
+        Dim Table As New List(Of DBTableField)
+        Dim IndexFields As List(Of String)
+
+        Table = New List(Of DBTableField)
+        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("backgroundProperty", FieldType.varchar_type, 50, True))
+
+        Call UpdateDB.CreateTable(eveIconsBackgroundsTableName, Table)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("graphicID")
+        Call UpdateDB.CreateIndex(eveIconsBackgroundsTableName, "IDX_" & eveIconsBackgroundsTableName & "_GID", IndexFields)
+
+        Table = New List(Of DBTableField)
+        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("foregroundProperty", FieldType.varchar_type, 50, True))
+
+        Call UpdateDB.CreateTable(eveIconsForegroundsTableName, Table)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("graphicID")
+        Call UpdateDB.CreateIndex(eveIconsForegroundsTableName, "IDX_" & eveIconsForegroundsTableName & "_GID", IndexFields)
+
+    End Sub
+
 End Class
 
 Public Class eveIcon
-    Public Property iconFile As Object
     Public Property description As Object
+    Public Property iconFile As Object
+    Public Property obsolete As Object
+    Public Property backgrounds As List(Of Object)
+    Public Property foregrounds As List(Of Object)
 End Class

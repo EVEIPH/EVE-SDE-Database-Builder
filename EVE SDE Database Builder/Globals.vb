@@ -6,7 +6,7 @@ Public Module Globals
 
     Public CancelImport As Boolean = False
     Public frmErrorText As String = ""
-
+    Public Lock As New Object
     Public AllSettings As New ProgramSettings
     Public UserApplicationSettings As ApplicationSettings
 

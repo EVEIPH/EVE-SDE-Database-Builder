@@ -32,9 +32,9 @@ Public Class YAMLmarketGroups
 
         ' Build table
         Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("marketGroupID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("descriptionID", FieldType.nvarchar_type, 3000, True))
-        Table.Add(New DBTableField("hasTypes", FieldType.bit_type, 0, True))
+        Table.Add(New DBTableField("marketGroupID ", FieldType.int_type, 0, False, True))
+        Table.Add(New DBTableField("descriptionID", FieldType.nvarchar_type, 300, True))
+        Table.Add(New DBTableField("hasTypes ", FieldType.bit_type, -1, True))
         Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("nameID", FieldType.nvarchar_type, 100, True))
         Table.Add(New DBTableField("parentGroupID", FieldType.int_type, 0, True))
@@ -66,8 +66,8 @@ Public Class YAMLmarketGroups
                 ' Build the insert list
                 DataFields.Add(UpdateDB.BuildDatabaseField("marketGroupID", DataField.Key, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("descriptionID", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("hasTypes", DataField.Value.hasTypes, FieldType.bit_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("iconID", DataField.Value.iconID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("hasTypes", .hasTypes, FieldType.bit_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("nameID", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("parentGroupID", .parentGroupID, FieldType.int_type))
 

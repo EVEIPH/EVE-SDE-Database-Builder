@@ -32,6 +32,7 @@ Public Class YAMLskinLicenses
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("licenseTypeID", FieldType.int_type, 0, False, True))
         Table.Add(New DBTableField("duration", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("isSingleUse", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("skinID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
@@ -62,6 +63,7 @@ Public Class YAMLskinLicenses
                 DataFields.Add(UpdateDB.BuildDatabaseField("licenseTypeID", .licenseTypeID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("duration", .duration, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("skinID", .skinID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("isSingleUse", .isSingleUse, FieldType.int_type))
             End With
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
@@ -81,5 +83,6 @@ End Class
 Public Class skinLicense
     Public Property licenseTypeID As Object
     Public Property duration As Object
+    Public Property isSingleUse As Object
     Public Property skinID As Object
 End Class

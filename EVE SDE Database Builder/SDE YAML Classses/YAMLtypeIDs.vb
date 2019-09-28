@@ -191,6 +191,8 @@ Public Class YAMLtypeIDs
                 DataFields.Add(UpdateDB.BuildDatabaseField("soundID", .soundID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("sofFactionName", .sofFactionName, FieldType.varchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("sofMaterialSetID", .sofMaterialSetID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("metaGroupID", .metaGroupID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("variationparentTypeID", .variationparentTypeID, FieldType.int_type))
 
                 ' Insert the translated data into translation tables
                 Call Translator.InsertTranslationData(DataField.Key, "typeID", "typeName", invTypes_Table, NameTranslation.GetAllTranslations(.name))
@@ -238,13 +240,15 @@ Public Class YAMLtypeIDs
         Table.Add(New DBTableField("soundID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("sofFactionName", FieldType.nvarchar_type, 100, True))
         Table.Add(New DBTableField("sofMaterialSetID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("metaGroupID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("variationparentTypeID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(invTypes_Table, Table)
 
         ' Create indexes
         IndexFields = New List(Of String)
-        IndexFields.Add("groupID")
-        Call UpdateDB.CreateIndex(invTypes_Table, "IDX_" & invTypes_Table & "_GID", IndexFields)
+        IndexFields.Add("typeID")
+        Call UpdateDB.CreateIndex(invTypes_Table, "IDX_" & invTypes_Table & "_TID", IndexFields)
 
     End Sub
 
@@ -437,6 +441,8 @@ Public Class typeID
     Public Property soundID As Object
     Public Property sofFactionName As Object
     Public Property sofMaterialSetID As Object
+    Public Property metaGroupID As Object
+    Public Property variationParentTypeID As Object
 
     Public Property masteries As Dictionary(Of Long, Object)
     Public Property traits As itemTraits

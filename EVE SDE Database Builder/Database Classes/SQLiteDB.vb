@@ -358,8 +358,9 @@ Public Class SQLiteDB
         Fields = StripLastCharacter(Fields)
         FieldValues = StripLastCharacter(FieldValues)
 
-        Call ExecuteNonQuerySQL(String.Format("INSERT INTO {0} ({1}) VALUES ({2})", TableName, Fields, FieldValues))
-
+        SyncLock Lock
+            Call ExecuteNonQuerySQL(String.Format("INSERT INTO {0} ({1}) VALUES ({2})", TableName, Fields, FieldValues))
+        End SyncLock
     End Sub
 
     ''' <summary>
