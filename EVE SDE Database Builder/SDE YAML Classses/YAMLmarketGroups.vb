@@ -23,6 +23,7 @@ Public Class YAMLmarketGroups
         DS = DSB.Build
 
         Dim YAMLRecords As New Dictionary(Of Long, marketGroup)
+        Dim IndexFields As List(Of String)
         Dim DataFields As List(Of DBField)
         Dim SQL As String = ""
         Dim Count As Long = 0
@@ -40,6 +41,10 @@ Public Class YAMLmarketGroups
         Table.Add(New DBTableField("parentGroupID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("marketGroupID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_MGID", IndexFields)
 
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then

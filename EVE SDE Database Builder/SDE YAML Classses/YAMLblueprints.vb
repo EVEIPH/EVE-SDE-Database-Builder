@@ -216,6 +216,11 @@ Public Class YAMLblueprints
 
         Call UpdateDB.CreateTable(industryBlueprints_Table, Table)
 
+        Dim IndexFields As List(Of String)
+        IndexFields = New List(Of String)
+        IndexFields.Add("blueprintTypeID")
+        Call UpdateDB.CreateIndex(industryBlueprints_Table, "IDX_" & industryBlueprints_Table & "_BPID", IndexFields)
+
     End Sub
 
     Private Sub BuildIndustryActivitiesTable()
@@ -286,6 +291,10 @@ Public Class YAMLblueprints
         IndexFields.Add("blueprintTypeID")
         IndexFields.Add("activityID")
         Call UpdateDB.CreateIndex(industryActivityProducts_Table, "IDX_" & industryActivityProducts_Table & "_TID_AID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("productTypeID")
+        Call UpdateDB.CreateIndex(industryActivityProducts_Table, "IDX_" & industryActivityProducts_Table & "_PTID", IndexFields)
 
     End Sub
 

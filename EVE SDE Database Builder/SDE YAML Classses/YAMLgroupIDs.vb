@@ -46,6 +46,15 @@ Public Class YAMLgroupIDs
 
         Call UpdateDB.CreateTable(TableName, Table)
 
+        Dim IndexFields As List(Of String)
+        IndexFields = New List(Of String)
+        IndexFields.Add("groupID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_GID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("categoryID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_CID", IndexFields)
+
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then
             Exit Sub

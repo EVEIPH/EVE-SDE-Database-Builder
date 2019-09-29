@@ -217,7 +217,6 @@ Public Class YAMLtypeIDs
     End Sub
 
     Private Sub BuildInventoryTypesTable()
-        Dim IndexFields As List(Of String)
         Dim Table As New List(Of DBTableField)
 
         Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
@@ -246,9 +245,18 @@ Public Class YAMLtypeIDs
         Call UpdateDB.CreateTable(invTypes_Table, Table)
 
         ' Create indexes
+        Dim IndexFields As List(Of String)
         IndexFields = New List(Of String)
         IndexFields.Add("typeID")
         Call UpdateDB.CreateIndex(invTypes_Table, "IDX_" & invTypes_Table & "_TID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("groupID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_GID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("marketGroupID")
+        Call UpdateDB.CreateIndex(invTypes_Table, "IDX_" & invTypes_Table & "_MGID", IndexFields)
 
     End Sub
 

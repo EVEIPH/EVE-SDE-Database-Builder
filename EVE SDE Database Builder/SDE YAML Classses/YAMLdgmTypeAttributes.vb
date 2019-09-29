@@ -37,6 +37,13 @@ Public Class YAMLdgmTypeAttributes
 
         Call UpdateDB.CreateTable(TableName, Table)
 
+        Dim IndexFields As List(Of String)
+        IndexFields = New List(Of String)
+        IndexFields.Add("typeID")
+        IndexFields.Add("attributeID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_TID_AID", IndexFields)
+
+
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then
             Exit Sub
