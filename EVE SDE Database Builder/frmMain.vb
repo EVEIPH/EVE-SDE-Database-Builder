@@ -20,30 +20,46 @@ Public Class frmMain
     Private LatestFilesFolder As String
     Private Const MainEXEFile As String = "EVE SDE Database Builder.exe"
     Private Const UpdaterEXEFile As String = "ESDEDB Updater.exe"
+    Private Const MainEXEManifest As String = "EVE SDE Database Builder.exe.manifest"
+    Private Const UpdaterEXEManifest As String = "ESDEDB Updater.exe.manifest"
+
+    Private Const EntityFrameworkDLL As String = "EntityFramework.dll"
+    Private Const EntityFrameworkSQLServerDLL As String = "EntityFramework.SqlServer.dll"
+    Private Const GoogleProtbufDLL As String = "Google.Protobuf.dll"
     Private Const MySQLDLL As String = "MySql.Data.dll"
-    Private Const PostgreSQLDLL As String = "Npgsql.dll"
+    Private Const NewtonSoftJsonDLL As String = "Newtonsoft.Json.dll"
+    Private Const NpgSQLDLL As String = "Npgsql.dll"
     Private Const SQLiteBaseDLL As String = "System.Data.SQLite.dll"
     Private Const SQLiteEF6DLL As String = "System.Data.SQLite.EF6.dll"
     Private Const SQLiteLinqDLL As String = "System.Data.SQLite.Linq.dll"
+    Private Const SystemRuntimeUnsafeDLL As String = "System.Runtime.CompilerServices.Unsafe.dll"
+    Private Const SystemThreadingTasksExtensionsDLL As String = "System.Threading.Tasks.Extensions.dll"
+    Private Const SystemValueTupleDLL As String = "System.ValueTuple.dll"
     Private Const YamlDotNetDLL As String = "YamlDotNet.dll"
     Private Const SQLiteInteropDLL As String = "SQLite.Interop.dll"
-    Private Const MainEXEManifest As String = "EVE SDE Database Builder.exe.manifest"
-    Private Const UpdaterEXEManifest As String = "ESDEDB Updater.exe.manifest"
 
     Private Const LatestVersionXML As String = "LatestVersionESDEDB.xml"
 
     ' File URLs
     Private MainEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe"
     Private UpdaterEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe"
-    Private MySQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/MySql.Data.dll"
-    Private PostgreSQLDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Npgsql.dll"
-    Private SQLiteBaseDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.dll"
-    Private SQLiteEF6DLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.EF6.dll"
-    Private SQLiteLinqDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.Linq.dll"
-    Private SQLiteInteropDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/blob/master/Latest%20Files/SQLite.Interop.dll"
-    Private YamlDotNetDLLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/YamlDotNet.dll"
     Private MainEXEManifestURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe.manifest"
     Private UpdaterEXEManifestURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe.manifest"
+
+    Private Const EntityFrameworkURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EntityFramework.dll"
+    Private Const EntityFrameworkSQLServerURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EntityFramework.SqlServer.dll"
+    Private Const GoogleProtbufURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Google.Protobuf.dll"
+    Private Const MySQLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/MySql.Data.dll"
+    Private Const NewtonSoftJsonURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Newtonsoft.Json.dll"
+    Private Const NpgSQLURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Npgsql.dll"
+    Private Const SQLiteBaseURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.dll"
+    Private Const SQLiteEF6URL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.EF6.dll"
+    Private Const SQLiteLinqURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.Linq.dll"
+    Private Const SystemRuntimeUnsafeURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Runtime.CompilerServices.Unsafe.dll"
+    Private Const SystemThreadingTasksExtensionsURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Threading.Tasks.Extensions.dll"
+    Private Const SystemValueTupleURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.ValueTuple.dll"
+    Private Const YamlDotNetURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/YamlDotNet.dll"
+    Private Const SQLiteInteropURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/SQLite.Interop.dll"
 
     ' For setting the number of threads to use
     Public SelectedThreads As Integer
@@ -1226,13 +1242,43 @@ CancelImportProcessing:
             NewFilesAdded = True
         End If
 
+        If Updater.MD5CalcFile(MainEXEManifest) <> Updater.MD5CalcFile(LatestFilesFolder & MainEXEManifest) Then
+            File.Copy(MainEXEManifest, LatestFilesFolder & MainEXEManifest, True)
+            NewFilesAdded = True
+        End If
+
+        If Updater.MD5CalcFile(UpdaterEXEManifest) <> Updater.MD5CalcFile(LatestFilesFolder & UpdaterEXEManifest) Then
+            File.Copy(UpdaterEXEManifest, LatestFilesFolder & UpdaterEXEManifest, True)
+            NewFilesAdded = True
+        End If
+
+        If Updater.MD5CalcFile(EntityFrameworkDLL) <> Updater.MD5CalcFile(LatestFilesFolder & EntityFrameworkDLL) Then
+            File.Copy(EntityFrameworkDLL, LatestFilesFolder & EntityFrameworkDLL, True)
+            NewFilesAdded = True
+        End If
+
+        If Updater.MD5CalcFile(EntityFrameworkSQLServerDLL) <> Updater.MD5CalcFile(LatestFilesFolder & EntityFrameworkSQLServerDLL) Then
+            File.Copy(EntityFrameworkSQLServerDLL, LatestFilesFolder & EntityFrameworkSQLServerDLL, True)
+            NewFilesAdded = True
+        End If
+
+        If Updater.MD5CalcFile(GoogleProtbufDLL) <> Updater.MD5CalcFile(LatestFilesFolder & GoogleProtbufDLL) Then
+            File.Copy(GoogleProtbufDLL, LatestFilesFolder & GoogleProtbufDLL, True)
+            NewFilesAdded = True
+        End If
+
         If Updater.MD5CalcFile(MySQLDLL) <> Updater.MD5CalcFile(LatestFilesFolder & MySQLDLL) Then
             File.Copy(MySQLDLL, LatestFilesFolder & MySQLDLL, True)
             NewFilesAdded = True
         End If
 
-        If Updater.MD5CalcFile(PostgreSQLDLL) <> Updater.MD5CalcFile(LatestFilesFolder & PostgreSQLDLL) Then
-            File.Copy(PostgreSQLDLL, LatestFilesFolder & PostgreSQLDLL, True)
+        If Updater.MD5CalcFile(NewtonSoftJsonDLL) <> Updater.MD5CalcFile(LatestFilesFolder & NewtonSoftJsonDLL) Then
+            File.Copy(NewtonSoftJsonDLL, LatestFilesFolder & NewtonSoftJsonDLL, True)
+            NewFilesAdded = True
+        End If
+
+        If Updater.MD5CalcFile(NpgSQLDLL) <> Updater.MD5CalcFile(LatestFilesFolder & NpgSQLDLL) Then
+            File.Copy(NpgSQLDLL, LatestFilesFolder & NpgSQLDLL, True)
             NewFilesAdded = True
         End If
 
@@ -1251,8 +1297,18 @@ CancelImportProcessing:
             NewFilesAdded = True
         End If
 
-        If Updater.MD5CalcFile(SQLiteInteropDLL) <> Updater.MD5CalcFile(LatestFilesFolder & SQLiteInteropDLL) Then
-            File.Copy(SQLiteInteropDLL, LatestFilesFolder & SQLiteInteropDLL, True)
+        If Updater.MD5CalcFile(SystemRuntimeUnsafeDLL) <> Updater.MD5CalcFile(LatestFilesFolder & SystemRuntimeUnsafeDLL) Then
+            File.Copy(SystemRuntimeUnsafeDLL, LatestFilesFolder & SystemRuntimeUnsafeDLL, True)
+            NewFilesAdded = True
+        End If
+
+        If Updater.MD5CalcFile(SystemThreadingTasksExtensionsDLL) <> Updater.MD5CalcFile(LatestFilesFolder & SystemThreadingTasksExtensionsDLL) Then
+            File.Copy(SystemThreadingTasksExtensionsDLL, LatestFilesFolder & SystemThreadingTasksExtensionsDLL, True)
+            NewFilesAdded = True
+        End If
+
+        If Updater.MD5CalcFile(SystemValueTupleDLL) <> Updater.MD5CalcFile(LatestFilesFolder & SystemValueTupleDLL) Then
+            File.Copy(SystemValueTupleDLL, LatestFilesFolder & SystemValueTupleDLL, True)
             NewFilesAdded = True
         End If
 
@@ -1261,13 +1317,8 @@ CancelImportProcessing:
             NewFilesAdded = True
         End If
 
-        If Updater.MD5CalcFile(MainEXEManifest) <> Updater.MD5CalcFile(LatestFilesFolder & MainEXEManifest) Then
-            File.Copy(MainEXEManifest, LatestFilesFolder & MainEXEManifest, True)
-            NewFilesAdded = True
-        End If
-
-        If Updater.MD5CalcFile(UpdaterEXEManifest) <> Updater.MD5CalcFile(LatestFilesFolder & UpdaterEXEManifest) Then
-            File.Copy(UpdaterEXEManifest, LatestFilesFolder & UpdaterEXEManifest, True)
+        If Updater.MD5CalcFile(SQLiteInteropDLL) <> Updater.MD5CalcFile(LatestFilesFolder & SQLiteInteropDLL) Then
+            File.Copy(SQLiteInteropDLL, LatestFilesFolder & SQLiteInteropDLL, True)
             NewFilesAdded = True
         End If
 
@@ -1330,55 +1381,6 @@ CancelImportProcessing:
             writer.WriteEndElement()
 
             writer.WriteStartElement("row")
-            writer.WriteAttributeString("Name", MySQLDLL)
-            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(MySQLDLL).FileVersion)
-            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & MySQLDLL))
-            writer.WriteAttributeString("URL", MySQLDLLURL)
-            writer.WriteEndElement()
-
-            writer.WriteStartElement("row")
-            writer.WriteAttributeString("Name", PostgreSQLDLL)
-            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(PostgreSQLDLL).FileVersion)
-            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & PostgreSQLDLL))
-            writer.WriteAttributeString("URL", PostgreSQLDLLURL)
-            writer.WriteEndElement()
-
-            writer.WriteStartElement("row")
-            writer.WriteAttributeString("Name", SQLiteBaseDLL)
-            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteBaseDLL).FileVersion)
-            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteBaseDLL))
-            writer.WriteAttributeString("URL", SQLiteBaseDLLURL)
-            writer.WriteEndElement()
-
-            writer.WriteStartElement("row")
-            writer.WriteAttributeString("Name", SQLiteEF6DLL)
-            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteEF6DLL).FileVersion)
-            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteEF6DLL))
-            writer.WriteAttributeString("URL", SQLiteEF6DLLURL)
-            writer.WriteEndElement()
-
-            writer.WriteStartElement("row")
-            writer.WriteAttributeString("Name", SQLiteLinqDLL)
-            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteLinqDLL).FileVersion)
-            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteLinqDLL))
-            writer.WriteAttributeString("URL", SQLiteLinqDLLURL)
-            writer.WriteEndElement()
-
-            writer.WriteStartElement("row")
-            writer.WriteAttributeString("Name", SQLiteInteropDLL)
-            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo("x86\" & SQLiteInteropDLL).FileVersion)
-            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteInteropDLL))
-            writer.WriteAttributeString("URL", SQLiteInteropDLLURL)
-            writer.WriteEndElement()
-
-            writer.WriteStartElement("row")
-            writer.WriteAttributeString("Name", YamlDotNetDLL)
-            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(YamlDotNetDLL).FileVersion)
-            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & YamlDotNetDLL))
-            writer.WriteAttributeString("URL", YamlDotNetDLLURL)
-            writer.WriteEndElement()
-
-            writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", MainEXEManifest)
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(MainEXEManifest).FileVersion)
             writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & MainEXEManifest))
@@ -1390,6 +1392,98 @@ CancelImportProcessing:
             writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(UpdaterEXEManifest).FileVersion)
             writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & UpdaterEXEManifest))
             writer.WriteAttributeString("URL", UpdaterEXEManifestURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", EntityFrameworkDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(EntityFrameworkDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & EntityFrameworkDLL))
+            writer.WriteAttributeString("URL", EntityFrameworkURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", EntityFrameworkSQLServerDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(EntityFrameworkSQLServerDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & EntityFrameworkSQLServerDLL))
+            writer.WriteAttributeString("URL", EntityFrameworkSQLServerURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", GoogleProtbufDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(GoogleProtbufDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & GoogleProtbufDLL))
+            writer.WriteAttributeString("URL", GoogleProtbufURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", NewtonSoftJsonDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(NewtonSoftJsonDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & NewtonSoftJsonDLL))
+            writer.WriteAttributeString("URL", NewtonSoftJsonURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", NpgSQLDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(NpgSQLDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & NpgSQLDLL))
+            writer.WriteAttributeString("URL", NpgSQLURL)
+            writer.WriteEndElement()
+
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", SQLiteBaseDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteBaseDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteBaseDLL))
+            writer.WriteAttributeString("URL", SQLiteBaseURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", SQLiteEF6DLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteEF6DLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteEF6DLL))
+            writer.WriteAttributeString("URL", SQLiteEF6URL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", SQLiteLinqDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteLinqDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteLinqDLL))
+            writer.WriteAttributeString("URL", SQLiteLinqURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", SystemRuntimeUnsafeDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteLinqDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SystemRuntimeUnsafeDLL))
+            writer.WriteAttributeString("URL", SystemRuntimeUnsafeURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", SystemThreadingTasksExtensionsDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteLinqDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SystemThreadingTasksExtensionsDLL))
+            writer.WriteAttributeString("URL", SystemThreadingTasksExtensionsURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", SystemValueTupleDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(SQLiteLinqDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SystemValueTupleDLL))
+            writer.WriteAttributeString("URL", SystemValueTupleURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", YamlDotNetDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(YamlDotNetDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & YamlDotNetDLL))
+            writer.WriteAttributeString("URL", YamlDotNetURL)
+            writer.WriteEndElement()
+
+            writer.WriteStartElement("row")
+            writer.WriteAttributeString("Name", SQLiteInteropDLL)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo("x86\" & SQLiteInteropDLL).FileVersion)
+            writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & SQLiteInteropDLL))
+            writer.WriteAttributeString("URL", SQLiteInteropURL)
             writer.WriteEndElement()
 
             ' End document.
@@ -1429,15 +1523,23 @@ CancelImportProcessing:
         File.Copy(LatestFilesFolder & LatestVersionXML, FinalBinaryFolderPath & LatestVersionXML)
         File.Copy(LatestFilesFolder & MainEXEFile, FinalBinaryFolderPath & MainEXEFile)
         File.Copy(LatestFilesFolder & UpdaterEXEFile, FinalBinaryFolderPath & UpdaterEXEFile)
+        File.Copy(LatestFilesFolder & MainEXEManifest, FinalBinaryFolderPath & MainEXEManifest)
+        File.Copy(LatestFilesFolder & UpdaterEXEManifest, FinalBinaryFolderPath & UpdaterEXEManifest)
+
+        File.Copy(LatestFilesFolder & EntityFrameworkDLL, FinalBinaryFolderPath & EntityFrameworkDLL)
+        File.Copy(LatestFilesFolder & EntityFrameworkSQLServerDLL, FinalBinaryFolderPath & EntityFrameworkSQLServerDLL)
+        File.Copy(LatestFilesFolder & GoogleProtbufDLL, FinalBinaryFolderPath & GoogleProtbufDLL)
         File.Copy(LatestFilesFolder & MySQLDLL, FinalBinaryFolderPath & MySQLDLL)
-        File.Copy(LatestFilesFolder & PostgreSQLDLL, FinalBinaryFolderPath & PostgreSQLDLL)
+        File.Copy(LatestFilesFolder & NewtonSoftJsonDLL, FinalBinaryFolderPath & NewtonSoftJsonDLL)
+        File.Copy(LatestFilesFolder & NpgSQLDLL, FinalBinaryFolderPath & NpgSQLDLL)
         File.Copy(LatestFilesFolder & SQLiteBaseDLL, FinalBinaryFolderPath & SQLiteBaseDLL)
         File.Copy(LatestFilesFolder & SQLiteEF6DLL, FinalBinaryFolderPath & SQLiteEF6DLL)
         File.Copy(LatestFilesFolder & SQLiteLinqDLL, FinalBinaryFolderPath & SQLiteLinqDLL)
-        File.Copy(LatestFilesFolder & SQLiteInteropDLL, FinalBinaryFolderPath & SQLiteInteropDLL)
+        File.Copy(LatestFilesFolder & SystemRuntimeUnsafeDLL, FinalBinaryFolderPath & SystemRuntimeUnsafeDLL)
+        File.Copy(LatestFilesFolder & SystemThreadingTasksExtensionsDLL, FinalBinaryFolderPath & SystemThreadingTasksExtensionsDLL)
+        File.Copy(LatestFilesFolder & SystemValueTupleDLL, FinalBinaryFolderPath & SystemValueTupleDLL)
         File.Copy(LatestFilesFolder & YamlDotNetDLL, FinalBinaryFolderPath & YamlDotNetDLL)
-        File.Copy(LatestFilesFolder & MainEXEManifest, FinalBinaryFolderPath & MainEXEManifest)
-        File.Copy(LatestFilesFolder & UpdaterEXEManifest, FinalBinaryFolderPath & UpdaterEXEManifest)
+        File.Copy(LatestFilesFolder & SQLiteInteropDLL, FinalBinaryFolderPath & SQLiteInteropDLL)
 
         ' Delete the file if it already exists
         File.Delete(FinalBinaryZipPath & FinalBinaryZip)
