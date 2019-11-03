@@ -104,8 +104,13 @@ Public Class DBFilesBase
                         ' Boolean values need to be properly formatted to 1/0
                         ReturnFieldValue = CStr(CInt(CBool(FieldValue)) * -1)
                     Case Else
-                        ' Convert numbers to strings
-                        ReturnFieldValue = CStr(FieldValue)
+                        If CStr(FieldValue) = "false" Or CStr(FieldValue) = "true" Then
+                            ' Assume it needs to be converted into a 1 or a 0
+                            ReturnFieldValue = CStr(CInt(CBool(FieldValue)))
+                        Else
+                            ' Convert numbers to strings
+                            ReturnFieldValue = CStr(FieldValue)
+                        End If
                 End Select
             Else
                 ' Set empty strings to null as well
