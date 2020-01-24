@@ -209,6 +209,7 @@
     </Compile>
     <Compile Include="ProgramSettings.vb" />
     <Compile Include="ProgramUpdater.vb" />
+    <Compile Include="SDE YAML Classses\YAMLagtAgentsinSpace.vb" />
     <Compile Include="SDE YAML Classses\YAMLblueprints.vb" />
     <Compile Include="SDE YAML Classses\YAMLUniverse.vb" />
     <Compile Include="SDE YAML Classses\YAMLtypeIDs.vb" />
@@ -242,13 +243,11 @@
     <Compile Include="SDE YAML Classses\YAMLinvTypeReactions.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvTypeMaterials.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvPositions.vb" />
-    <Compile Include="SDE YAML Classses\YAMLinvMetaTypes.vb" />
     <Compile Include="SDE YAML Classses\YAMLmetaGroups.vb" />
     <Compile Include="SDE YAML Classses\YAMLmarketGroups.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvItems.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvFlags.vb" />
-    <Compile Include="SDE YAML Classses\YAMLinvControlTowerResources.vb" />
-    <Compile Include="SDE YAML Classses\YAMLinvControlTowerResourcePurposes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcontrolTowerResources.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvContrabandTypes.vb" />
     <Compile Include="SDE YAML Classses\YAMLagtAgents.vb" />
     <Compile Include="SDE YAML Classses\YAMLagtAgentTypes.vb" />
@@ -265,12 +264,10 @@
     <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporations.vb" />
     <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporationTrades.vb" />
     <Compile Include="SDE YAML Classses\YAMLcrpNPCDivisions.vb" />
-    <Compile Include="SDE YAML Classses\YAMLdgmAttributeCategories.vb" />
-    <Compile Include="SDE YAML Classses\YAMLdgmAttributeTypes.vb" />
-    <Compile Include="SDE YAML Classses\YAMLdgmEffects.vb" />
-    <Compile Include="SDE YAML Classses\YAMLdgmExpressions.vb" />
-    <Compile Include="SDE YAML Classses\YAMLdgmTypeAttributes.vb" />
-    <Compile Include="SDE YAML Classses\YAMLdgmTypeEffects.vb" />
+    <Compile Include="SDE YAML Classses\YAMLdogmaAttributeCategories.vb" />
+    <Compile Include="SDE YAML Classses\YAMLdogmaAttributeTypes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLdogmaEffects.vb" />
+    <Compile Include="SDE YAML Classses\YAMLtypeDogma.vb" />
     <Compile Include="SDE YAML Classses\YAMLlandmarks.vb" />
     <Compile Include="SDE YAML Classses\YAMLeveUnits.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvNames.vb" />

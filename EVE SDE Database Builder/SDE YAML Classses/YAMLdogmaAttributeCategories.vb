@@ -2,10 +2,10 @@
 Imports YamlDotNet.Serialization
 Imports System.IO
 
-Public Class YAMLinvMetaTypes
+Public Class YAMLdogmaAttributeCategories
     Inherits YAMLFilesBase
 
-    Public Const invMetaTypesFile As String = "invMetaTypes.yaml"
+    Public Const dogmaAttributeCategoriesFile As String = "dogmaAttributeCategories.yaml"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -22,7 +22,7 @@ Public Class YAMLinvMetaTypes
         Dim DS As New Deserializer
         DS = DSB.Build
 
-        Dim YAMLRecords As New List(Of invMetaType)
+        Dim YAMLRecords As New Dictionary(Of Long, dogmaAttributeCategory)
         Dim DataFields As List(Of DBField)
         Dim SQL As String = ""
         Dim Count As Long = 0
@@ -30,9 +30,9 @@ Public Class YAMLinvMetaTypes
 
         ' Build table
         Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("parentTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("metaGroupID", FieldType.smallint_type, 0, True))
+        Table.Add(New DBTableField("categoryID", FieldType.tinyint_type, 0, False, True))
+        Table.Add(New DBTableField("name", FieldType.nvarchar_type, 50, True))
+        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 200, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -46,7 +46,7 @@ Public Class YAMLinvMetaTypes
 
         Try
             ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of invMetaType))(New StringReader(File.ReadAllText(YAMLFile)))
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of Long, dogmaAttributeCategory))(New StringReader(File.ReadAllText(YAMLFile)))
         Catch ex As Exception
             Call ShowErrorMessage(ex)
         End Try
@@ -55,19 +55,20 @@ Public Class YAMLinvMetaTypes
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
+            With DataField.Value
+                DataFields = New List(Of DBField)
 
-            ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.typeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("parentTypeID", DataField.parentTypeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("metaGroupID", DataField.metaGroupID, FieldType.smallint_type))
+                ' Build the insert list
+                DataFields.Add(UpdateDB.BuildDatabaseField("categoryID", DataField.Key, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("name", .name, FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("description", .description, FieldType.nvarchar_type))
 
-            Call UpdateDB.InsertRecord(TableName, DataFields)
+                Call UpdateDB.InsertRecord(TableName, DataFields)
 
-            ' Update grid progress
-            Call UpdateGridRowProgress(Params.RowLocation, Count, TotalRecords)
-            Count += 1
-
+                ' Update grid progress
+                Call UpdateGridRowProgress(Params.RowLocation, Count, TotalRecords)
+                Count += 1
+            End With
         Next
 
         Call FinalizeGridRow(Params.RowLocation)
@@ -76,8 +77,7 @@ Public Class YAMLinvMetaTypes
 
 End Class
 
-Public Class invMetaType
-    Public Property typeID As Object
-    Public Property parentTypeID As Object
-    Public Property metaGroupID As Object
+Public Class dogmaAttributeCategory
+    Public Property description As Object
+    Public Property name As Object
 End Class

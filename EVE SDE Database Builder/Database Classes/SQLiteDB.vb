@@ -297,7 +297,7 @@ Public Class SQLiteDB
         ' Finally build any unique PK index
         If PKFields.Count > 1 Then
             ' Create a unique index now with multiple PK fields for SQLite
-            Call CreateIndex(TableName, "IDX_" & TableName & "_TID_EID", PKFields, True)
+            Call CreateIndex(TableName, "IDX_" & TableName & "_PK", PKFields, True)
         End If
 
     End Sub

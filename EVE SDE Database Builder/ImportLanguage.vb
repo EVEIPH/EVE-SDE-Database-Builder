@@ -5,14 +5,15 @@
 Public Class ImportLanguage
 
     ' Language Consts
-    Public Const ENGLISH As String = "EN-US"
-    Public Const SPANISH As String = "ES" ' Not used
-    Public Const GERMAN As String = "DE"
-    Public Const FRENCH As String = "FR"
-    Public Const ITALIAN As String = "IT" ' Not used
-    Public Const JAPANESE As String = "JA"
-    Public Const RUSSIAN As String = "RU"
-    Private Const CHINESE As String = "ZH"
+    Public Const ENGLISH As String = "en"
+    Public Const SPANISH As String = "es" ' Not used
+    Public Const GERMAN As String = "de"
+    Public Const FRENCH As String = "fr"
+    Public Const ITALIAN As String = "it" ' Not used
+    Public Const JAPANESE As String = "ja"
+    Public Const RUSSIAN As String = "ru"
+    Private Const CHINESE As String = "zh"
+    Private Const KOREAN As String = "ko"
 
     Private SelectedLanguageCode As String
 
@@ -49,6 +50,8 @@ Public Class ImportLanguage
                         Translation = .es
                     Case ITALIAN
                         Translation = .it
+                    Case KOREAN
+                        Translation = .ko
                     Case Else
                         Translation = .en
                 End Select
@@ -93,6 +96,8 @@ Public Class ImportLanguage
                             .Translation = AllData.ru
                         Case LanguageCode.Chinese
                             .Translation = AllData.zh
+                        Case LanguageCode.Korean
+                            .Translation = AllData.ko
                         Case Else
                             .Translation = AllData.en ' Spanish and Italian don't have complete data, so use English 
                     End Select
@@ -140,6 +145,8 @@ Public Class ImportLanguage
                 ReturnCode = SPANISH
             Case LanguageCode.Italian
                 ReturnCode = ITALIAN
+            Case LanguageCode.Korean
+                ReturnCode = KOREAN
             Case Else
                 ReturnCode = ENGLISH
         End Select
@@ -158,6 +165,7 @@ Public Enum LanguageCode
     Chinese = 6
     Spanish = 7
     Italian = 8
+    Korean = 9
 End Enum
 
 Public Class Translations
@@ -169,6 +177,7 @@ Public Class Translations
     Public Property ja As Object
     Public Property ru As Object
     Public Property zh As Object
+    Public Property ko As Object
 End Class
 
 Public Structure TranslationData

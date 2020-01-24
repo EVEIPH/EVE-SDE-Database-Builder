@@ -2,10 +2,10 @@
 Imports YamlDotNet.Serialization
 Imports System.IO
 
-Public Class YAMLdgmTypeEffects
+Public Class YAMLagtAgentsinSpace
     Inherits YAMLFilesBase
 
-    Public Const dgmTypeEffectsFile As String = "dgmTypeEffects.yaml"
+    Public Const agentsinSpaceFile As String = "agentsInSpace.yaml"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -22,19 +22,31 @@ Public Class YAMLdgmTypeEffects
         Dim DS As New Deserializer
         DS = DSB.Build
 
-        Dim YAMLRecords As New List(Of dgmTypeEffect)
+        Dim YAMLRecords As New Dictionary(Of Long, agentInSpace)
         Dim DataFields As List(Of DBField)
+        Dim IndexFields As List(Of String)
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
 
         ' Build table
         Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("effectID", FieldType.smallint_type, 0, False, True))
-        Table.Add(New DBTableField("isDefault", FieldType.bit_type, 0, True))
+        Table.Add(New DBTableField("agentID", FieldType.int_type, 0, False, True))
+        Table.Add(New DBTableField("dungeonID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("spawnPointID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
+
+        ' Create indexes
+        IndexFields = New List(Of String)
+        IndexFields.Add("agentID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_AID", IndexFields)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("solarSystemID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_SSID", IndexFields)
 
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then
@@ -46,7 +58,7 @@ Public Class YAMLdgmTypeEffects
 
         Try
             ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of dgmTypeEffect))(New StringReader(File.ReadAllText(YAMLFile)))
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of Long, agentInSpace))(New StringReader(File.ReadAllText(YAMLFile)))
         Catch ex As Exception
             Call ShowErrorMessage(ex)
         End Try
@@ -58,15 +70,19 @@ Public Class YAMLdgmTypeEffects
             DataFields = New List(Of DBField)
 
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.typeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("effectID", DataField.effectID, FieldType.smallint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("isDefault", DataField.isDefault, FieldType.bit_type))
+            With DataField.Value
+                DataFields.Add(UpdateDB.BuildDatabaseField("agentID", DataField.Key, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("dungeonID", .dungeonID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("solarSystemID", .solarSystemID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("spawnPointID", .spawnPointID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("typeID", .typeID, FieldType.int_type))
+            End With
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 
             ' Update grid progress
             Call UpdateGridRowProgress(Params.RowLocation, Count, TotalRecords)
-            Count += 1
+            Count += 1 ' Count after so we never get to 100 until finished
 
         Next
 
@@ -76,8 +92,9 @@ Public Class YAMLdgmTypeEffects
 
 End Class
 
-Public Class dgmTypeEffect
+Public Class agentInSpace
+    Public Property dungeonID As Object
+    Public Property solarSystemID As Object
+    Public Property spawnPointID As Object
     Public Property typeID As Object
-    Public Property effectID As Object
-    Public Property isDefault As Object
 End Class

@@ -614,42 +614,6 @@ ExitProc:
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLdgmAttributeCategories.dgmAttributeCategoriesFile
-                        Dim DGMAttributeCategories As New YAMLdgmAttributeCategories(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf DGMAttributeCategories.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLdgmAttributeTypes.dgmAttributeTypesFile
-                        Dim DGMAttributeTypes As New YAMLdgmAttributeTypes(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf DGMAttributeTypes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLdgmEffects.dgmEffectsFile
-                        Dim DGMEffects As New YAMLdgmEffects(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf DGMEffects.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLdgmExpressions.dgmExpressionsFile
-                        Dim DGMExpressions As New YAMLdgmExpressions(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf DGMExpressions.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLdgmTypeAttributes.dgmTypeAttributesFile
-                        Dim DGMTypeAttributes As New YAMLdgmTypeAttributes(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf DGMTypeAttributes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLdgmTypeEffects.dgmTypeEffectsFile
-                        Dim DGMTypeEffects As New YAMLdgmTypeEffects(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf DGMTypeEffects.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLeveUnits.eveUnitsFile
                         Dim EVEUnits As New YAMLeveUnits(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf EVEUnits.ImportFile)
@@ -659,18 +623,6 @@ ExitProc:
                     Case YAMLinvContrabandTypes.invContrabandTypesFile
                         Dim INVContrabandTypes As New YAMLinvContrabandTypes(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVContrabandTypes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLinvControlTowerResourcePurposes.invControlTowerResourcePurposesFile
-                        Dim INVControlTowerResourcePurposes As New YAMLinvControlTowerResourcePurposes(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf INVControlTowerResourcePurposes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLinvControlTowerResources.invControlTowerResourcesFile
-                        Dim INVControlTowerResources As New YAMLinvControlTowerResources(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf INVControlTowerResources.ImportFile)
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
@@ -686,11 +638,6 @@ ExitProc:
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
-                    'Case YAMLinvMetaTypes.invMetaTypesFile
-                    '    Dim INVMetaTypes As New YAMLinvMetaTypes(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                    '    TempThreadList.T = New Thread(AddressOf INVMetaTypes.ImportFile)
-                    '    TempThreadList.Params = Parameters
-                    '    Call ThreadsArray.Add(TempThreadList)
                     Case YAMLinvNames.invNamesFile
                         Dim INVNames As New YAMLinvNames(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVNames.ImportFile)
@@ -827,6 +774,14 @@ ExitProc:
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
+
+
+                    Case YAMLagtAgentsinSpace.agentsinSpaceFile
+                        Dim AgentsInSpace As New YAMLagtAgentsinSpace(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                        TempThreadList.T = New Thread(AddressOf AgentsInSpace.ImportFile)
+                        TempThreadList.T.Name = .FileName
+                        TempThreadList.Params = Parameters
+                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLblueprints.blueprintsFile
                         Dim BPs As New YAMLblueprints(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf BPs.ImportFile)
@@ -842,6 +797,30 @@ ExitProc:
                     Case YAMLcertificates.certificatesFile
                         Dim Certificates As New YAMLcertificates(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf Certificates.ImportFile)
+                        TempThreadList.T.Name = .FileName
+                        TempThreadList.Params = Parameters
+                        Call ThreadsArray.Add(TempThreadList)
+                    Case YAMLcontrolTowerResources.controlTowerResourcesFile
+                        Dim INVControlTowerResourcePurposes As New YAMLcontrolTowerResources(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                        TempThreadList.T = New Thread(AddressOf INVControlTowerResourcePurposes.ImportFile)
+                        TempThreadList.T.Name = .FileName
+                        TempThreadList.Params = Parameters
+                        Call ThreadsArray.Add(TempThreadList)
+                    Case YAMLdogmaAttributeTypes.dogmaAttributeTypesFile
+                        Dim DGMAttributeTypes As New YAMLdogmaAttributeTypes(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                        TempThreadList.T = New Thread(AddressOf DGMAttributeTypes.ImportFile)
+                        TempThreadList.T.Name = .FileName
+                        TempThreadList.Params = Parameters
+                        Call ThreadsArray.Add(TempThreadList)
+                    Case YAMLdogmaEffects.dogmaEffectsFile
+                        Dim DGMEffects As New YAMLdogmaEffects(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                        TempThreadList.T = New Thread(AddressOf DGMEffects.ImportFile)
+                        TempThreadList.T.Name = .FileName
+                        TempThreadList.Params = Parameters
+                        Call ThreadsArray.Add(TempThreadList)
+                    Case YAMLdogmaAttributeCategories.dogmaAttributeCategoriesFile
+                        Dim DGMAttributeCategories As New YAMLdogmaAttributeCategories(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                        TempThreadList.T = New Thread(AddressOf DGMAttributeCategories.ImportFile)
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
@@ -878,6 +857,12 @@ ExitProc:
                     Case YAMLtournamentRuleSets.tournamentRuleSetsFile
                         Dim TRS As New YAMLtournamentRuleSets(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf TRS.ImportFile)
+                        TempThreadList.T.Name = .FileName
+                        TempThreadList.Params = Parameters
+                        Call ThreadsArray.Add(TempThreadList)
+                    Case YAMLtypeDogma.typeDogmaFile
+                        Dim DGMTypeAttributes As New YAMLtypeDogma(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                        TempThreadList.T = New Thread(AddressOf DGMTypeAttributes.ImportFile)
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
@@ -1085,8 +1070,8 @@ CancelImportProcessing:
         TempList.Add("crpActivities.yaml")
         TempList.Add("crpNPCCorporations.yaml")
         TempList.Add("crpNPCDivisions.yaml")
-        TempList.Add("dgmAttributeTypes.yaml")
-        TempList.Add("dgmEffects.yaml")
+        TempList.Add("dogmaAttributes.yaml")
+        TempList.Add("dogmaEffects.yaml")
         TempList.Add("eveUnits.yaml")
         TempList.Add("invCategories.yaml")
         TempList.Add("marketGroups.yaml")
@@ -1661,9 +1646,11 @@ CancelImportProcessing:
                 Dim BSD_FilesList As FileInfo() = BSD_DI.GetFiles()
 
                 For Each YAMLBSDFile In BSD_FilesList
-                    TempFile.FileName = YAMLBSDFile.Name
-                    TempFile.Checked = GetGridCheckValue(YAMLBSDFile.Name)
-                    TotalFileList.Add(TempFile)
+                    If YAMLBSDFile.Name.Substring(0, 3) <> "dgm" Then ' Ignore the old dogma files
+                        TempFile.FileName = YAMLBSDFile.Name
+                        TempFile.Checked = GetGridCheckValue(YAMLBSDFile.Name)
+                        TotalFileList.Add(TempFile)
+                    End If
                 Next
 
             Catch ex As Exception
