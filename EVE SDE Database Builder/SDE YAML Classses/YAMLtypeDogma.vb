@@ -69,25 +69,24 @@ Public Class YAMLtypeDogma
             With DataField.Value
                 ' For each record, insert the attribute values and the effect values
                 If .dogmaAttributes.Count > 0 Then
-                    DataFields = New List(Of DBField)
                     For Each attribute In .dogmaAttributes
+                        DataFields = New List(Of DBField)
                         DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.Key, FieldType.int_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("attributeID", attribute.attributeID, FieldType.smallint_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("value", attribute.value, FieldType.int_type))
+                        Call UpdateDB.InsertRecord(AttributesTableName, DataFields)
                     Next
-
-                    Call UpdateDB.InsertRecord(AttributesTableName, DataFields)
                 End If
 
                 If .dogmaEffects.Count > 0 Then
-                    DataFields = New List(Of DBField)
+
                     For Each effect In .dogmaEffects
+                        DataFields = New List(Of DBField)
                         DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.Key, FieldType.int_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("effectID", effect.effectID, FieldType.smallint_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("isDefault", effect.isDefault, FieldType.bit_type))
+                        Call UpdateDB.InsertRecord(EffectsTableName, DataFields)
                     Next
-
-                    Call UpdateDB.InsertRecord(EffectsTableName, DataFields)
                 End If
             End With
 
