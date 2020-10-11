@@ -2,10 +2,10 @@
 Imports YamlDotNet.Serialization
 Imports System.IO
 
-Public Class YAMLinvTypeMaterials
+Public Class YAMLresearchAgents
     Inherits YAMLFilesBase
 
-    Public Const invTypeMaterialsFile As String = "invTypeMaterials.yaml"
+    Public Const researchAgentsFile As String = "researchAgents.yaml"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -22,19 +22,25 @@ Public Class YAMLinvTypeMaterials
         Dim DS As New Deserializer
         DS = DSB.Build
 
-        Dim YAMLRecords As New List(Of invTypeMaterial)
+        Dim YAMLRecords As New Dictionary(Of Long, researchAgent)
         Dim DataFields As List(Of DBField)
+        Dim IndexFields As List(Of String)
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
 
+        Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
+
         ' Build table
         Dim Table As New List(Of DBTableField)
+        Table.Add(New DBTableField("agentID", FieldType.int_type, 0, False, True))
         Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("materialTypeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("quantity", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
+
+        IndexFields = New List(Of String)
+        IndexFields.Add("typeID")
+        Call UpdateDB.createindex(TableName, "IDX_" & TableName & "_TID", IndexFields)
 
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then
@@ -46,7 +52,7 @@ Public Class YAMLinvTypeMaterials
 
         Try
             ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of invTypeMaterial))(New StringReader(File.ReadAllText(YAMLFile)))
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of Long, researchAgent))(New StringReader(File.ReadAllText(YAMLFile)))
         Catch ex As Exception
             Call ShowErrorMessage(ex)
         End Try
@@ -55,19 +61,17 @@ Public Class YAMLinvTypeMaterials
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.typeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("materialTypeID", DataField.materialTypeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("quantity", DataField.quantity, FieldType.int_type))
-
-            Call UpdateDB.InsertRecord(TableName, DataFields)
+            For Each Skill In DataField.Value.skills
+                DataFields = New List(Of DBField)
+                DataFields.Add(UpdateDB.BuildDatabaseField("agentID", DataField.Key, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("typeID", Skill.typeID, FieldType.int_type))
+                Call UpdateDB.InsertRecord(TableName, DataFields)
+            Next
 
             ' Update grid progress
             Call UpdateGridRowProgress(Params.RowLocation, Count, TotalRecords)
             Count += 1
-
         Next
 
         Call FinalizeGridRow(Params.RowLocation)
@@ -76,8 +80,10 @@ Public Class YAMLinvTypeMaterials
 
 End Class
 
-Public Class invTypeMaterial
+Public Class researchAgent
+    Public Property skills As List(Of agentSkill)
+End Class
+
+Public Class agentSkill
     Public Property typeID As Object
-    Public Property materialTypeID As Object
-    Public Property quantity As Object
 End Class

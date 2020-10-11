@@ -35,7 +35,7 @@ Public Class YAMLtypeDogma
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
         Table.Add(New DBTableField("attributeID", FieldType.smallint_type, 0, False, True))
-        Table.Add(New DBTableField("value", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("value", FieldType.real_type, 0, True))
 
         Call UpdateDB.CreateTable(AttributesTableName, Table)
 

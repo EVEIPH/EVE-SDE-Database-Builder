@@ -2,10 +2,10 @@
 Imports YamlDotNet.Serialization
 Imports System.IO
 
-Public Class YAMLchrAncestries
+Public Class YAMLancestries
     Inherits YAMLFilesBase
 
-    Public Const chrAncestriesFile As String = "chrAncestries.yaml"
+    Public Const ancestriesFile As String = "ancestries.yaml"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -22,11 +22,13 @@ Public Class YAMLchrAncestries
         Dim DS As New Deserializer
         DS = DSB.Build
 
-        Dim YAMLRecords As New List(Of chrAncestry)
+        Dim YAMLRecords As New Dictionary(Of Long, chrAncestry)
         Dim DataFields As List(Of DBField)
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
+
+        Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
         Dim Table As New List(Of DBTableField)
@@ -54,7 +56,7 @@ Public Class YAMLchrAncestries
 
         Try
             ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of chrAncestry))(New StringReader(File.ReadAllText(YAMLFile)))
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of Long, chrAncestry))(New StringReader(File.ReadAllText(YAMLFile)))
         Catch ex As Exception
             Call ShowErrorMessage(ex)
         End Try
@@ -66,18 +68,24 @@ Public Class YAMLchrAncestries
             DataFields = New List(Of DBField)
 
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("ancestryID", DataField.ancestryID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("ancestryName", Translator.TranslateData(TableName, "ancestryName", "ancestryID", DataField.ancestryID, Params.ImportLanguageCode, DataField.ancestryName), FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("bloodlineID", DataField.bloodlineID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("description", Translator.TranslateData(TableName, "description", "ancestryID", DataField.ancestryID, Params.ImportLanguageCode, DataField.description), FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("perception", DataField.perception, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("willpower", DataField.willpower, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("charisma", DataField.charisma, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("memory", DataField.memory, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("intelligence", DataField.intelligence, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("iconID", DataField.iconID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("shortDescription", DataField.shortDescription, FieldType.nvarchar_type))
+            With DataField.Value
+                DataFields.Add(UpdateDB.BuildDatabaseField("ancestryID", DataField.Key, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("ancestryName", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("bloodlineID", .bloodlineID, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("description", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("perception", .perception, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("willpower", .willpower, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("charisma", .charisma, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("memory", .memory, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("intelligence", .intelligence, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("shortDescription", .shortDescription, FieldType.nvarchar_type))
 
+                ' Insert the translated data into translation tables
+                Call Translator.InsertTranslationData(DataField.Key, "ancestryID", "ancestryName", TableName, NameTranslation.GetAllTranslations(.nameID))
+                Call Translator.InsertTranslationData(DataField.Key, "ancestryID", "description", TableName, NameTranslation.GetAllTranslations(.descriptionID))
+
+            End With
             Call UpdateDB.InsertRecord(TableName, DataFields)
 
             ' Update grid progress
@@ -92,10 +100,9 @@ Public Class YAMLchrAncestries
 End Class
 
 Public Class chrAncestry
-    Public Property ancestryID As Object
-    Public Property ancestryName As Object
+    Public Property nameID As Translations
     Public Property bloodlineID As Object
-    Public Property description As Object
+    Public Property descriptionID As Translations
     Public Property perception As Object
     Public Property willpower As Object
     Public Property charisma As Object

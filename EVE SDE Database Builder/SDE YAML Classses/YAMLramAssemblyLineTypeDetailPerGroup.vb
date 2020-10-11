@@ -32,9 +32,9 @@ Public Class YAMLramAssemblyLineTypeDetailPerGroup
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("assemblyLineTypeID", FieldType.tinyint_type, 0, False, True))
         Table.Add(New DBTableField("groupID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("timeMultiplier", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("materialMultiplier", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("costMultiplier", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("timeMultiplier", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("materialMultiplier", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("costMultiplier", FieldType.real_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -62,9 +62,9 @@ Public Class YAMLramAssemblyLineTypeDetailPerGroup
             ' Build the insert list
             DataFields.Add(UpdateDB.BuildDatabaseField("assemblyLineTypeID", DataField.assemblyLineTypeID, FieldType.tinyint_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("groupID", DataField.groupID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("timeMultiplier", DataField.timeMultiplier, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("materialMultiplier", DataField.materialMultiplier, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("costMultiplier", DataField.costMultiplier, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("timeMultiplier", DataField.timeMultiplier, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("materialMultiplier", DataField.materialMultiplier, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("costMultiplier", DataField.costMultiplier, FieldType.real_type))
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

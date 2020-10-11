@@ -2,10 +2,10 @@
 Imports YamlDotNet.Serialization
 Imports System.IO
 
-Public Class YAMLagtAgents
+Public Class YAMLagents
     Inherits YAMLFilesBase
 
-    Public Const agtAgentsFile As String = "agtAgents.yaml"
+    Public Const agentsFile As String = "agents.yaml"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -22,7 +22,7 @@ Public Class YAMLagtAgents
         Dim DS As New Deserializer
         DS = DSB.Build
 
-        Dim YAMLRecords As New List(Of agtAgent)
+        Dim YAMLRecords As New Dictionary(Of Long, agtAgent)
         Dim DataFields As List(Of DBField)
         Dim IndexFields As List(Of String)
         Dim SQL As String = ""
@@ -36,7 +36,6 @@ Public Class YAMLagtAgents
         Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("locationID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("level", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("quality", FieldType.smallint_type, 0, True))
         Table.Add(New DBTableField("agentTypeID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("isLocator", FieldType.bit_type, 0, True))
 
@@ -61,7 +60,7 @@ Public Class YAMLagtAgents
 
         Try
             ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of agtAgent))(New StringReader(File.ReadAllText(YAMLFile)))
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of Long, agtAgent))(New StringReader(File.ReadAllText(YAMLFile)))
         Catch ex As Exception
             Call ShowErrorMessage(ex)
         End Try
@@ -73,15 +72,15 @@ Public Class YAMLagtAgents
             DataFields = New List(Of DBField)
 
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("agentID", DataField.agentID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("divisionID", DataField.divisionID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", DataField.corporationID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("locationID", DataField.locationID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("level", DataField.level, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("quality", DataField.quality, FieldType.smallint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("agentTypeID", DataField.agentTypeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("isLocator", DataField.isLocator, FieldType.bit_type))
-
+            With DataField.Value
+                DataFields.Add(UpdateDB.BuildDatabaseField("agentID", DataField.Key, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("divisionID", .divisionID, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", .corporationID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("locationID", .locationID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("level", .level, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("agentTypeID", .agentTypeID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("isLocator", .isLocator, FieldType.bit_type))
+            End With
             Call UpdateDB.InsertRecord(TableName, DataFields)
 
             ' Update grid progress
@@ -97,7 +96,6 @@ Public Class YAMLagtAgents
 End Class
 
 Public Class agtAgent
-    Public Property agentID As Object
     Public Property divisionID As Object
     Public Property corporationID As Object
     Public Property locationID As Object

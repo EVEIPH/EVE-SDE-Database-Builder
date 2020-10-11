@@ -62,6 +62,7 @@ Partial Class frmMain
         Me.rbtnMySQL = New System.Windows.Forms.RadioButton()
         Me.rbtnPostgreSQL = New System.Windows.Forms.RadioButton()
         Me.gbLanguage = New System.Windows.Forms.GroupBox()
+        Me.rbtnKorean = New System.Windows.Forms.RadioButton()
         Me.rbtnChinese = New System.Windows.Forms.RadioButton()
         Me.rbtnRussian = New System.Windows.Forms.RadioButton()
         Me.rbtnJapanese = New System.Windows.Forms.RadioButton()
@@ -69,6 +70,7 @@ Partial Class frmMain
         Me.rbtnGerman = New System.Windows.Forms.RadioButton()
         Me.rbtnEnglish = New System.Windows.Forms.RadioButton()
         Me.gbFilePathSelect = New System.Windows.Forms.GroupBox()
+        Me.btnDownload = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -124,18 +126,18 @@ Partial Class frmMain
         '
         'btnCheckNoGridItems
         '
-        Me.btnCheckNoGridItems.Location = New System.Drawing.Point(443, 121)
+        Me.btnCheckNoGridItems.Location = New System.Drawing.Point(443, 120)
         Me.btnCheckNoGridItems.Name = "btnCheckNoGridItems"
-        Me.btnCheckNoGridItems.Size = New System.Drawing.Size(76, 22)
+        Me.btnCheckNoGridItems.Size = New System.Drawing.Size(76, 23)
         Me.btnCheckNoGridItems.TabIndex = 7
         Me.btnCheckNoGridItems.Text = "Check None"
         Me.btnCheckNoGridItems.UseVisualStyleBackColor = True
         '
         'btnCheckAllGridItems
         '
-        Me.btnCheckAllGridItems.Location = New System.Drawing.Point(361, 121)
+        Me.btnCheckAllGridItems.Location = New System.Drawing.Point(361, 120)
         Me.btnCheckAllGridItems.Name = "btnCheckAllGridItems"
-        Me.btnCheckAllGridItems.Size = New System.Drawing.Size(76, 22)
+        Me.btnCheckAllGridItems.Size = New System.Drawing.Size(76, 23)
         Me.btnCheckAllGridItems.TabIndex = 6
         Me.btnCheckAllGridItems.Text = "Check All"
         Me.btnCheckAllGridItems.UseVisualStyleBackColor = True
@@ -426,6 +428,7 @@ Partial Class frmMain
         '
         'gbLanguage
         '
+        Me.gbLanguage.Controls.Add(Me.rbtnKorean)
         Me.gbLanguage.Controls.Add(Me.rbtnChinese)
         Me.gbLanguage.Controls.Add(Me.rbtnRussian)
         Me.gbLanguage.Controls.Add(Me.rbtnJapanese)
@@ -439,10 +442,20 @@ Partial Class frmMain
         Me.gbLanguage.TabStop = False
         Me.gbLanguage.Text = "Language:"
         '
+        'rbtnKorean
+        '
+        Me.rbtnKorean.AutoSize = True
+        Me.rbtnKorean.Location = New System.Drawing.Point(8, 104)
+        Me.rbtnKorean.Name = "rbtnKorean"
+        Me.rbtnKorean.Size = New System.Drawing.Size(59, 17)
+        Me.rbtnKorean.TabIndex = 6
+        Me.rbtnKorean.Text = "Korean"
+        Me.rbtnKorean.UseVisualStyleBackColor = True
+        '
         'rbtnChinese
         '
         Me.rbtnChinese.AutoSize = True
-        Me.rbtnChinese.Location = New System.Drawing.Point(8, 99)
+        Me.rbtnChinese.Location = New System.Drawing.Point(8, 89)
         Me.rbtnChinese.Name = "rbtnChinese"
         Me.rbtnChinese.Size = New System.Drawing.Size(63, 17)
         Me.rbtnChinese.TabIndex = 5
@@ -452,7 +465,7 @@ Partial Class frmMain
         'rbtnRussian
         '
         Me.rbtnRussian.AutoSize = True
-        Me.rbtnRussian.Location = New System.Drawing.Point(8, 82)
+        Me.rbtnRussian.Location = New System.Drawing.Point(8, 74)
         Me.rbtnRussian.Name = "rbtnRussian"
         Me.rbtnRussian.Size = New System.Drawing.Size(63, 17)
         Me.rbtnRussian.TabIndex = 4
@@ -462,7 +475,7 @@ Partial Class frmMain
         'rbtnJapanese
         '
         Me.rbtnJapanese.AutoSize = True
-        Me.rbtnJapanese.Location = New System.Drawing.Point(8, 65)
+        Me.rbtnJapanese.Location = New System.Drawing.Point(8, 59)
         Me.rbtnJapanese.Name = "rbtnJapanese"
         Me.rbtnJapanese.Size = New System.Drawing.Size(71, 17)
         Me.rbtnJapanese.TabIndex = 3
@@ -472,7 +485,7 @@ Partial Class frmMain
         'rbtnFrench
         '
         Me.rbtnFrench.AutoSize = True
-        Me.rbtnFrench.Location = New System.Drawing.Point(8, 48)
+        Me.rbtnFrench.Location = New System.Drawing.Point(8, 44)
         Me.rbtnFrench.Name = "rbtnFrench"
         Me.rbtnFrench.Size = New System.Drawing.Size(58, 17)
         Me.rbtnFrench.TabIndex = 2
@@ -482,7 +495,7 @@ Partial Class frmMain
         'rbtnGerman
         '
         Me.rbtnGerman.AutoSize = True
-        Me.rbtnGerman.Location = New System.Drawing.Point(8, 31)
+        Me.rbtnGerman.Location = New System.Drawing.Point(8, 29)
         Me.rbtnGerman.Name = "rbtnGerman"
         Me.rbtnGerman.Size = New System.Drawing.Size(62, 17)
         Me.rbtnGerman.TabIndex = 1
@@ -501,6 +514,7 @@ Partial Class frmMain
         '
         'gbFilePathSelect
         '
+        Me.gbFilePathSelect.Controls.Add(Me.btnDownload)
         Me.gbFilePathSelect.Controls.Add(Me.btnCheckNoGridItems)
         Me.gbFilePathSelect.Controls.Add(Me.btnCheckAllGridItems)
         Me.gbFilePathSelect.Controls.Add(Me.lblMediaFire)
@@ -515,6 +529,18 @@ Partial Class frmMain
         Me.gbFilePathSelect.TabIndex = 0
         Me.gbFilePathSelect.TabStop = False
         Me.gbFilePathSelect.Text = "Select File Locations:"
+        '
+        'btnDownload
+        '
+        Me.btnDownload.Location = New System.Drawing.Point(79, 54)
+        Me.btnDownload.Name = "btnDownload"
+        Me.btnDownload.Size = New System.Drawing.Size(76, 23)
+        Me.btnDownload.TabIndex = 8
+        Me.btnDownload.Text = "Download"
+        Me.ToolTip1.SetToolTip(Me.btnDownload, "Checks for a new database version, downloads, and unzips the files to the specifi" &
+        "ed folder.")
+        Me.btnDownload.UseVisualStyleBackColor = True
+        Me.btnDownload.Visible = False
         '
         'btnCancel
         '
@@ -553,13 +579,13 @@ Partial Class frmMain
         'SetThreadsUsedToolStripMenuItem
         '
         Me.SetThreadsUsedToolStripMenuItem.Name = "SetThreadsUsedToolStripMenuItem"
-        Me.SetThreadsUsedToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
+        Me.SetThreadsUsedToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
         Me.SetThreadsUsedToolStripMenuItem.Text = "Set Threads Used"
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'AboutToolStripMenuItem
@@ -696,4 +722,6 @@ Partial Class frmMain
     Friend WithEvents CheckForUpdatesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents lblServerName As Label
+    Friend WithEvents btnDownload As Button
+    Friend WithEvents rbtnKorean As RadioButton
 End Class

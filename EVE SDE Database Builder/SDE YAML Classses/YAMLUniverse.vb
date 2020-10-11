@@ -229,6 +229,7 @@ Public Class YAMLUniverse
     Private Function GetItemName(ByVal ItemID As Integer) As String
         Dim WhereClause As List(Of String)
         Dim Result As New List(Of List(Of Object))
+        Dim TempResult As String = ""
 
         ' See if the record is there
         WhereClause = New List(Of String)
@@ -238,8 +239,11 @@ Public Class YAMLUniverse
 
         Result = invNamesLDB.SelectfromTable(SelectClause, invNamesTableName, WhereClause)
 
-        If IsNothing(Result(0)(0)) Then
-            Return ""
+        If Result.Count = 0 Then
+            ' Run an ESI check
+            Dim ItemNameESICheck As New ESI
+            Dim ItemName = ItemNameESICheck.GetItemName(ItemID)
+            Return ItemName
         Else
             Return CStr(Result(0)(0))
         End If
@@ -377,6 +381,7 @@ Public Class YAMLUniverse
         DSB.IgnoreUnmatchedProperties()
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
+        Dim NameLookup As New ESI
         DS = DSB.Build
 
         Dim YAMLRecord As New region
@@ -434,6 +439,7 @@ Public Class YAMLUniverse
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build
+        Dim NameLookup As New ESI
 
         Dim YAMLRecord As New constellation
         Dim DataFields As New List(Of DBField)
@@ -486,6 +492,7 @@ Public Class YAMLUniverse
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build
+        Dim NameLookup As New ESI
 
         Dim YAMLRecord As New solarSystem
         Dim DataFields As New List(Of DBField)
@@ -690,43 +697,43 @@ Public Class YAMLUniverse
                 ' Must have this field and either stats or attributes to insert a record
                 DataFields.Add(UpdateDB.BuildDatabaseField("celestialID", CelestialID, FieldType.int_type))
                 If Not IsNothing(Stats) Then
-                    DataFields.Add(UpdateDB.BuildDatabaseField("temperature", .temperature, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("temperature", .temperature, FieldType.real_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("spectralClass", .spectralClass, FieldType.varchar_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("luminosity", .luminosity, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("age", .age, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("life", .life, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("orbitRadius", .orbitRadius, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("eccentricity", .eccentricity, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("massDust", .massDust, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("massGas", .massGas, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("luminosity", .luminosity, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("age", .age, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("life", .life, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("orbitRadius", .orbitRadius, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("eccentricity", .eccentricity, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("massDust", .massDust, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("massGas", .massGas, FieldType.real_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("fragmented", .fragmented, FieldType.bit_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("density", .density, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("surfaceGravity", .surfaceGravity, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("escapeVelocity", .escapeVelocity, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("orbitPeriod", .orbitPeriod, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("rotationRate", .rotationRate, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("density", .density, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("surfaceGravity", .surfaceGravity, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("escapeVelocity", .escapeVelocity, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("orbitPeriod", .orbitPeriod, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("rotationRate", .rotationRate, FieldType.real_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("locked", .locked, FieldType.bit_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("pressure", .pressure, FieldType.double_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("radius", .radius, FieldType.double_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("pressure", .pressure, FieldType.real_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("radius", .radius, FieldType.real_type))
                 Else
-                    DataFields.Add(New DBField("temperature", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("temperature", NullValue, FieldType.real_type))
                     DataFields.Add(New DBField("spectralClass", NullValue, FieldType.varchar_type))
-                    DataFields.Add(New DBField("luminosity", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("age", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("life", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("orbitRadius", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("eccentricity", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("massDust", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("massGas", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("luminosity", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("age", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("life", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("orbitRadius", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("eccentricity", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("massDust", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("massGas", NullValue, FieldType.real_type))
                     DataFields.Add(New DBField("fragmented", NullValue, FieldType.bit_type))
-                    DataFields.Add(New DBField("density", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("surfaceGravity", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("escapeVelocity", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("orbitPeriod", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("rotationRate", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("density", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("surfaceGravity", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("escapeVelocity", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("orbitPeriod", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("rotationRate", NullValue, FieldType.real_type))
                     DataFields.Add(New DBField("locked", NullValue, FieldType.bit_type))
-                    DataFields.Add(New DBField("pressure", NullValue, FieldType.double_type))
-                    DataFields.Add(New DBField("radius", NullValue, FieldType.double_type))
+                    DataFields.Add(New DBField("pressure", NullValue, FieldType.real_type))
+                    DataFields.Add(New DBField("radius", NullValue, FieldType.real_type))
                 End If
                 If Not IsNothing(Attributes) Then
                     DataFields.Add(UpdateDB.BuildDatabaseField("heightMap1", Attributes.heightMap1, FieldType.int_type))
@@ -798,6 +805,7 @@ Public Class YAMLUniverse
                                       ByVal orbitID As Object, ByVal position As List(Of Object), ByVal radius As Object, ByVal nameID As Object,
                                       ByVal security As Object, ByVal celestialIndex As Object, ByVal orbitIndex As Object)
         Dim DataFields As New List(Of DBField)
+        Dim NameLookup As New ESI
         Dim itemName As String = GetItemName(itemID)
 
         DataFields.Add(UpdateDB.BuildDatabaseField("itemID", itemID, FieldType.int_type))
@@ -838,24 +846,24 @@ Public Class YAMLUniverse
         Dim Table As New List(Of DBTableField)
 
         Table.Add(New DBTableField("celestialID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("temperature", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("temperature", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("spectralClass", FieldType.varchar_type, 10, True))
-        Table.Add(New DBTableField("luminosity", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("age", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("life", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("orbitRadius", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("eccentricity", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("massDust", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("massGas", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("luminosity", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("age", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("life", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("orbitRadius", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("eccentricity", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("massDust", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("massGas", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("fragmented", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("density", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("surfaceGravity", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("escapeVelocity", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("orbitPeriod", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("rotationRate", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("density", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("surfaceGravity", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("escapeVelocity", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("orbitPeriod", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("rotationRate", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("locked", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("pressure", FieldType.double_type, 0, True))
-        Table.Add(New DBTableField("radius", FieldType.double_type, 0, True))
+        Table.Add(New DBTableField("pressure", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("radius", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("heightMap1", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("heightMap2", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("population", FieldType.bit_type, 0, True))

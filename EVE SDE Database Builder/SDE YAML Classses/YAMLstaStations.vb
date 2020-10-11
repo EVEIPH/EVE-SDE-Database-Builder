@@ -37,9 +37,9 @@ Public Class YAMLstaStations
         ' Build table
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("stationID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("security", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("dockingCostPerVolume", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("maxShipVolumeDockable", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("security", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("dockingCostPerVolume", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("maxShipVolumeDockable", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("officeRentalCost", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("operationID", FieldType.tinyint_type, 0, True))
         Table.Add(New DBTableField("stationTypeID", FieldType.int_type, 0, True))
@@ -48,11 +48,11 @@ Public Class YAMLstaStations
         Table.Add(New DBTableField("constellationID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("regionID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("stationName", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("x", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("y", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("z", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("reprocessingEfficiency", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("reprocessingStationsTake", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("x", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("y", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("z", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("reprocessingEfficiency", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("reprocessingStationsTake", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("reprocessingHangarFlag", FieldType.tinyint_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
@@ -105,9 +105,9 @@ Public Class YAMLstaStations
 
             ' Build the insert list
             DataFields.Add(UpdateDB.BuildDatabaseField("stationID", DataField.stationID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("[security]", DataField.[security], FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("dockingCostPerVolume", DataField.dockingCostPerVolume, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("maxShipVolumeDockable", DataField.maxShipVolumeDockable, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("[security]", DataField.[security], FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("dockingCostPerVolume", DataField.dockingCostPerVolume, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("maxShipVolumeDockable", DataField.maxShipVolumeDockable, FieldType.real_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("officeRentalCost", DataField.officeRentalCost, FieldType.int_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("operationID", DataField.operationID, FieldType.tinyint_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("stationTypeID", DataField.stationTypeID, FieldType.int_type))
@@ -116,7 +116,8 @@ Public Class YAMLstaStations
             DataFields.Add(UpdateDB.BuildDatabaseField("constellationID", DataField.constellationID, FieldType.int_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("regionID", DataField.regionID, FieldType.int_type))
             If DataField.stationName = "ToBeUpdated" Then
-                StructureData = GetPublicESIData("https://esi.evetech.net/latest/universe/stations/" & DataField.stationID & "/?datasource=tranquility", Nothing)
+                Dim NameCheckESI As New ESI
+                StructureData = NameCheckESI.GetPublicESIData("https://esi.evetech.net/latest/universe/stations/" & DataField.stationID & "/?datasource=tranquility", Nothing)
                 If IsNothing(StructureData) Then
                     DataField.stationName = "Unknown Station Name"
                 Else
@@ -127,11 +128,11 @@ Public Class YAMLstaStations
                 End If
             End If
             DataFields.Add(UpdateDB.BuildDatabaseField("stationName", DataField.stationName, FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("reprocessingEfficiency", DataField.reprocessingEfficiency, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("reprocessingStationsTake", DataField.reprocessingStationsTake, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("reprocessingEfficiency", DataField.reprocessingEfficiency, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("reprocessingStationsTake", DataField.reprocessingStationsTake, FieldType.real_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("reprocessingHangarFlag", DataField.reprocessingHangarFlag, FieldType.tinyint_type))
 
             Call UpdateDB.InsertRecord(TableName, DataFields)

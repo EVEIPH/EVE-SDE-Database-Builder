@@ -2,7 +2,7 @@
 Imports YamlDotNet.Serialization
 Imports System.IO
 
-Public Class YAMLagtAgentsinSpace
+Public Class YAMLagentsinSpace
     Inherits YAMLFilesBase
 
     Public Const agentsinSpaceFile As String = "agentsInSpace.yaml"

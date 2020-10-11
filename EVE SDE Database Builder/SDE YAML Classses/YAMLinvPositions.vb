@@ -31,9 +31,9 @@ Public Class YAMLinvPositions
         ' Build table
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("itemID", FieldType.bigint_type, 0, False, True))
-        Table.Add(New DBTableField("x", FieldType.float_type, 0, False))
-        Table.Add(New DBTableField("y", FieldType.float_type, 0, False))
-        Table.Add(New DBTableField("z", FieldType.float_type, 0, False))
+        Table.Add(New DBTableField("x", FieldType.real_type, 0, False))
+        Table.Add(New DBTableField("y", FieldType.real_type, 0, False))
+        Table.Add(New DBTableField("z", FieldType.real_type, 0, False))
         Table.Add(New DBTableField("yaw", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("pitch", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("roll", FieldType.real_type, 0, True))
@@ -63,9 +63,9 @@ Public Class YAMLinvPositions
 
             ' Build the insert list
             DataFields.Add(UpdateDB.BuildDatabaseField("itemID", DataField.itemID, FieldType.bigint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.real_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("yaw", DataField.yaw, FieldType.real_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("pitch", DataField.pitch, FieldType.real_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("roll", DataField.roll, FieldType.real_type))

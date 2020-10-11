@@ -201,7 +201,7 @@ Public Class YAMLblueprints
                     ' Set it to 1 for 100% probability
                     Product.probability = 1
                 End If
-                DataFields.Add(UpdateDB.BuildDatabaseField("probability", Product.probability, FieldType.float_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("probability", Product.probability, FieldType.real_type))
 
                 Call UpdateDB.InsertRecord(industryActivityProducts_Table, DataFields)
             Next
@@ -281,7 +281,7 @@ Public Class YAMLblueprints
         Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, True))
         Table.Add(New DBTableField("productTypeID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("quantity", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("probability", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("probability", FieldType.real_type, 0, True))
 
         Call UpdateDB.CreateTable(industryActivityProducts_Table, Table)
 

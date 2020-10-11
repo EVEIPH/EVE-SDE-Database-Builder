@@ -33,10 +33,10 @@ Public Class YAMLinvContrabandTypes
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("factionID", FieldType.int_type, 0, False, True))
         Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("standingLoss", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("confiscateMinSec", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("fineByValue", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("attackMinSec", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("standingLoss", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("confiscateMinSec", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("fineByValue", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("attackMinSec", FieldType.real_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -69,10 +69,10 @@ Public Class YAMLinvContrabandTypes
             ' Build the insert list
             DataFields.Add(UpdateDB.BuildDatabaseField("factionID", DataField.factionID, FieldType.int_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.typeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("standingLoss", DataField.standingLoss, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("confiscateMinSec", DataField.confiscateMinSec, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("fineByValue", DataField.fineByValue, FieldType.float_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("attackMinSec", DataField.attackMinSec, FieldType.float_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("standingLoss", DataField.standingLoss, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("confiscateMinSec", DataField.confiscateMinSec, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("fineByValue", DataField.fineByValue, FieldType.real_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("attackMinSec", DataField.attackMinSec, FieldType.real_type))
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

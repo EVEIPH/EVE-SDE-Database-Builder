@@ -163,6 +163,7 @@
     <Compile Include="Database Classes\postgreSQLDB.vb" />
     <Compile Include="Database Classes\MySQLDB.vb" />
     <Compile Include="Database Classes\msAccessDB.vb" />
+    <Compile Include="ESI.vb" />
     <Compile Include="frmAbout.Designer.vb">
       <DependentUpon>frmAbout.vb</DependentUpon>
     </Compile>
@@ -209,8 +210,9 @@
     </Compile>
     <Compile Include="ProgramSettings.vb" />
     <Compile Include="ProgramUpdater.vb" />
-    <Compile Include="SDE YAML Classses\YAMLagtAgentsinSpace.vb" />
+    <Compile Include="SDE YAML Classses\YAMLagentsinSpace.vb" />
     <Compile Include="SDE YAML Classses\YAMLblueprints.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcontrabandTypes.vb" />
     <Compile Include="SDE YAML Classses\YAMLUniverse.vb" />
     <Compile Include="SDE YAML Classses\YAMLtypeIDs.vb" />
     <Compile Include="SDE YAML Classses\YAMLtournamentRuleSets.vb" />
@@ -226,9 +228,9 @@
     <Compile Include="SDE YAML Classses\YAMLwarCombatZones.vb" />
     <Compile Include="SDE YAML Classses\YAMLstaStationTypes.vb" />
     <Compile Include="SDE YAML Classses\YAMLstaStations.vb" />
-    <Compile Include="SDE YAML Classses\YAMLstaServices.vb" />
+    <Compile Include="SDE YAML Classses\YAMLstationServices.vb" />
     <Compile Include="SDE YAML Classses\YAMLstaOperationServices.vb" />
-    <Compile Include="SDE YAML Classses\YAMLstaOperations.vb" />
+    <Compile Include="SDE YAML Classses\YAMLstationOperations.vb" />
     <Compile Include="SDE YAML Classses\YAMLramInstallationTypeContents.vb" />
     <Compile Include="SDE YAML Classses\YAMLramAssemblyLineTypes.vb" />
     <Compile Include="SDE YAML Classses\YAMLramAssemblyLineTypeDetailPerGroup.vb" />
@@ -241,7 +243,7 @@
     <Compile Include="SDE YAML Classses\YAMLmapUniverse.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvUniqueNames.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvTypeReactions.vb" />
-    <Compile Include="SDE YAML Classses\YAMLinvTypeMaterials.vb" />
+    <Compile Include="SDE YAML Classses\YAMLtypeMaterials.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvPositions.vb" />
     <Compile Include="SDE YAML Classses\YAMLmetaGroups.vb" />
     <Compile Include="SDE YAML Classses\YAMLmarketGroups.vb" />
@@ -249,19 +251,19 @@
     <Compile Include="SDE YAML Classses\YAMLinvFlags.vb" />
     <Compile Include="SDE YAML Classses\YAMLcontrolTowerResources.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvContrabandTypes.vb" />
-    <Compile Include="SDE YAML Classses\YAMLagtAgents.vb" />
+    <Compile Include="SDE YAML Classses\YAMLagents.vb" />
     <Compile Include="SDE YAML Classses\YAMLagtAgentTypes.vb" />
-    <Compile Include="SDE YAML Classses\YAMLagtResearchAgents.vb" />
+    <Compile Include="SDE YAML Classses\YAMLresearchAgents.vb" />
     <Compile Include="SDE YAML Classses\YAMLFilesBase.vb" />
-    <Compile Include="SDE YAML Classses\YAMLchrAncestries.vb" />
-    <Compile Include="SDE YAML Classses\YAMLchrAttributes.vb" />
-    <Compile Include="SDE YAML Classses\YAMLchrBloodLines.vb" />
-    <Compile Include="SDE YAML Classses\YAMLchrFactions.vb" />
-    <Compile Include="SDE YAML Classses\YAMLchrRaces.vb" />
-    <Compile Include="SDE YAML Classses\YAMLcrpActivities.vb" />
-    <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporationDivisions.vb" />
+    <Compile Include="SDE YAML Classses\YAMLancestries.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcharacterAttributes.vb" />
+    <Compile Include="SDE YAML Classses\YAMLbloodLines.vb" />
+    <Compile Include="SDE YAML Classses\YAMLfactions.vb" />
+    <Compile Include="SDE YAML Classses\YAMLraces.vb" />
+    <Compile Include="SDE YAML Classses\YAMLcorporationActivities.vb" />
+    <Compile Include="SDE YAML Classses\YAMLnpcCorporationDivisions.vb" />
     <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporationResearchFields.vb" />
-    <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporations.vb" />
+    <Compile Include="SDE YAML Classses\YAMLnpcCorporations.vb" />
     <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporationTrades.vb" />
     <Compile Include="SDE YAML Classses\YAMLcrpNPCDivisions.vb" />
     <Compile Include="SDE YAML Classses\YAMLdogmaAttributeCategories.vb" />

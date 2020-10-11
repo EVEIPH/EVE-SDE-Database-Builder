@@ -159,6 +159,7 @@ Public Class SQLiteDB
                 SQL = SQL.Substring(0, Len(SQL) - 5)
             End If
         End If
+
         ' See if the query returns data
         SQLQuery = New SQLiteCommand(SQL, DB)
         SQLReader = SQLQuery.ExecuteReader

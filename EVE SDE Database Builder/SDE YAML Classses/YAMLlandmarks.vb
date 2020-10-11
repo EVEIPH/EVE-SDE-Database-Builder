@@ -38,9 +38,9 @@ Public Class YAMLlandmarks
         Table.Add(New DBTableField("landmarkNameID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("landmarkName", FieldType.nvarchar_type, 100, True)) ' Field doesn't exist in YAML, but will get from translation table
         Table.Add(New DBTableField("locationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("x", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("y", FieldType.float_type, 0, True))
-        Table.Add(New DBTableField("z", FieldType.float_type, 0, True))
+        Table.Add(New DBTableField("x", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("y", FieldType.real_type, 0, True))
+        Table.Add(New DBTableField("z", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
@@ -74,9 +74,9 @@ Public Class YAMLlandmarks
                 DataFields.Add(UpdateDB.BuildDatabaseField("landmarkNameID", .landmarkNameID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("landmarkName", Translator.TranslateData(TableName, "landmarkName", "landmarkID", DataField.Key, Params.ImportLanguageCode, ""), FieldType.nvarchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("locationID", .locationID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("x", .position(0), FieldType.float_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("y", .position(1), FieldType.float_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("z", .position(2), FieldType.float_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("x", .position(0), FieldType.real_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("y", .position(1), FieldType.real_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("z", .position(2), FieldType.real_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type))
             End With
 
