@@ -127,7 +127,9 @@ Public Class YAMLtypeIDs
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
         Dim DSB = New DeserializerBuilder()
-        DSB.IgnoreUnmatchedProperties()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build
@@ -266,12 +268,14 @@ Public Class YAMLtypeIDs
 
         Table.Add(New DBTableField("bonusID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("skilltypeID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("bonus", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("bonusText", FieldType.text_type, MaxFieldLen, True))
         Table.Add(New DBTableField("importance", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("nameID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("unitID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("isPositive", FieldType.bit_type, 0, True))
 
         Call UpdateDB.CreateTable(invTraits_Table, Table)
 
@@ -336,12 +340,14 @@ Public Class YAMLtypeIDs
 
                     DataFields.Add(UpdateDB.BuildDatabaseField("bonusID", BonusIDCounter, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("iconID", Traits.iconID, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("skilltypeID", -1, FieldType.int_type)) ' -1 for role bonuses that don't have skills associated with them
                     DataFields.Add(UpdateDB.BuildDatabaseField("bonus", R_bonus.bonus, FieldType.real_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("bonusText", NameTranslation.GetLanguageTranslationData(R_bonus.bonusText), FieldType.text_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("importance", R_bonus.importance, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("nameID", R_bonus.nameID, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("unitID", R_bonus.unitID, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("isPositive", R_bonus.isPositive, FieldType.int_type))
 
                     Call UpdateDB.InsertRecord(invTraits_Table, DataFields)
 
@@ -359,12 +365,14 @@ Public Class YAMLtypeIDs
 
                     DataFields.Add(UpdateDB.BuildDatabaseField("bonusID", BonusIDCounter, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("iconID", Traits.iconID, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("skilltypeID", -1, FieldType.int_type)) ' -1 for misc bonuses that don't have skills associated with them
                     DataFields.Add(UpdateDB.BuildDatabaseField("bonus", M_bonus.bonus, FieldType.real_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("bonusText", NameTranslation.GetLanguageTranslationData(M_bonus.bonusText), FieldType.text_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("importance", M_bonus.importance, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("nameID", M_bonus.nameID, FieldType.int_type))
                     DataFields.Add(UpdateDB.BuildDatabaseField("unitID", M_bonus.unitID, FieldType.int_type))
+                    DataFields.Add(UpdateDB.BuildDatabaseField("isPositive", M_bonus.isPositive, FieldType.int_type))
 
                     Call UpdateDB.InsertRecord(invTraits_Table, DataFields)
 
@@ -383,12 +391,14 @@ Public Class YAMLtypeIDs
 
                         DataFields.Add(UpdateDB.BuildDatabaseField("bonusID", BonusIDCounter, FieldType.int_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type))
+                        DataFields.Add(UpdateDB.BuildDatabaseField("iconID", Traits.iconID, FieldType.int_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("skilltypeID", TypeTrait.Key, FieldType.int_type)) ' -1 for misc bonuses that don't have skills associated with them
                         DataFields.Add(UpdateDB.BuildDatabaseField("bonus", S_bonus.bonus, FieldType.real_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("bonusText", NameTranslation.GetLanguageTranslationData(S_bonus.bonusText), FieldType.text_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("importance", S_bonus.importance, FieldType.int_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("nameID", S_bonus.nameID, FieldType.int_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("unitID", S_bonus.unitID, FieldType.int_type))
+                        DataFields.Add(UpdateDB.BuildDatabaseField("isPositive", S_bonus.isPositive, FieldType.int_type))
 
                         Call UpdateDB.InsertRecord(invTraits_Table, DataFields)
 
@@ -456,6 +466,7 @@ Public Class typeID
     Public Property traits As itemTraits
 
     Public Class itemTraits
+        Public Property iconID As Object
         Public Property roleBonuses As List(Of bonus)
         Public Property types As Dictionary(Of Long, List(Of bonus)) ' for skill bonuses to ships
         Public Property miscBonuses As List(Of bonus) ' For things like T3 destroyers
@@ -465,6 +476,7 @@ Public Class typeID
         Public Property bonus As Object
         Public Property bonusText As Translations
         Public Property importance As Object
+        Public Property isPositive As Object
         Public Property nameID As Object
         Public Property unitID As Object
     End Class

@@ -10,6 +10,8 @@ Public Module Globals
     Public AllSettings As New ProgramSettings
     Public UserApplicationSettings As ApplicationSettings
 
+    Public TestForSDEChanges As Boolean
+
     Public RetryCall As Boolean = False
 
     ''' <summary>

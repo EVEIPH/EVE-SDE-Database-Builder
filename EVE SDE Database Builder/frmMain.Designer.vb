@@ -84,6 +84,7 @@ Partial Class frmMain
         Me.DeveloperToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrepareFilesForUpdateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BuildBinaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestForSDEChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlMain.SuspendLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbSelectDBType.SuspendLayout()
@@ -609,7 +610,7 @@ Partial Class frmMain
         '
         'DeveloperToolStripMenuItem
         '
-        Me.DeveloperToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PrepareFilesForUpdateToolStripMenuItem, Me.BuildBinaryToolStripMenuItem})
+        Me.DeveloperToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PrepareFilesForUpdateToolStripMenuItem, Me.BuildBinaryToolStripMenuItem, Me.TestForSDEChangesToolStripMenuItem})
         Me.DeveloperToolStripMenuItem.Name = "DeveloperToolStripMenuItem"
         Me.DeveloperToolStripMenuItem.Size = New System.Drawing.Size(72, 20)
         Me.DeveloperToolStripMenuItem.Text = "Developer"
@@ -625,6 +626,13 @@ Partial Class frmMain
         Me.BuildBinaryToolStripMenuItem.Name = "BuildBinaryToolStripMenuItem"
         Me.BuildBinaryToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.BuildBinaryToolStripMenuItem.Text = "Build Binary"
+        '
+        'TestForSDEChangesToolStripMenuItem
+        '
+        Me.TestForSDEChangesToolStripMenuItem.CheckOnClick = True
+        Me.TestForSDEChangesToolStripMenuItem.Name = "TestForSDEChangesToolStripMenuItem"
+        Me.TestForSDEChangesToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
+        Me.TestForSDEChangesToolStripMenuItem.Text = "Test for SDE Changes"
         '
         'frmMain
         '
@@ -724,4 +732,5 @@ Partial Class frmMain
     Friend WithEvents lblServerName As Label
     Friend WithEvents btnDownload As Button
     Friend WithEvents rbtnKorean As RadioButton
+    Friend WithEvents TestForSDEChangesToolStripMenuItem As ToolStripMenuItem
 End Class

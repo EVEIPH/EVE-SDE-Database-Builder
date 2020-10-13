@@ -311,6 +311,8 @@ Public Class frmMain
         ' Sets the CurrentCulture 
         Thread.CurrentThread.CurrentCulture = LocalCulture
 
+        TestForSDEChanges = False
+
         FirstLoad = False
 
     End Sub
@@ -2248,6 +2250,13 @@ CancelImportProcessing:
 
     End Sub
 
+    Private Sub TestForSDEChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestForSDEChangesToolStripMenuItem.Click
+        If TestForSDEChangesToolStripMenuItem.Checked Then
+            TestForSDEChanges = True
+        Else
+            TestForSDEChanges = False
+        End If
+    End Sub
 End Class
 
 ' For updating the data grid view

@@ -165,7 +165,7 @@ Public Class YAMLUniverse
         ' Finally, set the indexes (this will speed up inserts)
         Call CreateUniverseIndexes()
 
-        ' Close local db
+        ' Close local dbs
         Call invNamesLDB.CloseDB()
         Call MapJumpsData.CloseDB()
 
@@ -175,80 +175,6 @@ Public Class YAMLUniverse
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
-
-#Region "Local Databases"
-
-    ''' <summary>
-    ''' Loads a local database with the invNames data for searching item names in the Universe files
-    ''' </summary>
-    ''' <param name="LangCode">Language to import the data in (not used for invNames)</param>
-    Private Sub LoadinvNames(ByVal LangCode As String)
-        Dim invNamesData As New List(Of invName)
-        Dim InvNames As New YAMLinvNames(YAMLinvNames.invNamesFile, BaseYAMLPath & "\bsd\", Nothing, Nothing)
-        Dim ImportParams As ImportParameters
-        Dim DataFields As List(Of DBField)
-
-        ImportParams.ImportLanguageCode = LangCode
-        ImportParams.InsertRecords = False
-        ImportParams.ReturnList = True
-        ImportParams.RowLocation = 0
-
-        invNamesData = InvNames.ImportFile(ImportParams)
-        invNamesLDB = New SQLiteDB(LocalDBsLocation & "invNames.sqlite", LocalDBsLocation, True)
-
-        ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("itemID", FieldType.bigint_type, 0, False, True))
-        Table.Add(New DBTableField("itemName", FieldType.nvarchar_type, 200, True))
-
-        Call invNamesLDB.CreateTable(invNamesTableName, Table)
-
-        invNamesLDB.BeginSQLiteTransaction()
-
-        For Each DataRecord In invNamesData
-            DataFields = New List(Of DBField)
-
-            ' Simple insert into local table
-            DataFields.Add(invNamesLDB.BuildDatabaseField("itemID", DataRecord.itemID, FieldType.bigint_type))
-            DataFields.Add(invNamesLDB.BuildDatabaseField("itemName", DataRecord.itemName, FieldType.nvarchar_type))
-
-            Call invNamesLDB.InsertRecord(invNamesTableName, DataFields)
-        Next
-
-        invNamesLDB.CommitSQLiteTransaction()
-
-        Application.DoEvents()
-
-    End Sub
-
-    ''' <summary>
-    ''' Returns the string name for the itemID sent
-    ''' </summary>
-    ''' <param name="ItemID">integer of ID to look up name in invNames table</param>
-    ''' <returns></returns>
-    Private Function GetItemName(ByVal ItemID As Integer) As String
-        Dim WhereClause As List(Of String)
-        Dim Result As New List(Of List(Of Object))
-        Dim TempResult As String = ""
-
-        ' See if the record is there
-        WhereClause = New List(Of String)
-        WhereClause.Add("itemID =" & ItemID)
-        Dim SelectClause As New List(Of String)
-        SelectClause.Add("itemName")
-
-        Result = invNamesLDB.SelectfromTable(SelectClause, invNamesTableName, WhereClause)
-
-        If Result.Count = 0 Then
-            ' Run an ESI check
-            Dim ItemNameESICheck As New ESI
-            Dim ItemName = ItemNameESICheck.GetItemName(ItemID)
-            Return ItemName
-        Else
-            Return CStr(Result(0)(0))
-        End If
-
-    End Function
 
     ''' <summary>
     ''' Creates the local map database for building the jumps tables after all data is imported
@@ -369,8 +295,6 @@ Public Class YAMLUniverse
 
     End Sub
 
-#End Region
-
     ''' <summary>
     ''' Import the region file and return region ID to use for later inserts
     ''' </summary>
@@ -378,7 +302,10 @@ Public Class YAMLUniverse
     ''' <returns>Region ID as integer</returns>
     Private Function ImportRegion(ByVal DirectoryPath As String) As Integer
         Dim DSB = New DeserializerBuilder()
-        DSB.IgnoreUnmatchedProperties()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
+
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         Dim NameLookup As New ESI
@@ -394,10 +321,12 @@ Public Class YAMLUniverse
             Call ShowErrorMessage(ex)
         End Try
 
+        Dim RegionName As String = New DirectoryInfo(DirectoryPath).Name
+
         ' Insert the region
         With YAMLRecord
             DataFields.Add(UpdateDB.BuildDatabaseField("regionID", .regionID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("regionName", GetItemName(.regionID), FieldType.varchar_type)) ' Get the name of the region from the folder
+            DataFields.Add(UpdateDB.BuildDatabaseField("regionName", GetItemName(.regionID, RegionName), FieldType.varchar_type)) ' Get the name of the region from the folder
             DataFields.Add(UpdateDB.BuildDatabaseField("x", .center(0), FieldType.real_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("y", .center(1), FieldType.real_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("z", .center(2), FieldType.real_type))
@@ -435,7 +364,9 @@ Public Class YAMLUniverse
     ''' <returns>Contellation ID as integer</returns>
     Private Function ImportConstellation(ByVal DirectoryPath As String, ConstellationRegionID As Integer) As Integer
         Dim DSB = New DeserializerBuilder()
-        DSB.IgnoreUnmatchedProperties()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build
@@ -451,10 +382,12 @@ Public Class YAMLUniverse
             Call ShowErrorMessage(ex)
         End Try
 
+        Dim ConstellationName As String = New DirectoryInfo(DirectoryPath).Name
+
         ' Insert the constellation
         With YAMLRecord
             DataFields.Add(UpdateDB.BuildDatabaseField("constellationID", .constellationID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("constellationName", GetItemName(.constellationID), FieldType.varchar_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("constellationName", GetItemName(.constellationID, ConstellationName), FieldType.varchar_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("regionID", ConstellationRegionID, FieldType.int_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("x", .center(0), FieldType.real_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("y", .center(1), FieldType.real_type))
@@ -488,7 +421,9 @@ Public Class YAMLUniverse
     ''' <param name="SystemConstellationID">Contellation ID for this System</param>
     Private Sub ImportSolarSystem(ByVal DirectoryPath As String, ByVal SystemRegionID As Integer, ByVal SystemConstellationID As Integer)
         Dim DSB = New DeserializerBuilder()
-        ' DSB.IgnoreUnmatchedProperties()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build
@@ -505,10 +440,12 @@ Public Class YAMLUniverse
             Call ShowErrorMessage(ex)
         End Try
 
+        Dim SolarSystemName As String = New DirectoryInfo(DirectoryPath).Name
+
         ' Insert the system
         With YAMLRecord
             DataFields.Add(UpdateDB.BuildDatabaseField("solarSystemID", .solarSystemID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("solarSystemName", GetItemName(.solarSystemID), FieldType.varchar_type))
+            DataFields.Add(UpdateDB.BuildDatabaseField("solarSystemName", GetItemName(.solarSystemID, SolarSystemName), FieldType.varchar_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("regionID", SystemRegionID, FieldType.int_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("constellationID", SystemConstellationID, FieldType.real_type))
             DataFields.Add(UpdateDB.BuildDatabaseField("x", .center(0), FieldType.real_type))
@@ -806,7 +743,6 @@ Public Class YAMLUniverse
                                       ByVal security As Object, ByVal celestialIndex As Object, ByVal orbitIndex As Object)
         Dim DataFields As New List(Of DBField)
         Dim NameLookup As New ESI
-        Dim itemName As String = GetItemName(itemID)
 
         DataFields.Add(UpdateDB.BuildDatabaseField("itemID", itemID, FieldType.int_type))
         DataFields.Add(UpdateDB.BuildDatabaseField("typeID", typeID, FieldType.int_type))
@@ -825,7 +761,6 @@ Public Class YAMLUniverse
         End If
         DataFields.Add(UpdateDB.BuildDatabaseField("radius", radius, FieldType.real_type))
         DataFields.Add(UpdateDB.BuildDatabaseField("nameID", nameID, FieldType.int_type))
-        DataFields.Add(UpdateDB.BuildDatabaseField("itemName", itemName, FieldType.varchar_type))
         DataFields.Add(UpdateDB.BuildDatabaseField("security", security, FieldType.real_type))
         DataFields.Add(UpdateDB.BuildDatabaseField("celestialIndex", celestialIndex, FieldType.int_type))
         DataFields.Add(UpdateDB.BuildDatabaseField("orbitIndex", orbitIndex, FieldType.int_type))
@@ -932,7 +867,7 @@ Public Class YAMLUniverse
         Table.Add(New DBTableField("z", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("radius", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("nameID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("itemName", FieldType.varchar_type, 100, True))
+        'Table.Add(New DBTableField("itemName", FieldType.varchar_type, 100, True)) ' people can link to invNames if they want this, it kills efficiency and it's not in the yaml file data
         Table.Add(New DBTableField("security", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("celestialIndex", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("orbitIndex", FieldType.int_type, 0, True))
@@ -1177,6 +1112,86 @@ Public Class YAMLUniverse
         MapJumpsData = Nothing
         Call Directory.Delete(LocalDBsLocation, True)
     End Sub
+
+#Region "Local Database"
+
+    ''' <summary>
+    ''' Loads a local database with the invNames data for searching item names in the Universe files
+    ''' </summary>
+    ''' <param name="LangCode">Language to import the data in (not used for invNames)</param>
+    Private Sub LoadinvNames(ByVal LangCode As String)
+        Dim invNamesData As New List(Of invName)
+        Dim InvNames As New YAMLinvNames(YAMLinvNames.invNamesFile, BaseYAMLPath & "\bsd\", Nothing, Nothing)
+        Dim ImportParams As ImportParameters
+        Dim DataFields As List(Of DBField)
+
+        ImportParams.ImportLanguageCode = LangCode
+        ImportParams.InsertRecords = False
+        ImportParams.ReturnList = True
+        ImportParams.RowLocation = 0
+
+        invNamesData = InvNames.ImportFile(ImportParams)
+        invNamesLDB = New SQLiteDB(LocalDBsLocation & "invNames.sqlite", LocalDBsLocation, True)
+
+        ' Build table
+        Dim Table As New List(Of DBTableField)
+        Table.Add(New DBTableField("itemID", FieldType.bigint_type, 0, False, True))
+        Table.Add(New DBTableField("itemName", FieldType.nvarchar_type, 200, True))
+
+        Call invNamesLDB.CreateTable(invNamesTableName, Table)
+
+        invNamesLDB.BeginSQLiteTransaction()
+
+        For Each DataRecord In invNamesData
+            DataFields = New List(Of DBField)
+
+            ' Simple insert into local table
+            DataFields.Add(invNamesLDB.BuildDatabaseField("itemID", DataRecord.itemID, FieldType.bigint_type))
+            DataFields.Add(invNamesLDB.BuildDatabaseField("itemName", DataRecord.itemName, FieldType.nvarchar_type))
+
+            Call invNamesLDB.InsertRecord(invNamesTableName, DataFields)
+        Next
+
+        invNamesLDB.CommitSQLiteTransaction()
+
+        Application.DoEvents()
+
+    End Sub
+
+    ''' <summary>
+    ''' Returns the string name for the itemID sent
+    ''' </summary>
+    ''' <param name="ItemID">integer of ID to look up name in invNames table</param>
+    ''' <returns></returns>
+    Private Function GetItemName(ByVal ItemID As Integer, ByVal FolderName As String) As String
+        Dim WhereClause As List(Of String)
+        Dim Result As New List(Of List(Of Object))
+        Dim TempResult As String = ""
+
+        ' See if the record is there
+        WhereClause = New List(Of String)
+        WhereClause.Add("itemID =" & ItemID)
+        Dim SelectClause As New List(Of String)
+        SelectClause.Add("itemName")
+
+        Result = invNamesLDB.SelectfromTable(SelectClause, invNamesTableName, WhereClause)
+
+        If Result.Count = 0 Then
+            ' Run an ESI check
+            Dim ItemNameESICheck As New ESI
+            Dim ItemName = ItemNameESICheck.GetItemName(ItemID)
+
+            If ItemName = "" Then
+                ' Return the folder name as a last resort
+                ItemName = FolderName
+            End If
+            Return ItemName
+        Else
+            Return CStr(Result(0)(0))
+        End If
+
+    End Function
+#End Region
 
 End Class
 

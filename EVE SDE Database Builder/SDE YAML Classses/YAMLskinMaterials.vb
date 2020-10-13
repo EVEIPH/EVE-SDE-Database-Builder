@@ -17,7 +17,9 @@ Public Class YAMLskinMaterials
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
         Dim DSB = New DeserializerBuilder()
-        DSB.IgnoreUnmatchedProperties()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build

@@ -44,7 +44,9 @@ Public Class YAMLTranslations
     Public Sub ImportTranslationLanguages(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True,
                                           Optional ByVal ShowProgress As Boolean = True)
         Dim DSB = New DeserializerBuilder()
-        DSB.IgnoreUnmatchedProperties()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build
@@ -140,7 +142,9 @@ Cancel:
     ''' <param name="ImportTable">If we want to import the table, true, else false. If false, then we are importing the table for local use only</param>
     Public Sub ImportTranslationColumns(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True)
         Dim DSB = New DeserializerBuilder()
-        DSB.IgnoreUnmatchedProperties()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build
@@ -273,7 +277,9 @@ Cancel:
     ''' <param name="ImportTable">If we want to import the table, true, else false. If false, then we are importing the table for local use only</param>
     Public Sub ImportTranslations(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True)
         Dim DSB = New DeserializerBuilder()
-        DSB.IgnoreUnmatchedProperties()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build

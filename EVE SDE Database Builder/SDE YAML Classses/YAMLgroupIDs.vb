@@ -19,7 +19,9 @@ Public Class YAMLgroupIDs
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
         Dim DSB = New DeserializerBuilder()
-        DSB.IgnoreUnmatchedProperties()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
         DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
         Dim DS As New Deserializer
         DS = DSB.Build
@@ -82,10 +84,10 @@ Public Class YAMLgroupIDs
                 DataFields.Add(UpdateDB.BuildDatabaseField("categoryID", .categoryID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("groupName", NameTranslation.GetLanguageTranslationData(.name), FieldType.nvarchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("published", .published, FieldType.bit_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("anchorable", .published, FieldType.bit_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("anchored", .published, FieldType.bit_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("fittableNonSingleton", .published, FieldType.bit_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("useBasePrice", .published, FieldType.bit_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("anchorable", .anchorable, FieldType.bit_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("anchored", .anchored, FieldType.bit_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("fittableNonSingleton", .fittableNonSingleton, FieldType.bit_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("useBasePrice", .useBasePrice, FieldType.bit_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type))
 
                 ' Insert the translated data into translation tables
