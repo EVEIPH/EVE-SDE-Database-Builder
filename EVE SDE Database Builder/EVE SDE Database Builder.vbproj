@@ -237,8 +237,6 @@
     <Compile Include="SDE YAML Classses\YAMLramAssemblyLineTypeDetailPerCategory.vb" />
     <Compile Include="SDE YAML Classses\YAMLramAssemblyLineStations.vb" />
     <Compile Include="SDE YAML Classses\YAMLramActivities.vb" />
-    <Compile Include="SDE YAML Classses\YAMLplanetSchematicsTypeMap.vb" />
-    <Compile Include="SDE YAML Classses\YAMLplanetSchematicsPinMap.vb" />
     <Compile Include="SDE YAML Classses\YAMLplanetSchematics.vb" />
     <Compile Include="SDE YAML Classses\YAMLmapUniverse.vb" />
     <Compile Include="SDE YAML Classses\YAMLinvUniqueNames.vb" />

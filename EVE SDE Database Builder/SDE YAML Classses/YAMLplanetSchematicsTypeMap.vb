@@ -80,7 +80,7 @@ Public Class YAMLplanetSchematicsTypeMap
 
 End Class
 
-Public Class planetSchematicTypeMap
+Public Class planetSchematicTypeMap1
     Public Property schematicID As Object
     Public Property typeID As Object
     Public Property quantity As Object

@@ -96,6 +96,12 @@ Public Class YAMLtypeIDs
         PackagedGroups.Add(New PackagedGroup With {.GroupID = 1283, .PackagedVolume = 2500})
         PackagedGroups.Add(New PackagedGroup With {.GroupID = 1305, .PackagedVolume = 5000})
 
+        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1527, .PackagedVolume = 2500})
+        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1534, .PackagedVolume = 5000})
+        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1538, .PackagedVolume = 1300000})
+        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1972, .PackagedVolume = 10000})
+        PackagedGroups.Add(New PackagedGroup With {.GroupID = 2001, .PackagedVolume = 2500})
+
         ' Now add the container data
         PackagedItems = New List(Of PackagedItem)
         PackagedItems.Add(New PackagedItem With {.typeID = 3293, .PackagedVolume = 33})

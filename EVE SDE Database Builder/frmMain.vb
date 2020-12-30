@@ -672,20 +672,9 @@ ExitProc:
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
                     Case YAMLplanetSchematics.planetSchematicsFile
-                        Dim PlanetSchematics As New YAMLplanetSchematics(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
+                        Dim PlanetSchematics As New YAMLplanetSchematics(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf PlanetSchematics.ImportFile)
                         TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLplanetSchematicsPinMap.planetSchematicsPinMapFile
-                        Dim PlanetPinMapFile As New YAMLplanetSchematicsPinMap(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf PlanetPinMapFile.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLplanetSchematicsTypeMap.planetSchematicsTypeMapFile
-                        Dim PlanetTypeMapFile As New YAMLplanetSchematicsTypeMap(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf PlanetTypeMapFile.ImportFile)
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
                     Case YAMLramActivities.ramActivitiesFile

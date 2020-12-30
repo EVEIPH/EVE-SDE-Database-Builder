@@ -24,19 +24,42 @@ Public Class YAMLplanetSchematics
         Dim DS As New Deserializer
         DS = DSB.Build
 
-        Dim YAMLRecords As New List(Of planetSchematic)
+        Dim YAMLRecords As New Dictionary(Of Long, planetSchematic)
         Dim DataFields As List(Of DBField)
+        Dim DataFields2 As List(Of DBField)
+        Dim DataFields3 As List(Of DBField)
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
 
-        ' Build table
+        Dim planetSchematicsTypeMapTable As String = "planetSchematicsTypeMap"
+        Dim planetSchematicsPinMapTable As String = "planetSchematicsPinMap"
+
+        Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
+
+        ' Build table - planetSchematics
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("schematicID", FieldType.smallint_type, 0, False, True))
         Table.Add(New DBTableField("schematicName", FieldType.nvarchar_type, 255, True))
         Table.Add(New DBTableField("cycleTime", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
+
+        ' Build table - planetSchematicsPinMap
+        Table = New List(Of DBTableField)
+        Table.Add(New DBTableField("schematicID", FieldType.smallint_type, 0, True))
+        Table.Add(New DBTableField("pinTypeID", FieldType.int_type, 0, True))
+
+        Call UpdateDB.CreateTable(planetSchematicsPinMaptable, Table)
+
+        ' Build table - planetSchematicsTypeMap
+        Table = New List(Of DBTableField)
+        Table.Add(New DBTableField("schematicID", FieldType.smallint_type, 0, True))
+        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("quantity", FieldType.smallint_type, 0, True))
+        Table.Add(New DBTableField("isInput", FieldType.bit_type, 0, True))
+
+        Call UpdateDB.CreateTable(planetSchematicsTypeMapTable, Table)
 
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then
@@ -48,7 +71,7 @@ Public Class YAMLplanetSchematics
 
         Try
             ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of planetSchematic))(New StringReader(File.ReadAllText(YAMLFile)))
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of Long, planetSchematic))(New StringReader(File.ReadAllText(YAMLFile)))
         Catch ex As Exception
             Call ShowErrorMessage(ex)
         End Try
@@ -57,12 +80,35 @@ Public Class YAMLplanetSchematics
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("schematicID", DataField.schematicID, FieldType.smallint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("schematicName", Translator.TranslateData(TableName, "schematicName", "schematicID", DataField.schematicID, Params.ImportLanguageCode, DataField.schematicName), FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("cycleTime", DataField.cycleTime, FieldType.int_type))
+            With DataField.Value
+                DataFields = New List(Of DBField)
+                DataFields.Add(UpdateDB.BuildDatabaseField("schematicID", DataField.Key, FieldType.smallint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("schematicName", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("cycleTime", .cycleTime, FieldType.int_type))
+
+                ' insert into pin map table
+                For i = 0 To .pins.Count - 1
+                    DataFields2 = New List(Of DBField)
+                    DataFields2.Add(UpdateDB.BuildDatabaseField("schematicID", DataField.Key, FieldType.smallint_type))
+                    DataFields2.Add(UpdateDB.BuildDatabaseField("pinTypeID", .pins(i), FieldType.int_type))
+                    Call UpdateDB.InsertRecord(planetSchematicsPinMapTable, DataFields2)
+                Next
+
+                ' Insert all data into type map table
+                For Each pinType In .types
+                    DataFields3 = New List(Of DBField)
+                    DataFields3.Add(UpdateDB.BuildDatabaseField("schematicID", DataField.Key, FieldType.smallint_type))
+                    DataFields3.Add(UpdateDB.BuildDatabaseField("typeID", pinType.Key, FieldType.int_type))
+                    DataFields3.Add(UpdateDB.BuildDatabaseField("quantity", pinType.Value.quantity, FieldType.smallint_type))
+                    DataFields3.Add(UpdateDB.BuildDatabaseField("isInput", pinType.Value.isInput, FieldType.bit_type))
+                    Call UpdateDB.InsertRecord(planetSchematicsTypeMapTable, DataFields3)
+                Next
+
+                ' Insert the translated data into translation tables
+                Call Translator.InsertTranslationData(DataField.Key, "schematicID", "schematicName", TableName, NameTranslation.GetAllTranslations(.nameID))
+
+            End With
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 
@@ -79,7 +125,13 @@ Public Class YAMLplanetSchematics
 End Class
 
 Public Class planetSchematic
-    Public Property schematicID As Object
-    Public Property schematicName As Object
     Public Property cycleTime As Object
+    Public Property nameID As Translations
+    Public Property pins As List(Of Object)
+    Public Property types As Dictionary(Of Long, planetSchematicTypeMapValues)
+End Class
+
+Public Class planetSchematicTypeMapValues
+    Public Property quantity As Object
+    Public Property isInput As Object
 End Class
