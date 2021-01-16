@@ -164,6 +164,7 @@ Public Class ProgramSettings
                     .SDEDirectory = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SDEDirectory", ""))
                     .DatabaseName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "DatabaseName", ""))
                     .FinalDBPath = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "FinalDBPath", ""))
+                    .DownloadFolderPath = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "DownloadFolderPath", ""))
                     .SQLConnectionString = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SQLConnectionString", ""))
                     .SQLPassword = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SQLPassword", ""))
                     .SQLUserName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SQLUserName", ""))
@@ -220,6 +221,7 @@ Public Class ProgramSettings
             .MySQLPassword = ""
             .CSVEUCheck = DefaultEUCheck
             .SelectedLanguage = DefaultSelectedLanguage
+            .DownloadFolderPath = ""
         End With
 
         ' Save locally
@@ -230,7 +232,7 @@ Public Class ProgramSettings
 
     ' Saves the application settings to XML
     Public Sub SaveApplicationSettings(SentSettings As ApplicationSettings)
-        Dim ApplicationSettingsList(16) As Setting
+        Dim ApplicationSettingsList(17) As Setting
 
         Try
             With SentSettings
@@ -251,6 +253,7 @@ Public Class ProgramSettings
                 ApplicationSettingsList(14) = New Setting("CSVEUCheck", .CSVEUCheck)
                 ApplicationSettingsList(15) = New Setting("SelectedLanguage", .SelectedLanguage)
                 ApplicationSettingsList(16) = New Setting("SelectedDB", .SelectedDB)
+                ApplicationSettingsList(17) = New Setting("DownloadFolderPath", .DownloadFolderPath)
             End With
 
             Call WriteSettingsToFile(AppSettingsFileName, ApplicationSettingsList, AppSettingsFileName)
@@ -280,6 +283,9 @@ Public Structure ApplicationSettings
 
     ' Used for all Access, SQLite, and CSV dbs
     Dim FinalDBPath As String
+
+    ' Where we download the SDE to 
+    Dim DownloadFolderPath As String
 
     Dim SQLConnectionString As String
     Dim SQLUserName As String

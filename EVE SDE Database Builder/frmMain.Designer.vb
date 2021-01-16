@@ -70,7 +70,10 @@ Partial Class frmMain
         Me.rbtnGerman = New System.Windows.Forms.RadioButton()
         Me.rbtnEnglish = New System.Windows.Forms.RadioButton()
         Me.gbFilePathSelect = New System.Windows.Forms.GroupBox()
-        Me.btnDownload = New System.Windows.Forms.Button()
+        Me.btnDownloadSDE = New System.Windows.Forms.Button()
+        Me.lblDownload = New System.Windows.Forms.Label()
+        Me.lblDownloadFolderPath = New System.Windows.Forms.Label()
+        Me.btnSelectDownloadPath = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -85,6 +88,8 @@ Partial Class frmMain
         Me.PrepareFilesForUpdateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BuildBinaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestForSDEChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnCancelDownload = New System.Windows.Forms.Button()
+        Me.pgBar = New System.Windows.Forms.ProgressBar()
         Me.pnlMain.SuspendLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbSelectDBType.SuspendLayout()
@@ -127,7 +132,7 @@ Partial Class frmMain
         '
         'btnCheckNoGridItems
         '
-        Me.btnCheckNoGridItems.Location = New System.Drawing.Point(443, 120)
+        Me.btnCheckNoGridItems.Location = New System.Drawing.Point(437, 178)
         Me.btnCheckNoGridItems.Name = "btnCheckNoGridItems"
         Me.btnCheckNoGridItems.Size = New System.Drawing.Size(76, 23)
         Me.btnCheckNoGridItems.TabIndex = 7
@@ -136,7 +141,7 @@ Partial Class frmMain
         '
         'btnCheckAllGridItems
         '
-        Me.btnCheckAllGridItems.Location = New System.Drawing.Point(361, 120)
+        Me.btnCheckAllGridItems.Location = New System.Drawing.Point(355, 178)
         Me.btnCheckAllGridItems.Name = "btnCheckAllGridItems"
         Me.btnCheckAllGridItems.Size = New System.Drawing.Size(76, 23)
         Me.btnCheckAllGridItems.TabIndex = 6
@@ -151,10 +156,10 @@ Partial Class frmMain
         Me.dgMain.AllowUserToResizeRows = False
         Me.dgMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgMain.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.FileSelect, Me.FileName, Me.Progress})
-        Me.dgMain.Location = New System.Drawing.Point(8, 336)
+        Me.dgMain.Location = New System.Drawing.Point(8, 395)
         Me.dgMain.Name = "dgMain"
         Me.dgMain.RowHeadersVisible = False
-        Me.dgMain.Size = New System.Drawing.Size(526, 287)
+        Me.dgMain.Size = New System.Drawing.Size(526, 228)
         Me.dgMain.TabIndex = 1
         '
         'FileSelect
@@ -185,7 +190,7 @@ Partial Class frmMain
         'lblFinalDBPath
         '
         Me.lblFinalDBPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblFinalDBPath.Location = New System.Drawing.Point(18, 97)
+        Me.lblFinalDBPath.Location = New System.Drawing.Point(12, 155)
         Me.lblFinalDBPath.Name = "lblFinalDBPath"
         Me.lblFinalDBPath.Size = New System.Drawing.Size(501, 20)
         Me.lblFinalDBPath.TabIndex = 4
@@ -193,7 +198,7 @@ Partial Class frmMain
         '
         'btnSelectFinalDBPath
         '
-        Me.btnSelectFinalDBPath.Location = New System.Drawing.Point(18, 120)
+        Me.btnSelectFinalDBPath.Location = New System.Drawing.Point(12, 178)
         Me.btnSelectFinalDBPath.Name = "btnSelectFinalDBPath"
         Me.btnSelectFinalDBPath.Size = New System.Drawing.Size(55, 23)
         Me.btnSelectFinalDBPath.TabIndex = 5
@@ -203,7 +208,7 @@ Partial Class frmMain
         'lblFinalDBFolder
         '
         Me.lblFinalDBFolder.AutoSize = True
-        Me.lblFinalDBFolder.Location = New System.Drawing.Point(17, 84)
+        Me.lblFinalDBFolder.Location = New System.Drawing.Point(9, 142)
         Me.lblFinalDBFolder.Name = "lblFinalDBFolder"
         Me.lblFinalDBFolder.Size = New System.Drawing.Size(113, 13)
         Me.lblFinalDBFolder.TabIndex = 3
@@ -237,7 +242,7 @@ Partial Class frmMain
         'lblSDEPath
         '
         Me.lblSDEPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblSDEPath.Location = New System.Drawing.Point(18, 31)
+        Me.lblSDEPath.Location = New System.Drawing.Point(12, 31)
         Me.lblSDEPath.Name = "lblSDEPath"
         Me.lblSDEPath.Size = New System.Drawing.Size(501, 20)
         Me.lblSDEPath.TabIndex = 1
@@ -245,7 +250,7 @@ Partial Class frmMain
         '
         'btnSelectSDEPath
         '
-        Me.btnSelectSDEPath.Location = New System.Drawing.Point(18, 54)
+        Me.btnSelectSDEPath.Location = New System.Drawing.Point(12, 54)
         Me.btnSelectSDEPath.Name = "btnSelectSDEPath"
         Me.btnSelectSDEPath.Size = New System.Drawing.Size(55, 23)
         Me.btnSelectSDEPath.TabIndex = 2
@@ -255,7 +260,7 @@ Partial Class frmMain
         'lblMediaFire
         '
         Me.lblMediaFire.AutoSize = True
-        Me.lblMediaFire.Location = New System.Drawing.Point(15, 18)
+        Me.lblMediaFire.Location = New System.Drawing.Point(9, 18)
         Me.lblMediaFire.Name = "lblMediaFire"
         Me.lblMediaFire.Size = New System.Drawing.Size(83, 13)
         Me.lblMediaFire.TabIndex = 0
@@ -515,7 +520,12 @@ Partial Class frmMain
         '
         'gbFilePathSelect
         '
-        Me.gbFilePathSelect.Controls.Add(Me.btnDownload)
+        Me.gbFilePathSelect.Controls.Add(Me.pgBar)
+        Me.gbFilePathSelect.Controls.Add(Me.btnCancelDownload)
+        Me.gbFilePathSelect.Controls.Add(Me.btnDownloadSDE)
+        Me.gbFilePathSelect.Controls.Add(Me.lblDownload)
+        Me.gbFilePathSelect.Controls.Add(Me.lblDownloadFolderPath)
+        Me.gbFilePathSelect.Controls.Add(Me.btnSelectDownloadPath)
         Me.gbFilePathSelect.Controls.Add(Me.btnCheckNoGridItems)
         Me.gbFilePathSelect.Controls.Add(Me.btnCheckAllGridItems)
         Me.gbFilePathSelect.Controls.Add(Me.lblMediaFire)
@@ -526,22 +536,48 @@ Partial Class frmMain
         Me.gbFilePathSelect.Controls.Add(Me.btnSelectSDEPath)
         Me.gbFilePathSelect.Location = New System.Drawing.Point(8, 178)
         Me.gbFilePathSelect.Name = "gbFilePathSelect"
-        Me.gbFilePathSelect.Size = New System.Drawing.Size(525, 152)
+        Me.gbFilePathSelect.Size = New System.Drawing.Size(525, 211)
         Me.gbFilePathSelect.TabIndex = 0
         Me.gbFilePathSelect.TabStop = False
         Me.gbFilePathSelect.Text = "Select File Locations:"
         '
-        'btnDownload
+        'btnDownloadSDE
         '
-        Me.btnDownload.Location = New System.Drawing.Point(79, 54)
-        Me.btnDownload.Name = "btnDownload"
-        Me.btnDownload.Size = New System.Drawing.Size(76, 23)
-        Me.btnDownload.TabIndex = 8
-        Me.btnDownload.Text = "Download"
-        Me.ToolTip1.SetToolTip(Me.btnDownload, "Checks for a new database version, downloads, and unzips the files to the specifi" &
+        Me.btnDownloadSDE.Location = New System.Drawing.Point(73, 116)
+        Me.btnDownloadSDE.Name = "btnDownloadSDE"
+        Me.btnDownloadSDE.Size = New System.Drawing.Size(76, 23)
+        Me.btnDownloadSDE.TabIndex = 11
+        Me.btnDownloadSDE.Text = "Download"
+        Me.btnDownloadSDE.UseVisualStyleBackColor = True
+        '
+        'lblDownload
+        '
+        Me.lblDownload.AutoSize = True
+        Me.lblDownload.Location = New System.Drawing.Point(9, 80)
+        Me.lblDownload.Name = "lblDownload"
+        Me.lblDownload.Size = New System.Drawing.Size(112, 13)
+        Me.lblDownload.TabIndex = 9
+        Me.lblDownload.Text = "SDE Download Folder"
+        '
+        'lblDownloadFolderPath
+        '
+        Me.lblDownloadFolderPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.lblDownloadFolderPath.Location = New System.Drawing.Point(12, 93)
+        Me.lblDownloadFolderPath.Name = "lblDownloadFolderPath"
+        Me.lblDownloadFolderPath.Size = New System.Drawing.Size(501, 20)
+        Me.lblDownloadFolderPath.TabIndex = 10
+        Me.lblDownloadFolderPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'btnSelectDownloadPath
+        '
+        Me.btnSelectDownloadPath.Location = New System.Drawing.Point(12, 116)
+        Me.btnSelectDownloadPath.Name = "btnSelectDownloadPath"
+        Me.btnSelectDownloadPath.Size = New System.Drawing.Size(55, 23)
+        Me.btnSelectDownloadPath.TabIndex = 8
+        Me.btnSelectDownloadPath.Text = "Select"
+        Me.ToolTip1.SetToolTip(Me.btnSelectDownloadPath, "Checks for a new database version, downloads, and unzips the files to the specifi" &
         "ed folder.")
-        Me.btnDownload.UseVisualStyleBackColor = True
-        Me.btnDownload.Visible = False
+        Me.btnSelectDownloadPath.UseVisualStyleBackColor = True
         '
         'btnCancel
         '
@@ -633,6 +669,24 @@ Partial Class frmMain
         Me.TestForSDEChangesToolStripMenuItem.Name = "TestForSDEChangesToolStripMenuItem"
         Me.TestForSDEChangesToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.TestForSDEChangesToolStripMenuItem.Text = "Test for SDE Changes"
+        '
+        'btnCancelDownload
+        '
+        Me.btnCancelDownload.Enabled = False
+        Me.btnCancelDownload.Location = New System.Drawing.Point(155, 116)
+        Me.btnCancelDownload.Name = "btnCancelDownload"
+        Me.btnCancelDownload.Size = New System.Drawing.Size(55, 23)
+        Me.btnCancelDownload.TabIndex = 12
+        Me.btnCancelDownload.Text = "Cancel"
+        Me.btnCancelDownload.UseVisualStyleBackColor = True
+        '
+        'pgBar
+        '
+        Me.pgBar.Location = New System.Drawing.Point(216, 116)
+        Me.pgBar.Name = "pgBar"
+        Me.pgBar.Size = New System.Drawing.Size(297, 23)
+        Me.pgBar.TabIndex = 13
+        Me.pgBar.Visible = False
         '
         'frmMain
         '
@@ -730,7 +784,12 @@ Partial Class frmMain
     Friend WithEvents CheckForUpdatesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents lblServerName As Label
-    Friend WithEvents btnDownload As Button
+    Friend WithEvents btnSelectDownloadPath As Button
     Friend WithEvents rbtnKorean As RadioButton
     Friend WithEvents TestForSDEChangesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents lblDownload As Label
+    Friend WithEvents lblDownloadFolderPath As Label
+    Friend WithEvents btnDownloadSDE As Button
+    Friend WithEvents btnCancelDownload As Button
+    Friend WithEvents pgBar As ProgressBar
 End Class

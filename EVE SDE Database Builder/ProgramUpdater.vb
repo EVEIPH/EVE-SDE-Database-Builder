@@ -214,62 +214,62 @@ DownloadError:
         End Try
     End Function
 
-    ''' <summary>
-    ''' Downloads the sent file from server and saves it to the root directory as the sent file name
-    ''' </summary>
-    ''' <param name="DownloadURL">URL to download the file</param>
-    ''' <param name="FileName">File name of downloaded file</param>
-    ''' <returns>File Name of where the downloaded file was saved.</returns>
-    Public Function DownloadFileFromServer(ByVal DownloadURL As String, ByVal FileName As String) As String
-        ' Creating the request And getting the response
-        Dim Response As HttpWebResponse
-        Dim Request As HttpWebRequest
+    '''' <summary>
+    '''' Downloads the sent file from server and saves it to the root directory as the sent file name
+    '''' </summary>
+    '''' <param name="DownloadURL">URL to download the file</param>
+    '''' <param name="FileName">File name of downloaded file</param>
+    '''' <returns>File Name of where the downloaded file was saved.</returns>
+    'Private Function DownloadFileFromServer(ByVal DownloadURL As String, ByVal FileName As String) As String
+    '    ' Creating the request And getting the response
+    '    Dim Response As HttpWebResponse
+    '    Dim Request As HttpWebRequest
 
-        ' For reading in chunks of data
-        Dim readBytes(4095) As Byte
-        ' Save in root directory
-        Dim writeStream As New FileStream(FileName, FileMode.Create)
-        Dim bytesread As Integer
+    '    ' For reading in chunks of data
+    '    Dim readBytes(4095) As Byte
+    '    ' Save in root directory
+    '    Dim writeStream As New FileStream(FileName, FileMode.Create)
+    '    Dim bytesread As Integer
 
-        Try 'Checks if the file exist
-            Request = DirectCast(HttpWebRequest.Create(DownloadURL), HttpWebRequest)
-            Request.Proxy = Nothing
-            Request.Credentials = CredentialCache.DefaultCredentials ' Added 9/27 to attempt to fix error: (407) Proxy Authentication Required.
-            Request.Timeout = 50000
-            Response = CType(Request.GetResponse, HttpWebResponse)
-        Catch ex As Exception
-            ' Show error and exit
-            'Close the streams
-            writeStream.Close()
-            MsgBox("An error occurred while downloading update file: " & ex.Message, vbCritical, Application.ProductName)
-            Return ""
-        End Try
+    '    Try 'Checks if the file exist
+    '        Request = DirectCast(HttpWebRequest.Create(DownloadURL), HttpWebRequest)
+    '        Request.Proxy = Nothing
+    '        Request.Credentials = CredentialCache.DefaultCredentials ' Added 9/27 to attempt to fix error: (407) Proxy Authentication Required.
+    '        Request.Timeout = 50000
+    '        Response = CType(Request.GetResponse, HttpWebResponse)
+    '    Catch ex As Exception
+    '        ' Show error and exit
+    '        'Close the streams
+    '        writeStream.Close()
+    '        MsgBox("An error occurred while downloading update file: " & ex.Message, vbCritical, Application.ProductName)
+    '        Return ""
+    '    End Try
 
-        ' Loop through and get the file in chunks, save out
-        Do
-            bytesread = Response.GetResponseStream.Read(readBytes, 0, 4096)
+    '    ' Loop through and get the file in chunks, save out
+    '    Do
+    '        bytesread = Response.GetResponseStream.Read(readBytes, 0, 4096)
 
-            ' No more bytes to read
-            If bytesread = 0 Then Exit Do
+    '        ' No more bytes to read
+    '        If bytesread = 0 Then Exit Do
 
-            writeStream.Write(readBytes, 0, bytesread)
-        Loop
+    '        writeStream.Write(readBytes, 0, bytesread)
+    '    Loop
 
-        'Close the streams
-        Response.GetResponseStream.Close()
-        writeStream.Close()
+    '    'Close the streams
+    '    Response.GetResponseStream.Close()
+    '    writeStream.Close()
 
-        ' Finally, check if the file is xml or text and adjust the lf to crlf (git saves as unix or lf only)
-        If FileName.Contains(".txt") Then 'Or FileName.Contains(".xml") Then
-            Dim FileText As String = File.ReadAllText(FileName)
-            FileText = FileText.Replace(Chr(10), vbCrLf)
-            ' Write the file back out if it's been updated
-            File.WriteAllText(FileName, FileText)
-        End If
+    '    ' Finally, check if the file is xml or text and adjust the lf to crlf (git saves as unix or lf only)
+    '    If FileName.Contains(".txt") Then 'Or FileName.Contains(".xml") Then
+    '        Dim FileText As String = File.ReadAllText(FileName)
+    '        FileText = FileText.Replace(Chr(10), vbCrLf)
+    '        ' Write the file back out if it's been updated
+    '        File.WriteAllText(FileName, FileText)
+    '    End If
 
-        Return FileName
+    '    Return FileName
 
-    End Function
+    'End Function
 
     ''' <summary>
     ''' Calculates the MD5 hash for the sent file.

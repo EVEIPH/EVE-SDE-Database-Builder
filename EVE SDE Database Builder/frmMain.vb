@@ -96,7 +96,7 @@ Public Class frmMain
     ''' <summary>
     ''' Saves all settings, including the files checked
     ''' </summary>
-    Private Sub SaveSettings()
+    Private Sub SaveSettings(SupressMessage As Boolean)
 
         If Not ConductErrorChecks(False) Then
             Exit Sub
@@ -106,6 +106,7 @@ Public Class frmMain
             .DatabaseName = txtDBName.Text
             .SDEDirectory = lblSDEPath.Text
             .FinalDBPath = lblFinalDBPath.Text
+            .DownloadFolderPath = lblDownloadFolderPath.Text
 
             ' Get the specific settings for each option
             If rbtnAccess.Checked Then
@@ -169,7 +170,9 @@ Public Class frmMain
         MyStream.Flush()
         MyStream.Close()
 
-        MsgBox("Settings Saved", vbInformation, Application.ProductName)
+        If Not SupressMessage Then
+            MsgBox("Settings Saved", vbInformation, Application.ProductName)
+        End If
 
     End Sub
 
@@ -189,6 +192,7 @@ Public Class frmMain
             txtDBName.Text = .DatabaseName
             lblFinalDBPath.Text = .FinalDBPath
             lblSDEPath.Text = .SDEDirectory
+            lblDownloadFolderPath.Text = .DownloadFolderPath
 
             ' Set the option
             Select Case .SelectedDB
@@ -2088,7 +2092,7 @@ CancelImportProcessing:
 
     Private Sub btnSaveFilePath_Click(sender As Object, e As EventArgs) Handles btnSaveSettings.Click
         If LoadFileListtoGrid() Then
-            Call SaveSettings()
+            Call SaveSettings(False)
         End If
     End Sub
 
@@ -2206,7 +2210,7 @@ CancelImportProcessing:
         End If
     End Sub
 
-    Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
+    Private Sub btnSelectDownloadPath_Click(sender As Object, e As EventArgs) Handles btnSelectDownloadPath.Click
         FBDialog.RootFolder = Environment.SpecialFolder.Desktop
 
         If Directory.Exists(UserApplicationSettings.SDEDirectory) Then
@@ -2217,25 +2221,142 @@ CancelImportProcessing:
 
         If FBDialog.ShowDialog() = DialogResult.OK Then
             Try
-                lblSDEPath.Text = FBDialog.SelectedPath
-                UserApplicationSettings.SDEDirectory = FBDialog.SelectedPath
+                lblDownloadFolderPath.Text = FBDialog.SelectedPath
+                UserApplicationSettings.DownloadFolderPath = FBDialog.SelectedPath
             Catch ex As Exception
                 MsgBox(Err.Description, vbExclamation, Application.ProductName)
                 Exit Sub
             End Try
         End If
 
+    End Sub
+
+    Private Sub btnDownloadSDE_Click(sender As Object, e As EventArgs) Handles btnDownloadSDE.Click
+        Dim ChecksumFileName As String = UserApplicationSettings.DownloadFolderPath & "\" & "checksum"
+        Dim OldChecksumFileName As String = UserApplicationSettings.DownloadFolderPath & "\" & "checksum-old"
+        Dim NewDownloadDirectory As String = "" ' Folder I'll download into and work with
+        Dim NewChecksum As StreamReader
+        Dim NewChecksumValue As String = ""
+        Dim OldChecksum As StreamReader
+        Dim OldChecksumValue As String = ""
+
+        CancelDownload = False
+
         ' Now that we have a good directory, download the check sum to make sure we need an update
-        If File.Exists(lblSDEPath.Text & "checksum") Then
-
-
+        If File.Exists(ChecksumFileName) Then
+            ' rename this checksum before downloading the new one
+            If File.Exists(OldChecksumFileName) Then
+                File.Delete(OldChecksumFileName)
+            End If
+            File.Copy(ChecksumFileName, OldChecksumFileName)
+            File.Delete(ChecksumFileName)
+            ' Read file
+            OldChecksum = New StreamReader(OldChecksumFileName)
+            OldChecksumValue = OldChecksum.ReadLine
+            Call OldChecksum.Dispose() ' Release
         End If
 
-        ' Download the new zip and process
+        ' Download the new checksum
+        Call DownloadFileFromServer("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/checksum", ChecksumFileName)
 
+        ' Read each check sum and check if they are different
+        NewChecksum = New StreamReader(ChecksumFileName)
+        NewChecksumValue = NewChecksum.ReadLine
 
+        If IsNothing(NewChecksumValue) Then
+            Call NewChecksum.Dispose()
+            MsgBox("Failed to download checksum. Try again.", vbExclamation, "SDE Database Builder")
+            Exit Sub
+        End If
 
+        ' Release file
+        Call NewChecksum.Dispose()
 
+        If NewChecksumValue <> OldChecksumValue Then
+            Me.UseWaitCursor = True
+            ' Need to download the new SDE
+            btnDownloadSDE.Enabled = False
+            btnSelectDownloadPath.Enabled = False
+            gbSelectDBType.Enabled = False
+            btnCancel.Enabled = False
+            btnSelectSDEPath.Enabled = False
+            btnSelectFinalDBPath.Enabled = False
+            btnCheckAllGridItems.Enabled = False
+            btnCheckNoGridItems.Enabled = False
+            btnBuildDatabase.Enabled = False
+            btnSaveSettings.Enabled = False
+            btnClose.Enabled = False
+            dgMain.Enabled = False
+            btnCancelDownload.Enabled = True
+
+            lblStatus.Text = "Preparing files..."
+            Application.DoEvents()
+            ' Create a folder for today's date and download the SDE into that folder - will overwrite anything there
+            NewDownloadDirectory = UserApplicationSettings.DownloadFolderPath & "\" & MonthName(Now.Month) & "_" & CStr(Now.Day) & "_" & Year(Now)
+            If Directory.Exists(NewDownloadDirectory) Then
+                Call Directory.Delete(NewDownloadDirectory, True)
+            End If
+            Call Directory.CreateDirectory(NewDownloadDirectory)
+
+            ' Now download into that folder
+            lblStatus.Text = "Downloading SDE..."
+            Call DownloadFileFromServer("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/sde.zip", NewDownloadDirectory & "\SDE.zip", pgBar)
+
+            If CancelDownload Then
+                ' Delete new checksum and restore old one
+                File.Delete(ChecksumFileName)
+                If File.Exists(OldChecksumFileName) Then
+                    ' Rename
+                    File.Copy(OldChecksumFileName, ChecksumFileName)
+                    File.Delete(OldChecksumFileName)
+                End If
+                MsgBox("Cancelled download", vbInformation, Application.ProductName)
+                GoTo CancelDownload
+            End If
+
+            ' Unzip files and set the new download folder 
+            lblStatus.Text = "Extracting files..."
+            btnCancelDownload.Enabled = False ' Can't cancel anymore
+            Application.DoEvents()
+            Call ZipFile.ExtractToDirectory(NewDownloadDirectory & "\SDE.zip", NewDownloadDirectory)
+
+            ' Finally delete old download zip file after extracted to save space
+            lblStatus.Text = "Cleaning up files..."
+            Application.DoEvents()
+            File.Delete(NewDownloadDirectory & "\SDE.zip")
+
+            lblSDEPath.Text = NewDownloadDirectory & "\sde"
+            UserApplicationSettings.SDEDirectory = NewDownloadDirectory & "\sde"
+            ' Save the settings as well
+            Call SaveSettings(True)
+            lblStatus.Text = ""
+            ' Refersh the yaml file paths
+            ' Load the file list since they just selected the folder
+            Call LoadFileListtoGrid()
+
+            Call MsgBox("SDE Downloaded and saved in SDE File Folder", vbInformation, Application.ProductName)
+        Else
+            Call MsgBox("You have the latest SDE Version downloaded", vbInformation, Application.ProductName)
+        End If
+
+        ' Delete the old check sum file in both cases
+        File.Delete(OldChecksumFileName)
+
+CancelDownload:
+        Me.UseWaitCursor = False
+
+        btnDownloadSDE.Enabled = True
+        btnSelectDownloadPath.Enabled = True
+        gbSelectDBType.Enabled = True
+        btnCancel.Enabled = True
+        btnSelectSDEPath.Enabled = True
+        btnSelectFinalDBPath.Enabled = True
+        btnCheckAllGridItems.Enabled = True
+        btnCheckNoGridItems.Enabled = True
+        btnBuildDatabase.Enabled = True
+        btnSaveSettings.Enabled = True
+        btnClose.Enabled = True
+        dgMain.Enabled = True
 
     End Sub
 
@@ -2245,6 +2366,10 @@ CancelImportProcessing:
         Else
             TestForSDEChanges = False
         End If
+    End Sub
+
+    Private Sub btnCancelDownload_Click(sender As Object, e As EventArgs) Handles btnCancelDownload.Click
+        CancelDownload = True
     End Sub
 End Class
 
