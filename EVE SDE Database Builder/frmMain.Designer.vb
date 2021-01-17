@@ -70,6 +70,8 @@ Partial Class frmMain
         Me.rbtnGerman = New System.Windows.Forms.RadioButton()
         Me.rbtnEnglish = New System.Windows.Forms.RadioButton()
         Me.gbFilePathSelect = New System.Windows.Forms.GroupBox()
+        Me.pgBar = New System.Windows.Forms.ProgressBar()
+        Me.btnCancelDownload = New System.Windows.Forms.Button()
         Me.btnDownloadSDE = New System.Windows.Forms.Button()
         Me.lblDownload = New System.Windows.Forms.Label()
         Me.lblDownloadFolderPath = New System.Windows.Forms.Label()
@@ -88,8 +90,6 @@ Partial Class frmMain
         Me.PrepareFilesForUpdateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BuildBinaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestForSDEChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnCancelDownload = New System.Windows.Forms.Button()
-        Me.pgBar = New System.Windows.Forms.ProgressBar()
         Me.pnlMain.SuspendLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbSelectDBType.SuspendLayout()
@@ -101,7 +101,7 @@ Partial Class frmMain
         '
         'btnBuildDatabase
         '
-        Me.btnBuildDatabase.Location = New System.Drawing.Point(81, 626)
+        Me.btnBuildDatabase.Location = New System.Drawing.Point(81, 621)
         Me.btnBuildDatabase.Name = "btnBuildDatabase"
         Me.btnBuildDatabase.Size = New System.Drawing.Size(90, 30)
         Me.btnBuildDatabase.TabIndex = 2
@@ -159,7 +159,7 @@ Partial Class frmMain
         Me.dgMain.Location = New System.Drawing.Point(8, 395)
         Me.dgMain.Name = "dgMain"
         Me.dgMain.RowHeadersVisible = False
-        Me.dgMain.Size = New System.Drawing.Size(526, 228)
+        Me.dgMain.Size = New System.Drawing.Size(526, 220)
         Me.dgMain.TabIndex = 1
         '
         'FileSelect
@@ -232,7 +232,7 @@ Partial Class frmMain
         '
         'btnSaveSettings
         '
-        Me.btnSaveSettings.Location = New System.Drawing.Point(273, 626)
+        Me.btnSaveSettings.Location = New System.Drawing.Point(273, 621)
         Me.btnSaveSettings.Name = "btnSaveSettings"
         Me.btnSaveSettings.Size = New System.Drawing.Size(90, 30)
         Me.btnSaveSettings.TabIndex = 4
@@ -541,6 +541,24 @@ Partial Class frmMain
         Me.gbFilePathSelect.TabStop = False
         Me.gbFilePathSelect.Text = "Select File Locations:"
         '
+        'pgBar
+        '
+        Me.pgBar.Location = New System.Drawing.Point(216, 116)
+        Me.pgBar.Name = "pgBar"
+        Me.pgBar.Size = New System.Drawing.Size(297, 23)
+        Me.pgBar.TabIndex = 13
+        Me.pgBar.Visible = False
+        '
+        'btnCancelDownload
+        '
+        Me.btnCancelDownload.Enabled = False
+        Me.btnCancelDownload.Location = New System.Drawing.Point(155, 116)
+        Me.btnCancelDownload.Name = "btnCancelDownload"
+        Me.btnCancelDownload.Size = New System.Drawing.Size(55, 23)
+        Me.btnCancelDownload.TabIndex = 12
+        Me.btnCancelDownload.Text = "Cancel"
+        Me.btnCancelDownload.UseVisualStyleBackColor = True
+        '
         'btnDownloadSDE
         '
         Me.btnDownloadSDE.Location = New System.Drawing.Point(73, 116)
@@ -581,7 +599,7 @@ Partial Class frmMain
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(177, 626)
+        Me.btnCancel.Location = New System.Drawing.Point(177, 621)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(90, 30)
         Me.btnCancel.TabIndex = 3
@@ -590,7 +608,7 @@ Partial Class frmMain
         '
         'btnClose
         '
-        Me.btnClose.Location = New System.Drawing.Point(369, 626)
+        Me.btnClose.Location = New System.Drawing.Point(369, 621)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(90, 30)
         Me.btnClose.TabIndex = 5
@@ -669,24 +687,6 @@ Partial Class frmMain
         Me.TestForSDEChangesToolStripMenuItem.Name = "TestForSDEChangesToolStripMenuItem"
         Me.TestForSDEChangesToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.TestForSDEChangesToolStripMenuItem.Text = "Test for SDE Changes"
-        '
-        'btnCancelDownload
-        '
-        Me.btnCancelDownload.Enabled = False
-        Me.btnCancelDownload.Location = New System.Drawing.Point(155, 116)
-        Me.btnCancelDownload.Name = "btnCancelDownload"
-        Me.btnCancelDownload.Size = New System.Drawing.Size(55, 23)
-        Me.btnCancelDownload.TabIndex = 12
-        Me.btnCancelDownload.Text = "Cancel"
-        Me.btnCancelDownload.UseVisualStyleBackColor = True
-        '
-        'pgBar
-        '
-        Me.pgBar.Location = New System.Drawing.Point(216, 116)
-        Me.pgBar.Name = "pgBar"
-        Me.pgBar.Size = New System.Drawing.Size(297, 23)
-        Me.pgBar.TabIndex = 13
-        Me.pgBar.Visible = False
         '
         'frmMain
         '
