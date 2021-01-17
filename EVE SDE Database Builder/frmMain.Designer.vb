@@ -242,7 +242,7 @@ Partial Class frmMain
         'lblSDEPath
         '
         Me.lblSDEPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblSDEPath.Location = New System.Drawing.Point(12, 31)
+        Me.lblSDEPath.Location = New System.Drawing.Point(12, 93)
         Me.lblSDEPath.Name = "lblSDEPath"
         Me.lblSDEPath.Size = New System.Drawing.Size(501, 20)
         Me.lblSDEPath.TabIndex = 1
@@ -250,7 +250,7 @@ Partial Class frmMain
         '
         'btnSelectSDEPath
         '
-        Me.btnSelectSDEPath.Location = New System.Drawing.Point(12, 54)
+        Me.btnSelectSDEPath.Location = New System.Drawing.Point(12, 116)
         Me.btnSelectSDEPath.Name = "btnSelectSDEPath"
         Me.btnSelectSDEPath.Size = New System.Drawing.Size(55, 23)
         Me.btnSelectSDEPath.TabIndex = 2
@@ -260,7 +260,7 @@ Partial Class frmMain
         'lblMediaFire
         '
         Me.lblMediaFire.AutoSize = True
-        Me.lblMediaFire.Location = New System.Drawing.Point(9, 18)
+        Me.lblMediaFire.Location = New System.Drawing.Point(9, 80)
         Me.lblMediaFire.Name = "lblMediaFire"
         Me.lblMediaFire.Size = New System.Drawing.Size(83, 13)
         Me.lblMediaFire.TabIndex = 0
@@ -543,7 +543,7 @@ Partial Class frmMain
         '
         'pgBar
         '
-        Me.pgBar.Location = New System.Drawing.Point(216, 116)
+        Me.pgBar.Location = New System.Drawing.Point(216, 52)
         Me.pgBar.Name = "pgBar"
         Me.pgBar.Size = New System.Drawing.Size(297, 23)
         Me.pgBar.TabIndex = 13
@@ -552,7 +552,7 @@ Partial Class frmMain
         'btnCancelDownload
         '
         Me.btnCancelDownload.Enabled = False
-        Me.btnCancelDownload.Location = New System.Drawing.Point(155, 116)
+        Me.btnCancelDownload.Location = New System.Drawing.Point(155, 52)
         Me.btnCancelDownload.Name = "btnCancelDownload"
         Me.btnCancelDownload.Size = New System.Drawing.Size(55, 23)
         Me.btnCancelDownload.TabIndex = 12
@@ -561,7 +561,7 @@ Partial Class frmMain
         '
         'btnDownloadSDE
         '
-        Me.btnDownloadSDE.Location = New System.Drawing.Point(73, 116)
+        Me.btnDownloadSDE.Location = New System.Drawing.Point(73, 52)
         Me.btnDownloadSDE.Name = "btnDownloadSDE"
         Me.btnDownloadSDE.Size = New System.Drawing.Size(76, 23)
         Me.btnDownloadSDE.TabIndex = 11
@@ -571,7 +571,7 @@ Partial Class frmMain
         'lblDownload
         '
         Me.lblDownload.AutoSize = True
-        Me.lblDownload.Location = New System.Drawing.Point(9, 80)
+        Me.lblDownload.Location = New System.Drawing.Point(9, 16)
         Me.lblDownload.Name = "lblDownload"
         Me.lblDownload.Size = New System.Drawing.Size(112, 13)
         Me.lblDownload.TabIndex = 9
@@ -580,7 +580,7 @@ Partial Class frmMain
         'lblDownloadFolderPath
         '
         Me.lblDownloadFolderPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblDownloadFolderPath.Location = New System.Drawing.Point(12, 93)
+        Me.lblDownloadFolderPath.Location = New System.Drawing.Point(12, 29)
         Me.lblDownloadFolderPath.Name = "lblDownloadFolderPath"
         Me.lblDownloadFolderPath.Size = New System.Drawing.Size(501, 20)
         Me.lblDownloadFolderPath.TabIndex = 10
@@ -588,7 +588,7 @@ Partial Class frmMain
         '
         'btnSelectDownloadPath
         '
-        Me.btnSelectDownloadPath.Location = New System.Drawing.Point(12, 116)
+        Me.btnSelectDownloadPath.Location = New System.Drawing.Point(12, 52)
         Me.btnSelectDownloadPath.Name = "btnSelectDownloadPath"
         Me.btnSelectDownloadPath.Size = New System.Drawing.Size(55, 23)
         Me.btnSelectDownloadPath.TabIndex = 8
