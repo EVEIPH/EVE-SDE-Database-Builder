@@ -38,6 +38,7 @@ Public Class YAMLraces
         Table.Add(New DBTableField("raceName", FieldType.varchar_type, 100, True))
         Table.Add(New DBTableField("raceDescription", FieldType.varchar_type, 1000, True))
         Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
+        Table.Add(New DBTableField("shipTypeID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -76,6 +77,7 @@ Public Class YAMLraces
                 DataFields.Add(UpdateDB.BuildDatabaseField("raceName", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("raceDescription", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("shipTypeID", .shipTypeID, FieldType.int_type))
             End With
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
@@ -107,5 +109,6 @@ Public Class race
     Public Property nameID As Translations
     Public Property descriptionID As Translations
     Public Property iconID As Object
+    Public Property shipTypeID As Integer
     Public Property skills As Dictionary(Of Long, Integer) ' typeID and level
 End Class

@@ -882,7 +882,7 @@ Public Class YAMLUniverse
     Private Sub CreatemapDisallowedAnchorCategories()
         Dim Table As New List(Of DBTableField)
 
-        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, False, True))
+        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("categoryID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(mapDisallowedAnchorCategories_Table, Table)
@@ -895,7 +895,7 @@ Public Class YAMLUniverse
     Private Sub CreatemapDisallowedAnchorGroups()
         Dim Table As New List(Of DBTableField)
 
-        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, False, True))
+        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("groupID", FieldType.int_type, 0, True))
 
         Call UpdateDB.CreateTable(mapDisallowedAnchorGroups_Table, Table)

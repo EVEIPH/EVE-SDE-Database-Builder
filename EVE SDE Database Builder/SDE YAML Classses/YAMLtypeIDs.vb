@@ -11,7 +11,7 @@ Public Class YAMLtypeIDs
     Private Const invTraits_Table As String = "invTraits"
     Private Const invTypes_Table As String = "invTypes"
 
-    Private BonusIDCounter As Integer = 0 ' For assigning unique bonusIDs in traits
+    Private BonusIDCounter As Integer = 0 ' For assigning unique bonusIDs in traits but linking to translation tables
 
     Private PackagedItems As List(Of PackagedItem)
     Private PackagedItemtoFind As PackagedItem

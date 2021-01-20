@@ -37,6 +37,7 @@ Public Class YAMLfactions
         Table.Add(New DBTableField("factionID", FieldType.int_type, 0, False, True))
         Table.Add(New DBTableField("factionName", FieldType.varchar_type, 100, True))
         Table.Add(New DBTableField("description", FieldType.varchar_type, 1500, True))
+        Table.Add(New DBTableField("shortDescriptionID", FieldType.varchar_type, 500, True))
         Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("sizeFactor", FieldType.real_type, 0, True))
@@ -79,6 +80,7 @@ Public Class YAMLfactions
                 DataFields.Add(UpdateDB.BuildDatabaseField("factionID", DataField.Key, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("factionName", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("description", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("shortDescriptionID", NameTranslation.GetLanguageTranslationData(.shortDescriptionID), FieldType.nvarchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("solarSystemID", .solarSystemID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", .corporationID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("sizeFactor", .sizeFactor, FieldType.real_type))
@@ -89,6 +91,7 @@ Public Class YAMLfactions
                 ' Insert the translated data into translation tables
                 Call Translator.InsertTranslationData(DataField.Key, "factionID", "factionName", TableName, NameTranslation.GetAllTranslations(.nameID))
                 Call Translator.InsertTranslationData(DataField.Key, "factionID", "description", TableName, NameTranslation.GetAllTranslations(.descriptionID))
+                Call Translator.InsertTranslationData(DataField.Key, "factionID", "shortDescriptionID", TableName, NameTranslation.GetAllTranslations(.shortDescriptionID))
 
             End With
 
@@ -119,6 +122,7 @@ Public Class faction
     Public Property memberRaces As List(Of Object)
     Public Property militiaCorporationID As Object
     Public Property nameID As Translations
+    Public Property shortDescriptionID As Translations
     Public Property sizeFactor As Object
     Public Property solarSystemID As Object
     Public Property uniqueName As Object
