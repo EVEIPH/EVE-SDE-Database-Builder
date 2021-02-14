@@ -129,7 +129,8 @@ Public Class SQLiteDB
     ''' <param name="SelectTableName">Table name to select from</param>
     ''' <param name="SelectWhereClause">List of where clauses such as WHERE Y = 3</param>
     ''' <returns>List of objects to match the field values</returns>
-    Public Function SelectfromTable(ByVal SelectFieldValues As List(Of String), ByVal SelectTableName As String, ByVal SelectWhereClause As List(Of String)) As List(Of List(Of Object))
+    Public Function SelectfromTable(ByVal SelectFieldValues As List(Of String), ByVal SelectTableName As String, ByVal SelectWhereClause As List(Of String),
+                                    Optional ByRef RecordsFound As Boolean = False) As List(Of List(Of Object))
         Dim SQLQuery As SQLiteCommand
         Dim SQLReader As SQLiteDataReader
         Dim ReturnValues As New List(Of List(Of Object))
@@ -170,6 +171,7 @@ Public Class SQLiteDB
                 TempRecord.Add(SQLReader.GetValue(i))
             Next
             ReturnValues.Add(TempRecord)
+            RecordsFound = True
         End While
 
         SQLReader.Close()
@@ -397,9 +399,8 @@ Public Class SQLiteDB
                         DataFields.Add(BuildDatabaseField("tcID", CType(row.Item(4), Object), FieldType.smallint_type))
 
                     ElseIf Tables(i).TableName = YAMLTranslations.trnTranslationLanguagesTable Then
-                        DataFields.Add(BuildDatabaseField("numericLanguageID", CType(row.Item(0), Object), FieldType.int_type))
-                        DataFields.Add(BuildDatabaseField("languageID", CType(row.Item(1), Object), FieldType.varchar_type))
-                        DataFields.Add(BuildDatabaseField("languageName", CType(row.Item(2), Object), FieldType.nvarchar_type))
+                        DataFields.Add(BuildDatabaseField("languageID", CType(row.Item(0), Object), FieldType.varchar_type))
+                        DataFields.Add(BuildDatabaseField("languageName", CType(row.Item(1), Object), FieldType.nvarchar_type))
 
                     ElseIf Tables(i).TableName = YAMLTranslations.trnTranslationsTable Then
 

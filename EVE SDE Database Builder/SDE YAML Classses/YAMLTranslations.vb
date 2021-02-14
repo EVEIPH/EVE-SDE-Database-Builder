@@ -6,13 +6,11 @@ Imports System.IO
 Public Class YAMLTranslations
     Inherits YAMLFilesBase
 
-    Public Const trnTranslationColumnsTable As String = "trnTranslationColumns"
-    Public Const trnTranslationLanguagesTable As String = "trnTranslationLanguages"
-    Public Const trnTranslationsTable As String = "trnTranslations"
+    Public Const trnTranslationColumnsTable As String = "translationColumns"
+    Public Const trnTranslationLanguagesTable As String = "translationLanguages"
+    Public Const trnTranslationsTable As String = "translations"
 
-    Public Const trnTranslationColumnsFile As String = "trnTranslationColumns.yaml"
-    Public Const trnTranslationLanguagesFile As String = "trnTranslationLanguages.yaml"
-    Public Const trnTranslationsFile As String = "trnTranslations.yaml"
+    Public Const translationLanguagesFile As String = "translationLanguages.yaml"
 
     ' Local copies of the translation data tables
     Public TranslationTables As New LocalDatabase ' for final loading and passing to databases for inserts
@@ -51,18 +49,67 @@ Public Class YAMLTranslations
         Dim DS As New Deserializer
         DS = DSB.Build
 
-        Dim YAMLRecords As New List(Of trnTranslationLanguage)
-        Dim DataFields As List(Of DBField)
+        Dim YAMLRecords As New Dictionary(Of String, String)
+        Dim DataFields As New List(Of DBField)
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
-        Dim ImportText As String = String.Format("Importing {0}...", trnTranslationLanguagesFile)
+        Dim ImportText As String = String.Format("Importing {0}...", translationLanguagesFile)
+        Dim IndexFields As New List(Of String)
 
-        ' Build table
+        ' Build columns table
         Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("numericLanguageID", FieldType.int_type, 0, False, True))
+        Table.Add(New DBTableField("columnName", FieldType.nvarchar_type, 128, True))
+        Table.Add(New DBTableField("masterID", FieldType.nvarchar_type, 128, True))
+        Table.Add(New DBTableField("tableName", FieldType.nvarchar_type, 256, True))
+        Table.Add(New DBTableField("tcGroupID", FieldType.smallint_type, 0, True))
+        Table.Add(New DBTableField("tcID", FieldType.smallint_type, 0, True))
+
+        If ImportTable Then
+            Call UpdateDB.CreateTable(trnTranslationColumnsTable, Table)
+        End If
+        Call TranslationTablesDB.CreateTable(trnTranslationColumnsTable, Table)
+
+        ' Create Index
+        IndexFields = New List(Of String)
+        IndexFields.Add("tableName")
+        IndexFields.Add("columnName")
+        IndexFields.Add("masterID")
+
+        If ImportTable Then
+            Call UpdateDB.CreateIndex(trnTranslationColumnsTable, "IDX_" & trnTranslationColumnsTable & "_TN_CN_MID", IndexFields, True)
+        End If
+        Call TranslationTablesDB.CreateIndex(trnTranslationColumnsTable, "IDX_" & trnTranslationColumnsTable & "_TN_CN_MID", IndexFields, True)
+
+        ' Build translations table
+        Table = New List(Of DBTableField)
+        Table.Add(New DBTableField("keyID", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("languageID", FieldType.varchar_type, 50, True))
-        Table.Add(New DBTableField("languageName", FieldType.nvarchar_type, 200, True))
+        Table.Add(New DBTableField("tcID", FieldType.smallint_type, 256, True))
+        Table.Add(New DBTableField("text", FieldType.nvarchar_type, -1, True)) ' Some are null for some reason
+
+        If ImportTable Then
+            Call UpdateDB.CreateTable(trnTranslationsTable, Table)
+        End If
+
+        Call TranslationTablesDB.CreateTable(trnTranslationsTable, Table)
+
+        ' Create Index
+        IndexFields = New List(Of String)
+        IndexFields.Add("tcID")
+        IndexFields.Add("keyID")
+        IndexFields.Add("languageID")
+
+        If ImportTable Then
+            Call UpdateDB.CreateIndex(trnTranslationsTable, "IDX_" & trnTranslationsTable & "_TCID_KID_LID", IndexFields, False)
+        End If
+
+        Call TranslationTablesDB.CreateIndex(trnTranslationsTable, "IDX_" & trnTranslationsTable & "_TCID_KID_LID", IndexFields, False)
+
+        ' Build language table
+        Table = New List(Of DBTableField)
+        Table.Add(New DBTableField("languageID", FieldType.varchar_type, 2, True))
+        Table.Add(New DBTableField("languageName", FieldType.nvarchar_type, 10, True))
 
         If ImportTable Then
             Call UpdateDB.CreateTable(trnTranslationLanguagesTable, Table)
@@ -72,7 +119,7 @@ Public Class YAMLTranslations
 
         Try
             ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of trnTranslationLanguage))(New StringReader(File.ReadAllText(YAMLFile & trnTranslationLanguagesFile)))
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of String, String))(New StringReader(File.ReadAllText(YAMLFile & translationLanguagesFile)))
         Catch ex As Exception
             Call ShowErrorMessage(ex)
         End Try
@@ -89,7 +136,7 @@ Public Class YAMLTranslations
             If ImportTable Then
                 Call InitGridRow(Params.RowLocation)
             Else
-                Call InitalizeMainProgressBar(TotalRecords, "Importing " & trnTranslationLanguagesFile)
+                Call InitalizeMainProgressBar(TotalRecords, "Importing " & translationLanguagesFile)
             End If
         End If
 
@@ -98,9 +145,8 @@ Public Class YAMLTranslations
             DataFields = New List(Of DBField)
 
             ' Build the insert list
-            DataFields.Add(TranslationTablesDB.BuildDatabaseField("numericLanguageID", DataField.numericLanguageID, FieldType.int_type))
-            DataFields.Add(TranslationTablesDB.BuildDatabaseField("languageID", DataField.languageID.ToUpper, FieldType.varchar_type))
-            DataFields.Add(TranslationTablesDB.BuildDatabaseField("languageName", DataField.languageName, FieldType.nvarchar_type))
+            DataFields.Add(TranslationTablesDB.BuildDatabaseField("languageID", DataField.Key.ToUpper, FieldType.varchar_type))
+            DataFields.Add(TranslationTablesDB.BuildDatabaseField("languageName", DataField.Value, FieldType.nvarchar_type))
 
             ' Save locally for searching and import
             Call TranslationTablesDB.InsertRecord(trnTranslationLanguagesTable, DataFields)
@@ -111,7 +157,7 @@ Public Class YAMLTranslations
                 If ImportTable Then
                     Call UpdateGridRowProgress(Params.RowLocation, Count, TotalRecords)
                 Else
-                    Call UpdateMainProgressBar(Count, "Importing " & trnTranslationLanguagesFile)
+                    Call UpdateMainProgressBar(Count, "Importing " & translationLanguagesFile)
                 End If
             End If
 
@@ -136,67 +182,6 @@ Cancel:
     End Sub
 
     ''' <summary>
-    ''' Imports the translations.yaml file and inserts all records into the trnTranslationColumns table
-    ''' </summary>
-    ''' <param name="Params">Import paramenters</param>
-    ''' <param name="ImportTable">If we want to import the table, true, else false. If false, then we are importing the table for local use only</param>
-    Public Sub ImportTranslationColumns(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True)
-        Dim DSB = New DeserializerBuilder()
-        If Not TestForSDEChanges Then
-            DSB.IgnoreUnmatchedProperties()
-        End If
-        DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
-        Dim DS As New Deserializer
-        DS = DSB.Build
-
-        Dim YAMLRecords As New List(Of trnTranslationColumn)
-        Dim SQL As String = ""
-
-        Dim ImportText As String = String.Format("Importing {0}...", trnTranslationColumnsFile)
-        Dim IndexFields As List(Of String)
-
-        ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("columnName", FieldType.nvarchar_type, 128, True))
-        Table.Add(New DBTableField("masterID", FieldType.nvarchar_type, 128, True))
-        Table.Add(New DBTableField("tableName", FieldType.nvarchar_type, 256, True))
-        Table.Add(New DBTableField("tcGroupID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("tcID", FieldType.smallint_type, 0, True))
-
-        If ImportTable Then
-            Call UpdateDB.CreateTable(trnTranslationColumnsTable, Table)
-        End If
-        Call TranslationTablesDB.CreateTable(trnTranslationColumnsTable, Table)
-
-        ' Create Index
-        IndexFields = New List(Of String)
-        IndexFields.Add("tableName")
-        IndexFields.Add("columnName")
-        IndexFields.Add("masterID")
-
-        If ImportTable Then
-            Call UpdateDB.CreateIndex(trnTranslationColumnsTable, "IDX_" & trnTranslationColumnsTable & "_TN_CN_MID", IndexFields, True)
-        End If
-        Call TranslationTablesDB.CreateIndex(trnTranslationColumnsTable, "IDX_" & trnTranslationColumnsTable & "_TN_CN_MID", IndexFields, True)
-
-        Try
-            ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of trnTranslationColumn))(New StringReader(File.ReadAllText(YAMLFile & trnTranslationColumnsFile)))
-        Catch ex As Exception
-            Call ShowErrorMessage(ex)
-        End Try
-
-        ' See if we only want to build the table and indexes
-        If Not Params.InsertRecords Then
-            Exit Sub
-        End If
-
-        ' Insert all the records read
-        Call InsertTranslationColumnsRecords(YAMLRecords, Params.RowLocation, ImportText, ImportTable)
-
-    End Sub
-
-    ''' <summary>
     ''' Saves the records from trnTranslationColumns into the table
     ''' </summary>
     ''' <param name="trnColRecord">Parsed list of trnTranslationColumns from yaml</param>
@@ -217,8 +202,6 @@ Cancel:
         If ShowProgress Then
             If UpdateGridProgressbar Then
                 Call InitGridRow(RowLocation)
-            Else
-                Call InitalizeMainProgressBar(TotalRecords, "Importing " & trnTranslationColumnsFile)
             End If
         End If
 
@@ -246,8 +229,6 @@ Cancel:
             If ShowProgress Then
                 If UpdateGridProgressbar Then
                     Call UpdateGridRowProgress(RowLocation, Count, TotalRecords)
-                Else
-                    Call UpdateMainProgressBar(Count, "Importing " & trnTranslationColumnsFile)
                 End If
             End If
 
@@ -271,67 +252,6 @@ Cancel:
     End Sub
 
     ''' <summary>
-    ''' Imports the translations.yaml file and inserts all records into the trnTranslationColumns and trnTranslations tables
-    ''' </summary>
-    ''' <param name="Params">Import paramenters</param>
-    ''' <param name="ImportTable">If we want to import the table, true, else false. If false, then we are importing the table for local use only</param>
-    Public Sub ImportTranslations(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True)
-        Dim DSB = New DeserializerBuilder()
-        If Not TestForSDEChanges Then
-            DSB.IgnoreUnmatchedProperties()
-        End If
-        DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
-        Dim DS As New Deserializer
-        DS = DSB.Build
-
-        Dim YAMLRecords As New List(Of trnTranslation)
-        Dim IndexFields As List(Of String)
-        Dim SQL As String = ""
-        Dim ImportText As String = String.Format("Importing {0}...", trnTranslationsFile)
-
-        ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("keyID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("languageID", FieldType.varchar_type, 50, True))
-        Table.Add(New DBTableField("tcID", FieldType.smallint_type, 256, True))
-        Table.Add(New DBTableField("text", FieldType.nvarchar_type, -1, True)) ' Some are null for some reason
-
-        If ImportTable Then
-            Call UpdateDB.CreateTable(trnTranslationsTable, Table)
-        End If
-
-        Call TranslationTablesDB.CreateTable(trnTranslationsTable, Table)
-
-        ' Create Index
-        IndexFields = New List(Of String)
-        IndexFields.Add("tcID")
-        IndexFields.Add("keyID")
-        IndexFields.Add("languageID")
-
-        If ImportTable Then
-            Call UpdateDB.CreateIndex(trnTranslationsTable, "IDX_" & trnTranslationsTable & "_TCID_KID_LID", IndexFields, False)
-        End If
-
-        Call TranslationTablesDB.CreateIndex(trnTranslationsTable, "IDX_" & trnTranslationsTable & "_TCID_KID_LID", IndexFields, False)
-
-        Try
-            ' Parse the input text
-            YAMLRecords = DS.Deserialize(Of List(Of trnTranslation))(New StringReader(File.ReadAllText(YAMLFile & trnTranslationsFile)))
-        Catch ex As Exception
-            Call ShowErrorMessage(ex)
-        End Try
-
-        ' See if we only want to build the table and indexes
-        If Not Params.InsertRecords Then
-            Exit Sub
-        End If
-
-        ' Insert all the records read
-        Call InsertTranslationsRecords(YAMLRecords, Params.RowLocation, ImportText, ImportTable)
-
-    End Sub
-
-    ''' <summary>
     ''' Saves the records from trnTranslations into the table
     ''' </summary>
     ''' <param name="trnRecord">Parsed list of trnTranslations from yaml</param>
@@ -351,8 +271,6 @@ Cancel:
         If ShowProgress Then
             If UpdateGridProgressbar Then
                 Call InitGridRow(RowLocation)
-            Else
-                Call InitalizeMainProgressBar(TotalRecords, "Importing " & trnTranslationsFile)
             End If
         End If
 
@@ -373,8 +291,6 @@ Cancel:
             If ShowProgress Then
                 If UpdateGridProgressbar Then
                     Call UpdateGridRowProgress(RowLocation, Count, TotalRecords)
-                Else
-                    Call UpdateMainProgressBar(Count, "Importing " & trnTranslationsFile)
                 End If
             End If
 
@@ -414,33 +330,45 @@ Cancel:
         Dim TranslationColumnsList As New List(Of trnTranslationColumn)
 
         Dim Result As New List(Of List(Of Object))
-        Dim WhereClause As List(Of String)
+        Dim WhereClause As New List(Of String)
         Dim SelectClause As New List(Of String)
+        Dim CheckClause As New List(Of String)
 
         Dim TranslationColumnID As Integer
+        Dim Records As Boolean = False
 
-        ' Look up id used
-        WhereClause = New List(Of String)
-        WhereClause.Add("tableName='" & TranslationTableName & "'")
-        WhereClause.Add("columnName='" & TranslationColumnName & "'")
-        WhereClause.Add("masterID ='" & TranslationMasterID & "'")
+        ' First see if there are any records in the table
+        CheckClause.Add("*")
+        Result = TranslationTablesDB.SelectfromTable(CheckClause, trnTranslationColumnsTable, WhereClause, Records)
 
-        SelectClause.Add("tcID")
-
-        Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)
-
-        If Result.Count = 0 Then
-            ' Look up the max and add one to it
+        ' Look up the max id if there are records
+        If Records Then
+            ' Look up id used
             WhereClause = New List(Of String)
-            SelectClause = New List(Of String)
-            SelectClause.Add("Max(tcID)")
-            TranslationColumnID = CInt(TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)(0)(0)) + 1
+            WhereClause.Add("tableName='" & TranslationTableName & "'")
+            WhereClause.Add("columnName='" & TranslationColumnName & "'")
+            WhereClause.Add("masterID ='" & TranslationMasterID & "'")
+
+            SelectClause.Add("tcID")
+
+            Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)
+
+            If Result.Count = 0 Then
+                ' Look up the max and add one to it
+                WhereClause = New List(Of String)
+                SelectClause = New List(Of String)
+                SelectClause.Add("Max(tcID)")
+                TranslationColumnID = CInt(TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)(0)(0)) + 1
+            Else
+                TranslationColumnID = CInt(Result(0)(0))
+            End If
         Else
-            TranslationColumnID = CInt(Result(0)(0))
+            TranslationColumnID = 1 ' No records yet
         End If
 
         For Each entry In TranslationDataList
-            ' See if the record is there
+            Records = False ' reset
+            ' See if the record is there in translations
             WhereClause = New List(Of String)
             WhereClause.Add("tcID =" & TranslationColumnID)
             WhereClause.Add("keyID =" & ID)
@@ -449,9 +377,9 @@ Cancel:
             SelectClause = New List(Of String)
             SelectClause.Add("tcID")
 
-            Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationsTable, WhereClause)
+            Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationsTable, WhereClause, Records)
 
-            If Result.Count = 0 Then
+            If Not Records Then
                 ' No data found, insert
                 TempTranslation = New trnTranslation
                 TempTranslation.tcID = TranslationColumnID
@@ -464,16 +392,19 @@ Cancel:
                 Call InsertTranslationsRecords(TranslationsList, 0, "", False, False)
             End If
 
-            ' See if the record is there
+            Records = False ' reset
+
+            ' See if the record is there in translationColumns
             WhereClause = New List(Of String)
             WhereClause.Add("tableName='" & TranslationTableName & "'")
             WhereClause.Add("tcID =" & TranslationColumnID)
 
+            SelectClause = New List(Of String)
             SelectClause.Add("tcID")
 
-            Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)
+            Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause, Records)
 
-            If Result.Count = 0 Then
+            If Not Records Then
                 ' No data found, insert
                 TempTranslationColumn = New trnTranslationColumn
                 TempTranslationColumn.tcID = TranslationColumnID
@@ -556,12 +487,6 @@ Cancel:
         Call Directory.Delete(LocalDBPath, True)
     End Sub
 
-End Class
-
-Public Class trnTranslationLanguage
-    Public Property languageID As Object
-    Public Property languageName As Object
-    Public Property numericLanguageID As Object
 End Class
 
 Public Class trnTranslationColumn

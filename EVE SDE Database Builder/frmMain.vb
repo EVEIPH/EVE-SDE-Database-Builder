@@ -492,33 +492,17 @@ ExitProc:
         If Parameters.InsertRecords Then
 
             ' Run translations before anything else if they selected files that require them for lookups or saving
-            Translator = New YAMLTranslations(UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, UserApplicationSettings.SDEDirectory)
+            Translator = New YAMLTranslations(UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, UserApplicationSettings.SDEDirectory)
 
             ' If we are adding translation files, then import them first so the tables that have data in them already can be queried
             If ImportTranslationData Then
 
-                If CheckedFilesList.Contains(YAMLTranslations.trnTranslationColumnsFile) Then
-                    Parameters.RowLocation = GetRowLocation(YAMLTranslations.trnTranslationColumnsFile)
-                    Call Translator.ImportTranslationColumns(Parameters)
-                Else
-                    ' Don't update in the grid
-                    Call Translator.ImportTranslationColumns(Parameters, False)
-                End If
-
-                If CheckedFilesList.Contains(YAMLTranslations.trnTranslationLanguagesFile) Then
-                    Parameters.RowLocation = GetRowLocation(YAMLTranslations.trnTranslationLanguagesFile)
+                If CheckedFilesList.Contains(YAMLTranslations.translationLanguagesFile) Then
+                    Parameters.RowLocation = GetRowLocation(YAMLTranslations.translationLanguagesFile)
                     Call Translator.ImportTranslationLanguages(Parameters)
                 Else
                     ' Don't update in the grid
                     Call Translator.ImportTranslationLanguages(Parameters, False)
-                End If
-
-                If CheckedFilesList.Contains(YAMLTranslations.trnTranslationsFile) Then
-                    Parameters.RowLocation = GetRowLocation(YAMLTranslations.trnTranslationsFile)
-                    Call Translator.ImportTranslations(Parameters)
-                Else
-                    ' Don't update in the grid
-                    Call Translator.ImportTranslations(Parameters, False)
                 End If
 
             End If
@@ -619,12 +603,6 @@ ExitProc:
                     Case YAMLcrpNPCDivisions.crpNPCDivisionsFile
                         Dim CorpDivisions As New YAMLcrpNPCDivisions(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CorpDivisions.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLeveUnits.eveUnitsFile
-                        Dim EVEUnits As New YAMLeveUnits(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf EVEUnits.ImportFile)
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
@@ -738,24 +716,6 @@ ExitProc:
                     Case YAMLstaStations.staStationsFile
                         Dim StaStations As New YAMLstaStations(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf StaStations.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLstaStationTypes.staStationTypesFile
-                        Dim StaStationTypes As New YAMLstaStationTypes(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf StaStationTypes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLwarCombatZones.warCombatZonesFile
-                        Dim WarCombatZones As New YAMLwarCombatZones(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf WarCombatZones.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLwarCombatZoneSystems.warCombatZoneSystemsFile
-                        Dim WarCombatSystems As New YAMLwarCombatZoneSystems(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf WarCombatSystems.ImportFile)
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
@@ -897,18 +857,7 @@ ExitProc:
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
-
-                        ' For translation tables, only import if not done above - the final completion will copy over selections
-                    Case YAMLTranslations.trnTranslationColumnsFile
-                        ' They checked this so, copy for later import
-                        Call CheckedTranslationTables.Add(YAMLTranslations.trnTranslationColumnsTable)
-                        If Not ImportTranslationData Then
-                            TempThreadList.T = New Thread(AddressOf Translator.ImportTranslationColumns)
-                            TempThreadList.T.Name = .FileName
-                            TempThreadList.Params = Parameters
-                            Call ThreadsArray.Add(TempThreadList)
-                        End If
-                    Case YAMLTranslations.trnTranslationLanguagesFile
+                    Case YAMLTranslations.translationLanguagesFile
                         ' They checked this so, copy for later import
                         Call CheckedTranslationTables.Add(YAMLTranslations.trnTranslationLanguagesTable)
                         If Not ImportTranslationData Then
@@ -917,16 +866,6 @@ ExitProc:
                             TempThreadList.Params = Parameters
                             Call ThreadsArray.Add(TempThreadList)
                         End If
-                    Case YAMLTranslations.trnTranslationsFile
-                        ' They checked this so, copy for later import
-                        Call CheckedTranslationTables.Add(YAMLTranslations.trnTranslationsTable)
-                        If Not ImportTranslationData Then
-                            TempThreadList.T = New Thread(AddressOf Translator.ImportTranslations)
-                            TempThreadList.T.Name = .FileName
-                            TempThreadList.Params = Parameters
-                            Call ThreadsArray.Add(TempThreadList)
-                        End If
-
                 End Select
             End With
         Next
@@ -1077,7 +1016,7 @@ CancelImportProcessing:
 
         TempList.Add("dogmaAttributes.yaml")
         TempList.Add("dogmaEffects.yaml")
-        TempList.Add("eveUnits.yaml")
+        ' TempList.Add("eveUnits.yaml")
         TempList.Add("invCategories.yaml")
         TempList.Add("marketGroups.yaml")
         TempList.Add("metaGroups.yaml")
