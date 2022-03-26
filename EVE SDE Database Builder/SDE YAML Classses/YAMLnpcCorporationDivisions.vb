@@ -35,10 +35,11 @@ Public Class YAMLnpcCorporationDivisions
         ' Build table
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("divisionID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("divisionName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("leaderTypeName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("shortDescription", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("longDescription", FieldType.varchar_type, 1000, True))
+        Table.Add(New DBTableField("internalName", FieldType.varchar_type, 100, True))
+        Table.Add(New DBTableField("description", FieldType.varchar_type, 100, True))
+        Table.Add(New DBTableField("descriptionID", FieldType.varchar_type, 1000, True))
+        Table.Add(New DBTableField("leaderTypeNameID", FieldType.varchar_type, 100, True))
+        Table.Add(New DBTableField("nameID", FieldType.varchar_type, 100, True))
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' See if we only want to build the table and indexes
@@ -65,16 +66,17 @@ Public Class YAMLnpcCorporationDivisions
             ' Build the insert list
             With DataField.Value
                 DataFields.Add(UpdateDB.BuildDatabaseField("divisionID", DataField.Key, FieldType.tinyint_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("divisionName", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("leaderTypeName", NameTranslation.GetLanguageTranslationData(.leaderTypeNameID), FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("shortDescription", .description, FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("longDescription", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("internalName", .internalName, FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("description", .description, FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("descriptionID", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("leaderTypeNameID", NameTranslation.GetLanguageTranslationData(.leaderTypeNameID), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("nameID", NameTranslation.GetLanguageTranslationData(.nameID), FieldType.nvarchar_type))
 
 
                 ' Insert the translated data into translation tables
-                Call Translator.InsertTranslationData(DataField.Key, "divisionID", "divisionName", TableName, NameTranslation.GetAllTranslations(.nameID))
-                Call Translator.InsertTranslationData(DataField.Key, "divisionID", "leaderTypeName", TableName, NameTranslation.GetAllTranslations(.leaderTypeNameID))
-                Call Translator.InsertTranslationData(DataField.Key, "divisionID", "longDescription", TableName, NameTranslation.GetAllTranslations(.descriptionID))
+                Call Translator.InsertTranslationData(DataField.Key, "divisionID", "descriptionID", TableName, NameTranslation.GetAllTranslations(.descriptionID))
+                Call Translator.InsertTranslationData(DataField.Key, "divisionID", "leaderTypeNameID", TableName, NameTranslation.GetAllTranslations(.leaderTypeNameID))
+                Call Translator.InsertTranslationData(DataField.Key, "divisionID", "nameID", TableName, NameTranslation.GetAllTranslations(.nameID))
 
             End With
 
@@ -94,6 +96,7 @@ End Class
 
 Public Class npcCorporationDivision
     Public Property divisionID As Object
+    Public Property internalName As Object
     Public Property description As Object
     Public Property descriptionID As Translations
     Public Property leaderTypeNameID As Translations

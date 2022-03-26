@@ -277,10 +277,7 @@
     <Compile Include="SDE YAML Classses\YAMLraces.vb" />
     <Compile Include="SDE YAML Classses\YAMLcorporationActivities.vb" />
     <Compile Include="SDE YAML Classses\YAMLnpcCorporationDivisions.vb" />
-    <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporationResearchFields.vb" />
     <Compile Include="SDE YAML Classses\YAMLnpcCorporations.vb" />
-    <Compile Include="SDE YAML Classses\YAMLcrpNPCCorporationTrades.vb" />
-    <Compile Include="SDE YAML Classses\YAMLcrpNPCDivisions.vb" />
     <Compile Include="SDE YAML Classses\YAMLdogmaAttributeCategories.vb" />
     <Compile Include="SDE YAML Classses\YAMLdogmaAttributeTypes.vb" />
     <Compile Include="SDE YAML Classses\YAMLdogmaEffects.vb" />

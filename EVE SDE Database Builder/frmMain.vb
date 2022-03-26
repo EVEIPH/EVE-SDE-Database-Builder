@@ -582,27 +582,9 @@ ExitProc:
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLcrpNPCCorporationResearchFields.crpNPCCorporationResearchFieldsFile
-                        Dim CorpCorporationResearchFields As New YAMLcrpNPCCorporationResearchFields(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf CorpCorporationResearchFields.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLnpcCorporations.npcCorporationsFile
                         Dim CorpCorporations As New YAMLnpcCorporations(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CorpCorporations.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLcrpNPCCorporationTrades.crpNPCCorporationTradesFile
-                        Dim CorpCorporationTrades As New YAMLcrpNPCCorporationTrades(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf CorpCorporationTrades.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
-                    Case YAMLcrpNPCDivisions.crpNPCDivisionsFile
-                        Dim CorpDivisions As New YAMLcrpNPCDivisions(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf CorpDivisions.ImportFile)
                         TempThreadList.T.Name = .FileName
                         TempThreadList.Params = Parameters
                         Call ThreadsArray.Add(TempThreadList)
