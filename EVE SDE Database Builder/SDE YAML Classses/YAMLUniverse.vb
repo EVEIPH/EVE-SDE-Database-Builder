@@ -306,7 +306,7 @@ Public Class YAMLUniverse
             DSB.IgnoreUnmatchedProperties()
         End If
 
-        DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
+        DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.Instance)
         Dim DS As New Deserializer
         Dim NameLookup As New ESI
         DS = DSB.Build
@@ -367,7 +367,7 @@ Public Class YAMLUniverse
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
         End If
-        DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
+        DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.Instance)
         Dim DS As New Deserializer
         DS = DSB.Build
         Dim NameLookup As New ESI
@@ -424,7 +424,7 @@ Public Class YAMLUniverse
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
         End If
-        DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
+        DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.Instance)
         Dim DS As New Deserializer
         DS = DSB.Build
         Dim NameLookup As New ESI

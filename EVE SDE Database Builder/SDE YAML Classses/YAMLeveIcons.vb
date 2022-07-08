@@ -24,7 +24,7 @@ Public Class YAMLeveIcons
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
         End If
-        DSB = DSB.WithNamingConvention(New NamingConventions.NullNamingConvention)
+        DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
         Dim DS As New Deserializer
         DS = DSB.Build
 
