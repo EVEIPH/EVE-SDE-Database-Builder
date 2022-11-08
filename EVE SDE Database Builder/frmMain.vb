@@ -2160,6 +2160,7 @@ CancelImportProcessing:
         Dim NewChecksumValue As String = ""
         Dim OldChecksum As StreamReader
         Dim OldChecksumValue As String = ""
+        Dim FileDate As Date ' to save the date of the download
 
         CancelDownload = False
 
@@ -2178,7 +2179,7 @@ CancelImportProcessing:
         End If
 
         ' Download the new checksum
-        Call DownloadFileFromServer("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/checksum", ChecksumFileName)
+        Call DownloadFileFromServer("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/checksum", ChecksumFileName, FileDate)
 
         ' Read each check sum and check if they are different
         NewChecksum = New StreamReader(ChecksumFileName)
@@ -2213,7 +2214,7 @@ CancelImportProcessing:
             lblStatus.Text = "Preparing files..."
             Application.DoEvents()
             ' Create a folder for today's date and download the SDE into that folder - will overwrite anything there
-            NewDownloadDirectory = UserApplicationSettings.DownloadFolderPath & "\" & MonthName(Now.Month) & "_" & CStr(Now.Day) & "_" & Year(Now)
+            NewDownloadDirectory = UserApplicationSettings.DownloadFolderPath & "\" & MonthName(FileDate.Month) & "_" & CStr(FileDate.Day) & "_" & Year(FileDate)
             If Directory.Exists(NewDownloadDirectory) Then
                 Call Directory.Delete(NewDownloadDirectory, True)
             End If
@@ -2221,7 +2222,7 @@ CancelImportProcessing:
 
             ' Now download into that folder
             lblStatus.Text = "Downloading SDE..."
-            Call DownloadFileFromServer("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/sde.zip", NewDownloadDirectory & "\SDE.zip", pgBar)
+            Call DownloadFileFromServer("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/sde.zip", NewDownloadDirectory & "\SDE.zip", Nothing, pgBar)
 
             If CancelDownload Then
                 ' Delete new checksum and restore old one

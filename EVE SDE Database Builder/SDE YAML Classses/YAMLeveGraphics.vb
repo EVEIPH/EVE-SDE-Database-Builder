@@ -9,6 +9,7 @@ Public Class YAMLeveGrpahics
     Private Const eveGraphicsIconInfoTableName As String = "evegraphicIconInfo"
     Private Const eveGraphicsIconBackgroundsTableName As String = "evegraphicBackgrounds"
     Private Const eveGraphicsIconForegroundsTableName As String = "evegraphicForegrounds"
+    Private Const eveGraphicssofLayouts As String = "graphicsofLayouts"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -31,6 +32,7 @@ Public Class YAMLeveGrpahics
 
         Dim YAMLRecords As New Dictionary(Of Long, eveGraphic)
         Dim DataFields As List(Of DBField)
+        Dim DataFields2 As List(Of DBField)
         Dim SQL As String = ""
         Dim Count As Long = 0
         Dim TotalRecords As Long = 0
@@ -45,6 +47,18 @@ Public Class YAMLeveGrpahics
         Table.Add(New DBTableField("sofRaceName", FieldType.varchar_type, 100, True))
 
         Call UpdateDB.CreateTable(TableName, Table)
+
+        ' Add minor table for sofLayout change in uprising
+        Table = New List(Of DBTableField)
+        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, False, True))
+        Table.Add(New DBTableField("sofLayout", FieldType.varchar_type, 100, True))
+
+        Call UpdateDB.CreateTable(eveGraphicssofLayouts, Table)
+
+        Dim IndexFields As List(Of String)
+        IndexFields = New List(Of String)
+        IndexFields.Add("graphicID")
+        Call UpdateDB.CreateIndex(eveGraphicssofLayouts, "IDX_" & eveGraphicssofLayouts & "_GID", IndexFields)
 
         ' Set up the tables for icon info
         Call BuildIconInfoTables()
@@ -69,6 +83,7 @@ Public Class YAMLeveGrpahics
         ' Process Data
         For Each DataField In YAMLRecords
             DataFields = New List(Of DBField)
+            DataFields2 = New List(Of DBField)
 
             With DataField.Value
                 ' Build the insert list
@@ -78,6 +93,14 @@ Public Class YAMLeveGrpahics
                 DataFields.Add(UpdateDB.BuildDatabaseField("sofFactionName", .sofFactionName, FieldType.varchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("sofHullName", .sofHullName, FieldType.varchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("sofRaceName", .sofRaceName, FieldType.varchar_type))
+
+                If Not IsNothing(.sofLayout) Then
+                    For Each sofLayout In .sofLayout
+                        DataFields2.Add(UpdateDB.BuildDatabaseField("graphicID", DataField.Key, FieldType.int_type))
+                        DataFields2.Add(UpdateDB.BuildDatabaseField("sofLayout", sofLayout, FieldType.varchar_type))
+                        Call UpdateDB.InsertRecord(eveGraphicssofLayouts, DataFields2)
+                    Next
+                End If
 
                 ' Insert the icon info as well
                 Call InsertIconInfo(DataField.Key, .iconInfo)
@@ -171,6 +194,7 @@ Public Class eveGraphic
     Public Property sofFactionName As Object
     Public Property sofHullName As Object
     Public Property sofRaceName As Object
+    Public Property sofLayout As List(Of String)
 End Class
 
 Public Class iconInfoClass

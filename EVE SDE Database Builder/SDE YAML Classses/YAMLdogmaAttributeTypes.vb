@@ -35,7 +35,7 @@ Public Class YAMLdogmaAttributeTypes
 
         ' Build table
         Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("attributeID", FieldType.smallint_type, 0, False, True))
+        Table.Add(New DBTableField("attributeID", FieldType.smallint_type, 0, False)) ' Dupes ok in uprising expansion
         Table.Add(New DBTableField("attributeName", FieldType.varchar_type, 100, True))
         Table.Add(New DBTableField("description", FieldType.varchar_type, 1000, True))
         Table.Add(New DBTableField("displayNameID", FieldType.varchar_type, 1000, True))
@@ -105,6 +105,11 @@ Public Class YAMLdogmaAttributeTypes
                 Count += 1
             End With
         Next
+
+        Dim IndexFields As List(Of String)
+        IndexFields = New List(Of String)
+        IndexFields.Add("attributeID")
+        Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_AID", IndexFields)
 
         Call FinalizeGridRow(Params.RowLocation)
 

@@ -88,7 +88,7 @@ Public Module Globals
     ''' <param name="DownloadURL">URL to download the file</param>
     ''' <param name="FileName">File name of downloaded file</param>
     ''' <returns>File Name of where the downloaded file was saved.</returns>
-    Public Function DownloadFileFromServer(ByVal DownloadURL As String, ByVal FileName As String, Optional PGBar As ProgressBar = Nothing) As String
+    Public Function DownloadFileFromServer(ByVal DownloadURL As String, ByVal FileName As String, Optional ByRef FileDate As Date = Nothing, Optional PGBar As ProgressBar = Nothing) As String
         'Creating the request and getting the response
         Dim Response As HttpWebResponse
         Dim Request As HttpWebRequest
@@ -129,6 +129,7 @@ Public Module Globals
 
         ' Get size
         FileSize = Response.ContentLength()
+        FileDate = Response.LastModified
 
         ' Loop through and get the file in chunks, save out
         Do
