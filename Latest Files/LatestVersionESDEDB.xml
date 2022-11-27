@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<EVESDEDB Version="Version 1.0.8347.25382">
-  <LastUpdated>11/8/2022 2:06:11 PM</LastUpdated>
+<EVESDEDB Version="Version 1.0.8366.22203">
+  <LastUpdated>11/27/2022 12:20:14 PM</LastUpdated>
   <result>
     <rowset name="filelist" key="version" columns="Name,Version,MD5,URL">
-      <row Name="EVE SDE Database Builder.exe" Version="Version 1.0.8347.25382" MD5="3f96ca1ea38e6d7612800725da7a5441" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe" />
+      <row Name="EVE SDE Database Builder.exe" Version="Version 1.0.8366.22203" MD5="5ef79b4348378834d9933e56f0f5cdb6" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe" />
       <row Name="ESDEDB Updater.exe" Version="1.0" MD5="0861f0c8a49b5e630996ee18bace0a8d" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe" />
       <row Name="EVE SDE Database Builder.exe.manifest" Version="" MD5="82312969f8bd80ed78f48b1f155bc184" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe.manifest" />
       <row Name="ESDEDB Updater.exe.manifest" Version="" MD5="2c46dd672a0f794ae364160bde1d7cc0" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe.manifest" />
       <row Name="EntityFramework.dll" Version="6.400.420.21404" MD5="ffdcf232d0bb2fff78721fb347641a76" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EntityFramework.dll" />
       <row Name="EntityFramework.SqlServer.dll" Version="6.400.420.21404" MD5="af1646b1c2227ab206d855bd068535cf" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EntityFramework.SqlServer.dll" />
-      <row Name="Google.Protobuf.dll" Version="3.21.2.0" MD5="a93c82719e98c382d81bc0dcd99ad402" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Google.Protobuf.dll" />
-      <row Name="Newtonsoft.Json.dll" Version="13.0.1.25517" MD5="081d9558bbb7adce142da153b2d5577a" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Newtonsoft.Json.dll" />
+      <row Name="Google.Protobuf.dll" Version="3.21.9.0" MD5="a92694ce70bf88bb188b161c463eab43" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Google.Protobuf.dll" />
+      <row Name="Newtonsoft.Json.dll" Version="13.0.2.27524" MD5="715a1fbee4665e99e859eda667fe8034" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Newtonsoft.Json.dll" />
       <row Name="Npgsql.dll" Version="4.0.3.0" MD5="23c7af32b03088c192c5d44f1a822451" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/Npgsql.dll" />
-      <row Name="System.Data.SQLite.dll" Version="1.0.116.0" MD5="147328def2e79a86d7335a661eecc051" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.dll" />
-      <row Name="System.Data.SQLite.EF6.dll" Version="1.0.116.0" MD5="c4f999c91e9f5040b16a137ea7d89e82" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.EF6.dll" />
-      <row Name="System.Data.SQLite.Linq.dll" Version="1.0.116.0" MD5="59498a0f662dbc18d751a6af9d0e7173" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.Linq.dll" />
-      <row Name="System.Runtime.CompilerServices.Unsafe.dll" Version="1.0.116.0" MD5="c610e828b54001574d86dd2ed730e392" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Runtime.CompilerServices.Unsafe.dll" />
-      <row Name="System.Threading.Tasks.Extensions.dll" Version="1.0.116.0" MD5="e1e9d7d46e5cd9525c5927dc98d9ecc7" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Threading.Tasks.Extensions.dll" />
-      <row Name="System.ValueTuple.dll" Version="1.0.116.0" MD5="23ee4302e85013a1eb4324c414d561d5" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.ValueTuple.dll" />
-      <row Name="YamlDotNet.dll" Version="11.2.1.0" MD5="638380e3d9b275fdd8f020f40ae27ca1" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/YamlDotNet.dll" />
-      <row Name="SQLite.Interop.dll" Version="1.0.116.0" MD5="1cc60317c59f882ca4d0e2d90847c9ae" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/SQLite.Interop.dll" />
+      <row Name="System.Data.SQLite.dll" Version="1.0.117.0" MD5="b0911d27918a1e20088b4e6b6ec29ad3" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.dll" />
+      <row Name="System.Data.SQLite.EF6.dll" Version="1.0.117.0" MD5="0e9070f41dd18a530fcb8ce581d71cde" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.EF6.dll" />
+      <row Name="System.Data.SQLite.Linq.dll" Version="1.0.117.0" MD5="be9fc7d12265be18dbce0d8ead91351e" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Data.SQLite.Linq.dll" />
+      <row Name="System.Runtime.CompilerServices.Unsafe.dll" Version="1.0.117.0" MD5="c610e828b54001574d86dd2ed730e392" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Runtime.CompilerServices.Unsafe.dll" />
+      <row Name="System.Threading.Tasks.Extensions.dll" Version="1.0.117.0" MD5="e1e9d7d46e5cd9525c5927dc98d9ecc7" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.Threading.Tasks.Extensions.dll" />
+      <row Name="System.ValueTuple.dll" Version="1.0.117.0" MD5="23ee4302e85013a1eb4324c414d561d5" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/System.ValueTuple.dll" />
+      <row Name="YamlDotNet.dll" Version="12.0.2.0" MD5="1fc1e5b81845494f6ddc1becc731b3c4" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/YamlDotNet.dll" />
+      <row Name="SQLite.Interop.dll" Version="1.0.117.0" MD5="1cc60317c59f882ca4d0e2d90847c9ae" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/SQLite.Interop.dll" />
     </rowset>
   </result>
 </EVESDEDB>
