@@ -132,6 +132,7 @@ Public Class CSVDB
         TableStream.WriteLine(OutputText)
         TableStream.Flush()
         TableStream.Close()
+        TableStream.Dispose()
 
     End Sub
 
@@ -207,6 +208,7 @@ Public Class CSVDB
         TableStream.WriteLine(OutputText)
         TableStream.Flush()
         TableStream.Close()
+        TableStream.Dispose()
 
     End Sub
 

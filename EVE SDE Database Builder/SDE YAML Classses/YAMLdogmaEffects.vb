@@ -92,6 +92,7 @@ Public Class YAMLdogmaEffects
         IndexFields.Add("modifyingAttributeID")
         IndexFields.Add("operation")
         IndexFields.Add("skillTypeID")
+        IndexFields.Add("secondaryEffectID")
         Call UpdateDB.CreateIndex(dogmaEffectsModifierInfoTable, "IDX_" & dogmaEffectsModifierInfoTable & "_EID", IndexFields, True)
 
         ' See if we only want to build the table and indexes

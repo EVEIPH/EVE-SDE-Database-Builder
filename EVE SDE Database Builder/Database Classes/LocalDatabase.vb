@@ -35,7 +35,7 @@ Public Class LocalDatabase
                     Case FieldType.double_type, FieldType.float_type, FieldType.real_type
                         FT = GetType(Double)
                     Case FieldType.int_type, FieldType.bigint_type, FieldType.smallint_type, FieldType.tinyint_type
-                        FT = GetType(Integer)
+                        FT = GetType(Long)
                     Case FieldType.bit_type
                         FT = GetType(Boolean)
                     Case Else
@@ -75,8 +75,10 @@ Public Class LocalDatabase
         Next
 
         ' Add the new row
-        DT.NewRow.ItemArray = Data
-        DT.Rows.Add(DT.NewRow)
+        Dim AddRow As DataRow
+        AddRow = DT.NewRow
+        AddRow.ItemArray = Data
+        DT.Rows.Add(AddRow)
 
     End Sub
 

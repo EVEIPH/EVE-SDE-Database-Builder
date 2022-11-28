@@ -86,12 +86,12 @@ Public Class YAMLstationOperations
 
             ' Build the insert list
             With DataField.Value
-                DataFields.Add(UpdateDB.BuildDatabaseField("operationID", DataField.Key, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("operationID", DataField.Key, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("operationName", NameTranslation.GetLanguageTranslationData(.operationNameID), FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("description", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("activityID", .activityID, FieldType.tinyint_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("activityID", .activityID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("border", .border, FieldType.real_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("corridor", .corridor, FieldType.real_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("description", NameTranslation.GetLanguageTranslationData(.descriptionID), FieldType.nvarchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("fringe", .fringe, FieldType.real_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("hub", .hub, FieldType.real_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("manufacturingFactor", .manufacturingFactor, FieldType.real_type))

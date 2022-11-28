@@ -108,7 +108,7 @@ Public Class YAMLTranslations
 
         ' Build language table
         Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("languageID", FieldType.varchar_type, 2, True))
+        Table.Add(New DBTableField("languageID", FieldType.varchar_type, 5, True))
         Table.Add(New DBTableField("languageName", FieldType.nvarchar_type, 10, True))
 
         If ImportTable Then
@@ -145,6 +145,7 @@ Public Class YAMLTranslations
             DataFields = New List(Of DBField)
 
             ' Build the insert list
+
             DataFields.Add(TranslationTablesDB.BuildDatabaseField("languageID", DataField.Key.ToUpper, FieldType.varchar_type))
             DataFields.Add(TranslationTablesDB.BuildDatabaseField("languageName", DataField.Value, FieldType.nvarchar_type))
 

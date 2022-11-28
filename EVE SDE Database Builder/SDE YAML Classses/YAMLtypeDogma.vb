@@ -75,7 +75,7 @@ Public Class YAMLtypeDogma
                         DataFields = New List(Of DBField)
                         DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.Key, FieldType.int_type))
                         DataFields.Add(UpdateDB.BuildDatabaseField("attributeID", attribute.attributeID, FieldType.smallint_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("value", attribute.value, FieldType.int_type))
+                        DataFields.Add(UpdateDB.BuildDatabaseField("value", attribute.value, FieldType.real_type))
                         Call UpdateDB.InsertRecord(AttributesTableName, DataFields)
                     Next
                 End If

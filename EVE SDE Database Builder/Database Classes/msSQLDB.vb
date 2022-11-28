@@ -88,7 +88,7 @@ Public Class msSQLDB
                     DBServerName, DBUserName, DBPassword, DBName))
         Else
             ' Use windows default connection
-            DBRef = New SqlConnection(String.Format("Server={0}; Initial Catalog={1}; Integrated Security=True;Connection Timeout=30;", DBUserName, DBName))
+            DBRef = New SqlConnection(String.Format("Server={0}; Initial Catalog={1}; Integrated Security=True;Connection Timeout=30;", DBServerName, DBName))
         End If
 
         DBRef.Open()

@@ -335,6 +335,7 @@ Public Class msAccessDB
             TableStream.WriteLine(TableData.SchemaFile)
             TableStream.Flush()
             TableStream.Close()
+            TableStream.Dispose()
 
             ' Bulk insert the data and commit each insert instead of using a transaction
             Call ExecuteNonQuerySQL(TableData.TableSQL)

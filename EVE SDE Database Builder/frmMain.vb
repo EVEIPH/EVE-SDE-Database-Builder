@@ -70,9 +70,6 @@ Public Class frmMain
 
     Private CSVImport As Boolean ' If we are using CSV to bulk import the data
 
-    ' Keeps an array of threads if we need to abort update
-    Private ThreadsArray As List(Of ThreadList)
-
     ' For use with updating the grid with files
     Public Structure FileListItem
         Dim FileName As String
@@ -445,6 +442,8 @@ ExitProc:
     ''' <param name="UpdateDatabase">Database class to use for building database and import data into.</param>
     ''' <param name="DatabaseType">Type of Database class</param>
     Private Sub BuildEVEDatabase(UpdateDatabase As Object, DatabaseType As DatabaseType)
+        ' Keeps an array of threads if we need to abort update
+        Dim ThreadsArray As New List(Of ThreadList)
         Dim ImportFileList As New List(Of FileListItem)
         Dim Parameters As YAMLFilesBase.ImportParameters
         Dim WorkingDirectory As String = ""
@@ -452,7 +451,7 @@ ExitProc:
         Dim ImportTranslationData As Boolean = False
         Dim Translator As YAMLTranslations = Nothing
         Dim TempThreadList As ThreadList = Nothing
-
+        Dim AddThread As Boolean
         Dim CheckedTranslationTables As New List(Of String)
 
         ' For later update
@@ -460,8 +459,6 @@ ExitProc:
 
         ' Set up the importfile list
         ImportFileList = GetImportFileList(ImportTranslationData)
-
-        ThreadsArray = New List(Of ThreadList)
 
         ' Reset the third column so it updates properly
         Call ResetProgressColumn()
@@ -520,335 +517,184 @@ ExitProc:
             With YAMLFile
                 ' Set the row location
                 Parameters.RowLocation = .RowLocation
+                AddThread = True
 
                 Select Case .FileName
                     Case YAMLagents.agentsFile
                         Dim Agents As New YAMLagents(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf Agents.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLagtAgentTypes.agtAgentTypesFile
                         Dim AgentTypes As New YAMLagtAgentTypes(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf AgentTypes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLresearchAgents.researchAgentsFile
                         Dim ResearchAgents As New YAMLresearchAgents(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf ResearchAgents.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLancestries.ancestriesFile
                         Dim CharAncestry As New YAMLancestries(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CharAncestry.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLcharacterAttributes.charactersAttributesFile
                         Dim CharAttributes As New YAMLcharacterAttributes(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CharAttributes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLbloodLines.chrBloodlinesFile
                         Dim CharBloodlines As New YAMLbloodLines(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CharBloodlines.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLfactions.factionsFile
                         Dim CharFactions As New YAMLfactions(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CharFactions.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLraces.racesFile
                         Dim CharRaces As New YAMLraces(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CharRaces.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLcorporationActivities.corporationActivitiesFile
                         Dim CorpActivites As New YAMLcorporationActivities(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CorpActivites.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLnpcCorporationDivisions.npcCorporationDivisionsFile
                         Dim CorpCorporationDivisions As New YAMLnpcCorporationDivisions(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CorpCorporationDivisions.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLnpcCorporations.npcCorporationsFile
                         Dim CorpCorporations As New YAMLnpcCorporations(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf CorpCorporations.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLinvContrabandTypes.invContrabandTypesFile
                         Dim INVContrabandTypes As New YAMLinvContrabandTypes(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVContrabandTypes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLinvFlags.invFlagsFile
                         Dim INVFlags As New YAMLinvFlags(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVFlags.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLinvItems.invItemsFile
                         Dim INVItems As New YAMLinvItems(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVItems.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLinvNames.invNamesFile
                         Dim INVNames As New YAMLinvNames(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVNames.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLinvPositions.invPositionsFile
                         Dim INVPositions As New YAMLinvPositions(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVPositions.ImportFile)
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLinvTypeReactions.invTypeReactionsFile
                         Dim INVTypeReactions As New YAMLinvTypeReactions(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVTypeReactions.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLinvUniqueNames.invUniqueNamesFile
                         Dim INVUniqueNames As New YAMLinvUniqueNames(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVUniqueNames.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLmapUniverse.mapUniverseFile
                         Dim MapUniverse As New YAMLmapUniverse(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf MapUniverse.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLplanetSchematics.planetSchematicsFile
                         Dim PlanetSchematics As New YAMLplanetSchematics(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf PlanetSchematics.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLramActivities.ramActivitiesFile
                         Dim RAMActivities As New YAMLramActivities(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf RAMActivities.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLramAssemblyLineStations.ramAssemblyLineStationsFile
                         Dim RAMAssemblyStations As New YAMLramAssemblyLineStations(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf RAMAssemblyStations.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLramAssemblyLineTypeDetailPerCategory.ramAssemblyLineTypeDetailPerCategoryFile
                         Dim RAMassemblyLineCategories As New YAMLramAssemblyLineTypeDetailPerCategory(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf RAMassemblyLineCategories.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLramAssemblyLineTypeDetailPerGroup.ramAssemblyLineTypeDetailPerGroupFile
                         Dim RAMassemblyLineGroups As New YAMLramAssemblyLineTypeDetailPerGroup(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf RAMassemblyLineGroups.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLramAssemblyLineTypes.ramAssemblyLineTypesFile
                         Dim RAMAssemblyLineTypes As New YAMLramAssemblyLineTypes(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf RAMAssemblyLineTypes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLramInstallationTypeContents.ramInstallationTypeContentsFile
                         Dim RAMInstallationType As New YAMLramInstallationTypeContents(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf RAMInstallationType.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLstationOperations.stationOperationsFile
                         Dim StaOperations As New YAMLstationOperations(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf StaOperations.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLstaOperationServices.staOperationServicesFile
                         Dim StaOperationServices As New YAMLstaOperationServices(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf StaOperationServices.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLstationServices.stationServicesFile
                         Dim StaServies As New YAMLstationServices(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf StaServies.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLstaStations.staStationsFile
                         Dim StaStations As New YAMLstaStations(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf StaStations.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLlandmarks.landmarksFile
                         Dim Landmarks As New YAMLlandmarks(.FileName, UserApplicationSettings.SDEDirectory & FSDLandMarksPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf Landmarks.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLagentsinSpace.agentsinSpaceFile
                         Dim AgentsInSpace As New YAMLagentsinSpace(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf AgentsInSpace.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLblueprints.blueprintsFile
                         Dim BPs As New YAMLblueprints(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf BPs.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLcategoryIDs.categoryIDsFile
                         Dim Categories As New YAMLcategoryIDs(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf Categories.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLcertificates.certificatesFile
                         Dim Certificates As New YAMLcertificates(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf Certificates.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLcontrabandTypes.contrabandTypesFile
                         Dim ContrabandTypes As New YAMLcontrabandTypes(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf ContrabandTypes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLcontrolTowerResources.controlTowerResourcesFile
                         Dim INVControlTowerResourcePurposes As New YAMLcontrolTowerResources(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf INVControlTowerResourcePurposes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLdogmaAttributeTypes.dogmaAttributeTypesFile
                         Dim DGMAttributeTypes As New YAMLdogmaAttributeTypes(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf DGMAttributeTypes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLdogmaEffects.dogmaEffectsFile
                         Dim DGMEffects As New YAMLdogmaEffects(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf DGMEffects.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLdogmaAttributeCategories.dogmaAttributeCategoriesFile
                         Dim DGMAttributeCategories As New YAMLdogmaAttributeCategories(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf DGMAttributeCategories.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLeveGrpahics.eveGraphicsFile
                         Dim EVEGraphics As New YAMLeveGrpahics(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf EVEGraphics.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLeveIcons.eveIconsFile
                         Dim EVEIcons As New YAMLeveIcons(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf EVEIcons.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLskinLicenses.skinLicensesFile
                         Dim SkinLiscences As New YAMLskinLicenses(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf SkinLiscences.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLskinMaterials.skinMaterialsFile
                         Dim SkinMats As New YAMLskinMaterials(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf SkinMats.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLskins.skinsFile
                         Dim Skins As New YAMLskins(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf Skins.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLtournamentRuleSets.tournamentRuleSetsFile
                         Dim TRS As New YAMLtournamentRuleSets(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf TRS.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLtypeDogma.typeDogmaFile
                         Dim DGMTypeAttributes As New YAMLtypeDogma(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf DGMTypeAttributes.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLtypeIDs.typeIDsFile
                         Dim TIDs As New YAMLtypeIDs(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf TIDs.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLgroupIDs.groupIDsFile
                         Dim GroupIDs As New YAMLgroupIDs(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf GroupIDs.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLmarketGroups.marketGroupsFile
                         Dim MaG As New YAMLmarketGroups(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf MaG.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLmetaGroups.metaGroupsFile
                         Dim MeG As New YAMLmetaGroups(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf MeG.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLtypeMaterials.typeMaterialsFile
                         Dim typeMaterials As New YAMLtypeMaterials(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf typeMaterials.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLUniverse.UniverseFiles
                         UF = New YAMLUniverse("", UserApplicationSettings.SDEDirectory & EVEUniversePath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf UF.ImportFile)
-                        TempThreadList.T.Name = .FileName
-                        TempThreadList.Params = Parameters
-                        Call ThreadsArray.Add(TempThreadList)
                     Case YAMLTranslations.translationLanguagesFile
                         ' They checked this so, copy for later import
                         Call CheckedTranslationTables.Add(YAMLTranslations.trnTranslationLanguagesTable)
                         If Not ImportTranslationData Then
                             TempThreadList.T = New Thread(AddressOf Translator.ImportTranslationLanguages)
-                            TempThreadList.T.Name = .FileName
-                            TempThreadList.Params = Parameters
-                            Call ThreadsArray.Add(TempThreadList)
+                        Else
+                            AddThread = False
                         End If
                 End Select
+
+                If AddThread Then
+                    TempThreadList.T.Name = .FileName
+                    TempThreadList.Params = Parameters
+                    Call ThreadsArray.Add(TempThreadList)
+                End If
+
             End With
         Next
 
@@ -899,8 +745,7 @@ ExitProc:
         Loop
 
         ' Kill any remaining threads
-        Call KillThreads()
-        ThreadsArray = Nothing
+        Call KillThreads(ThreadsArray)
         CSVImport = False
 
         Select Case DatabaseType
@@ -947,7 +792,7 @@ ExitProc:
 CancelImportProcessing:
 
         On Error Resume Next
-        Call KillThreads()
+        Call KillThreads(ThreadsArray)
         Call ResetProgressColumn()
         Call Translator.Close()
         Call UF.Close()
@@ -1657,13 +1502,11 @@ CancelImportProcessing:
     ''' </summary>
     ''' <param name="T">Thread variable</param>
     ''' <param name="Params">Import Paramaters</param>
-    ''' <returns>Thread begun</returns>
-    Private Function ImportFile(T As Thread, Params As YAMLFilesBase.ImportParameters) As Thread
+    Private Sub ImportFile(T As Thread, Params As YAMLFilesBase.ImportParameters)
 
         T.Start(Params)
-        Return T
 
-    End Function
+    End Sub
 
     ''' <summary>
     ''' Checks to see if any threads are still open
@@ -1677,6 +1520,10 @@ CancelImportProcessing:
             If Th.T.IsAlive Then
                 AllComplete = False
                 Return AllComplete
+            Else
+                Call Th.T.Abort()
+                Th.T = Nothing
+                GC.Collect()
             End If
         Next
 
@@ -1686,14 +1533,17 @@ CancelImportProcessing:
     ''' <summary>
     ''' Aborts all threads in the Thread Array (public varaible)
     ''' </summary>
-    Private Sub KillThreads()
+    Private Sub KillThreads(ByRef ListofThreads As List(Of ThreadList))
         ' Kill all the threads
         On Error Resume Next
-        For i = 0 To ThreadsArray.Count - 1
-            If ThreadsArray(i).T.IsAlive Then
-                ThreadsArray(i).T.Abort()
+        For i = 0 To ListofThreads.Count - 1
+            If ListofThreads(i).T.IsAlive Then
+                ListofThreads(i).T.Abort()
             End If
+            Application.DoEvents()
         Next
+        ListofThreads = Nothing
+        GC.Collect()
         On Error GoTo 0
     End Sub
 

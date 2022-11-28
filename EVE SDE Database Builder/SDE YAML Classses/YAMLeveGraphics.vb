@@ -40,7 +40,7 @@ Public Class YAMLeveGrpahics
         ' Build main table
         Dim Table As New List(Of DBTableField)
         Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("graphicFile", FieldType.varchar_type, 100, True))
+        Table.Add(New DBTableField("graphicFile", FieldType.varchar_type, 150, True))
         Table.Add(New DBTableField("description", FieldType.text_type, MaxFieldLen, True))
         Table.Add(New DBTableField("sofFactionName", FieldType.varchar_type, 100, True))
         Table.Add(New DBTableField("sofHullName", FieldType.varchar_type, 100, True))
