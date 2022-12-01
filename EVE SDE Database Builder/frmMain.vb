@@ -357,8 +357,9 @@ Public Class frmMain
                     Call BuildEVEDatabase(NewSQLiteDB, DatabaseType.SQLite)
                     Call NewSQLiteDB.CommitSQLiteTransaction()
 
-                    ' Run a vacuum on the new DB to optimize and safe space
+                    ' Run a vacuum on the new DB to optimize and save space
                     Call NewSQLiteDB.ExecuteNonQuerySQL("VACUUM")
+                    Call NewSQLiteDB.ExecuteNonQuerySQL("PRAGMA integrity_check")
                     Call NewSQLiteDB.CloseDB()
                 Else
                     GoTo ExitProc
@@ -413,6 +414,7 @@ Public Class frmMain
 
             End If
         End With
+
         If CancelImport Then
             CancelImport = False
             Call ResetProgressColumn()
@@ -786,9 +788,6 @@ ExitProc:
 
         End If
 
-        lblStatus.Text = ""
-        Exit Sub
-
 CancelImportProcessing:
 
         On Error Resume Next
@@ -798,6 +797,8 @@ CancelImportProcessing:
         Call UF.Close()
         Application.DoEvents()
         lblStatus.Text = ""
+        GC.Collect()
+        GC.WaitForPendingFinalizers()
         On Error GoTo 0
 
     End Sub
@@ -1523,7 +1524,6 @@ CancelImportProcessing:
             Else
                 Call Th.T.Abort()
                 Th.T = Nothing
-                GC.Collect()
             End If
         Next
 
@@ -1543,7 +1543,6 @@ CancelImportProcessing:
             Application.DoEvents()
         Next
         ListofThreads = Nothing
-        GC.Collect()
         On Error GoTo 0
     End Sub
 
@@ -2143,6 +2142,7 @@ CancelDownload:
     Private Sub btnCancelDownload_Click(sender As Object, e As EventArgs) Handles btnCancelDownload.Click
         CancelDownload = True
     End Sub
+
 End Class
 
 ' For updating the data grid view

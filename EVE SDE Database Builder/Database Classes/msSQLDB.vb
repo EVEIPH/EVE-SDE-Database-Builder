@@ -103,8 +103,10 @@ Public Class msSQLDB
     ''' <param name="RefDB">The database to close.</param>
     Public Sub CloseDB(ByRef RefDB As SqlConnection)
         On Error Resume Next
+        SqlConnection.ClearAllPools()
         RefDB.Close()
         RefDB.Dispose()
+        RefDB = Nothing
         On Error GoTo 0
     End Sub
 
@@ -357,7 +359,7 @@ Public Class msSQLDB
                 Next
                 copy.DestinationTableName = Tables(i).TableName
                 copy.WriteToServer(Tables(i))
-
+                Application.DoEvents()
             End Using
         Next
 

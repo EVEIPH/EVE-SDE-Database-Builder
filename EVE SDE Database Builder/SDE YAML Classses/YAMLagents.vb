@@ -71,6 +71,7 @@ Public Class YAMLagents
 
         ' Process Data
         For Each DataField In YAMLRecords
+            DataFields = Nothing
             DataFields = New List(Of DBField)
 
             ' Build the insert list
@@ -91,10 +92,15 @@ Public Class YAMLagents
 
         Next
 
+        YAMLRecords.Clear()
+
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class
 
 Public Class agtAgent

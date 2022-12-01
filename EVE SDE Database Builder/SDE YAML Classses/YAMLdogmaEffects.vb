@@ -182,8 +182,14 @@ Public Class YAMLdogmaEffects
             Count += 1
         Next
 
+        YAMLRecords.Clear()
+
         Call FinalizeGridRow(Params.RowLocation)
 
+    End Sub
+
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
     End Sub
 
     Private Function RecordinModinfoTable(ByRef ModInfoTableRef As DataTable, ByVal Record As List(Of DBField)) As Boolean

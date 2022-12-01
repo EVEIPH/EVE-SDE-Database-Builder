@@ -86,6 +86,8 @@ Public Class YAMLcertificates
 
         Next
 
+        YAMLRecords.Clear()
+
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
@@ -210,6 +212,9 @@ Public Class YAMLcertificates
         End If
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class
 
 Public Class certificate

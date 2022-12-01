@@ -87,6 +87,7 @@ Public Class SQLiteDB
         On Error Resume Next
         DB.Close()
         DB.Dispose()
+        DB = Nothing
         On Error GoTo 0
     End Sub
 

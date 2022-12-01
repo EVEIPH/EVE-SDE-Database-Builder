@@ -86,10 +86,15 @@ Public Class YAMLcharacterAttributes
 
         Next
 
+        YAMLRecords.Clear()
+
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class
 
 Public Class characterAttribute

@@ -1,6 +1,6 @@
 ﻿
 Imports System.IO
-Imports DAO
+Imports Microsoft.Office.Interop.Access.Dao
 Imports System.Collections.Concurrent
 
 ''' <summary>

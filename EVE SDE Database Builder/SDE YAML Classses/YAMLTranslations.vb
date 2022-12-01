@@ -180,6 +180,8 @@ Cancel:
             End If
         End If
 
+        YAMLRecords.Clear()
+
     End Sub
 
     ''' <summary>
@@ -488,6 +490,9 @@ Cancel:
         Call Directory.Delete(LocalDBPath, True)
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class
 
 Public Class trnTranslationColumn

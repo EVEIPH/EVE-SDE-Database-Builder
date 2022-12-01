@@ -220,6 +220,8 @@ Public Class YAMLtypeIDs
 
         Next
 
+        YAMLRecords.Clear()
+
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
@@ -444,6 +446,10 @@ Public Class YAMLtypeIDs
         End If
 
     End Function
+
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class
 
 Public Class typeID

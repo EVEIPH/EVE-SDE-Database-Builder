@@ -11,6 +11,10 @@ Public Class YAMLinvNames
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
+
     ''' <summary>
     ''' Imports the yaml file into the database set in the constructor
     ''' Returns a list of invName of all the data for use
@@ -78,6 +82,9 @@ Public Class YAMLinvNames
         Next
 
         Call FinalizeGridRow(Params.RowLocation)
+
+        YAMLRecords.Clear()
+        YAMLRecords = Nothing
 
         Return YAMLRecords
 

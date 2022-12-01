@@ -111,10 +111,15 @@ Public Class YAMLdogmaAttributeTypes
         IndexFields.Add("attributeID")
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_AID", IndexFields)
 
+        YAMLRecords.Clear()
+
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class
 
 Public Class dogmaAttributeType

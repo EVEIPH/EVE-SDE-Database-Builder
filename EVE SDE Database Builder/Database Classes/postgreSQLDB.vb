@@ -151,7 +151,7 @@ Public Class postgreSQLDB
     ''' </summary>
     ''' <param name="TableName">Table you want to drop</param>
     Private Sub DropTable(TableName As String)
-        Call ExecuteNonQuerySQL(String.Format("DROP TABLE IF EXISTS ""{0}""", TableName))
+        Call ExecuteNonQuerySQL(String.Format("DROP TABLE IF EXISTS public.""{0}""", TableName))
     End Sub
 
     ''' <summary>
@@ -324,20 +324,24 @@ Public Class postgreSQLDB
     Public Sub FinalizeDataImport(ByRef Translator As YAMLTranslations, ByVal TranslationTableImportList As List(Of String))
 
         Call InitalizeMainProgressBar(BulkInsertTablesData.Count, "Importing Bulk Data...")
+        Try
+            For i = 0 To BulkInsertTablesData.Count - 1
+                Call UpdateMainProgressBar(i, "Bulk Loading " & BulkInsertTablesData(i).TableName & "...")
+                Debug.Print(BulkInsertTablesData(i).TableName)
+                Application.DoEvents()
 
-        For i = 0 To BulkInsertTablesData.Count - 1
-            Call UpdateMainProgressBar(i, "Bulk Loading " & BulkInsertTablesData(i).TableName & "...")
-            Debug.Print(BulkInsertTablesData(i).TableName)
+                Call BeginSQLTransaction()
+                Call ExecuteNonQuerySQL(BulkInsertTablesData(3).BulkImportSQL)
+                Call CommitSQLTransaction()
+
+                ' Since we are done, delete the csv file we just imported
+                Call File.Delete(CSVDirectory & BulkInsertTablesData(i).TableName & ".csv")
+
+            Next
+        Catch ex As Exception
             Application.DoEvents()
+        End Try
 
-            Call BeginSQLTransaction()
-            Call ExecuteNonQuerySQL(BulkInsertTablesData(i).BulkImportSQL)
-            Call CommitSQLTransaction()
-
-            ' Since we are done, delete the csv file we just imported
-            Call File.Delete(CSVDirectory & BulkInsertTablesData(i).TableName & ".csv")
-
-        Next
 
         Call ClearMainProgressBar()
 

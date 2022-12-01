@@ -134,6 +134,8 @@ Public Class YAMLblueprints
 
         Next
 
+        YAMLRecords.Clear()
+
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
@@ -300,6 +302,9 @@ Public Class YAMLblueprints
 
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class
 
 ' Class to parse the blueprints.yaml file

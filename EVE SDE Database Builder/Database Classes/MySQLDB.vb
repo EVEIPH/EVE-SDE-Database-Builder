@@ -17,7 +17,7 @@ Public Class MySQLDB
     Private DBUserID As String
     Private DBUserPassword As String
 
-    Private Const DBConnectionString As String = "Server={0}; userid={1}; password={2}; pooling=false; default command timeout=600"
+    Private Const DBConnectionString As String = "Server={0}; userid={1}; password={2}; pooling=false; default command timeout=600; AllowLoadLocalInfile=true;"
 
     ' For doing bulk data inserts
     Private Structure BulkInsertData
@@ -53,6 +53,7 @@ Public Class MySQLDB
             DBUserID = UserID
             DBUserPassword = Password
 
+
             DB = New MySqlConnection(String.Format(DBConnectionString, DBServerName, DBUserID, DBUserPassword))
             DB.Open()
 
@@ -86,7 +87,9 @@ Public Class MySQLDB
 
         ' Open the connection for reference
         Dim DBRef As New MySqlConnection(String.Format(DBConnectionString, DBServerName, DBUserID, DBUserPassword))
+
         DBRef.Open()
+
 
         ' Set the database
         DBRef.ChangeDatabase(MainDatabase)
@@ -335,6 +338,7 @@ Public Class MySQLDB
             Call UpdateMainProgressBar(i, "Importing " & BulkInsertTablesData(i).TableName & "...")
             Application.DoEvents()
             Call BeginSQLTransaction()
+            Call ExecuteNonQuerySQL("SET GLOBAL local_infile=1;") ' Server setting to allow local uploads of data
             Call ExecuteNonQuerySQL(String.Format("ALTER TABLE {0} DISABLE KEYS", BulkInsertTablesData(i).TableName))
             Call ExecuteNonQuerySQL("SET autocommit = 1;set unique_checks = 0;set foreign_key_checks = 0;set sql_log_bin=0;")
             Call ExecuteNonQuerySQL(BulkInsertTablesData(i).BulkImportSQL)

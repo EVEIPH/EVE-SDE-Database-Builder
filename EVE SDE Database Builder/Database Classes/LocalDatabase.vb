@@ -75,10 +75,16 @@ Public Class LocalDatabase
         Next
 
         ' Add the new row
-        Dim AddRow As DataRow
-        AddRow = DT.NewRow
-        AddRow.ItemArray = Data
-        DT.Rows.Add(AddRow)
+        Try
+            Dim AddRow As DataRow
+            AddRow = DT.NewRow
+            AddRow.ItemArray = Data
+            SyncLock Lock
+                DT.Rows.Add(AddRow)
+            End SyncLock
+        Catch ex As Exception
+            MsgBox("An import error occured with the Local Database: " & ex.Message & " Table: " & TableNameRef, vbInformation, "Import Error")
+        End Try
 
     End Sub
 

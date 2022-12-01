@@ -243,9 +243,8 @@ Public Class CSVDB
                         DataFields.Add(BuildDatabaseField("tcID", CType(row.Item(4), Object), FieldType.smallint_type))
 
                     ElseIf TTable.TableName = YAMLTranslations.trnTranslationLanguagesTable Then
-                        DataFields.Add(BuildDatabaseField("numericLanguageID", CType(row.Item(0), Object), FieldType.int_type))
-                        DataFields.Add(BuildDatabaseField("languageID", CType(row.Item(1), Object), FieldType.varchar_type))
-                        DataFields.Add(BuildDatabaseField("languageName", CType(row.Item(2), Object), FieldType.nvarchar_type))
+                        DataFields.Add(BuildDatabaseField("languageID", CType(row.Item(0), Object), FieldType.varchar_type))
+                        DataFields.Add(BuildDatabaseField("languageName", CType(row.Item(1), Object), FieldType.nvarchar_type))
 
                     ElseIf TTable.TableName = YAMLTranslations.trnTranslationsTable Then
                         DataFields.Add(BuildDatabaseField("keyID", CType(row.Item(0), Object), FieldType.int_type))

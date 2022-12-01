@@ -115,6 +115,9 @@ Public Module Globals
             Application.DoEvents()
         End If
 
+        ServicePointManager.Expect100Continue = True
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+
         Try 'Checks if the file exist
             Request = DirectCast(HttpWebRequest.Create(DownloadURL), HttpWebRequest)
             Request.Proxy = Nothing

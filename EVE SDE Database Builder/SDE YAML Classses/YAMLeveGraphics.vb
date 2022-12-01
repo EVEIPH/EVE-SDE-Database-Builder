@@ -114,6 +114,8 @@ Public Class YAMLeveGrpahics
 
         Next
 
+        YAMLRecords.Clear()
+
         Call FinalizeGridRow(Params.RowLocation)
 
     End Sub
@@ -185,6 +187,9 @@ Public Class YAMLeveGrpahics
 
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class
 
 Public Class eveGraphic
