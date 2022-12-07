@@ -1066,7 +1066,7 @@ CancelImportProcessing:
             ' Updater EXE
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", UpdaterEXEFile)
-            writer.WriteAttributeString("Version", "1.0")
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(UpdaterEXEFile).FileVersion)
             writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & UpdaterEXEFile))
             writer.WriteAttributeString("URL", UpdaterEXEFileURL)
             writer.WriteEndElement()
@@ -1074,7 +1074,7 @@ CancelImportProcessing:
             ' Main EXE program config file
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", MainEXEConfig)
-            writer.WriteAttributeString("Version", VersionNumber)
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(UpdaterEXEFile).FileVersion)
             writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & MainEXEConfig))
             writer.WriteAttributeString("URL", MainEXEConfigURL)
             writer.WriteEndElement()
@@ -1082,7 +1082,7 @@ CancelImportProcessing:
             ' Updater EXE config file
             writer.WriteStartElement("row")
             writer.WriteAttributeString("Name", UpdaterEXEConfig)
-            writer.WriteAttributeString("Version", "1.0")
+            writer.WriteAttributeString("Version", FileVersionInfo.GetVersionInfo(UpdaterEXEConfig).FileVersion)
             writer.WriteAttributeString("MD5", Updater.MD5CalcFile(LatestFilesFolder & UpdaterEXEConfig))
             writer.WriteAttributeString("URL", UpdaterEXEConfigURL)
             writer.WriteEndElement()
