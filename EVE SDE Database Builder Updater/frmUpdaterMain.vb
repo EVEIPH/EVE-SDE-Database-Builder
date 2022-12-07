@@ -1,7 +1,6 @@
 ﻿
 Imports System.IO
 Imports System.Xml
-Imports System.Net
 Imports System.ComponentModel
 Imports System.Globalization ' For culture info
 Imports System.Threading
@@ -179,6 +178,11 @@ Public Class frmUpdaterMain
 
         ' Sets the CurrentCulture 
         Thread.CurrentThread.CurrentCulture = LocalCulture
+
+        ' Delete the old interop file for SQLlite if it exists
+        If File.Exists("SQLite.Interop.dll") Then
+            File.Delete("SQLite.Interop.dll")
+        End If
 
         UpdateStatusDelegate = New UpdateStatusSafe(AddressOf UpdateStatus)
         Me.Invoke(UpdateStatusDelegate, False, "Checking for Updates...")

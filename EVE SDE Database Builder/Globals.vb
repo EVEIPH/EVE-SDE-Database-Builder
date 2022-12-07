@@ -92,18 +92,26 @@ Public Module Globals
         'Creating the request and getting the response
         Dim Response As HttpWebResponse
         Dim Request As HttpWebRequest
+        Dim bytesread As Integer
 
         ' File sizes for progress bar
         Dim FileSize As Double
 
         ' For reading in chunks of data
         Dim readBytes(4095) As Byte
-        ' Create directory if it doesn't exist already
-        If Not Directory.Exists(Path.GetDirectoryName(FileName)) Then
-            Directory.CreateDirectory(Path.GetDirectoryName(FileName))
-        End If
-        Dim writeStream As New FileStream(FileName, FileMode.Create)
-        Dim bytesread As Integer
+        Dim writeStream As FileStream
+
+        Try
+            ' Create directory if it doesn't exist already
+            If Not Directory.Exists(Path.GetDirectoryName(FileName)) Then
+                Directory.CreateDirectory(Path.GetDirectoryName(FileName))
+            End If
+            writeStream = New FileStream(FileName, FileMode.Create)
+
+        Catch ex As Exception
+            MsgBox("An error downloading the file occured: " & ex.Message, vbExclamation, Application.ProductName)
+            Return ""
+        End Try
 
         'Replacement for Stream.Position (webResponse stream doesn't support seek)
         Dim nRead As Long

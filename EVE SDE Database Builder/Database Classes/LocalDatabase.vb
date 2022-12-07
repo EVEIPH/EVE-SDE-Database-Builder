@@ -83,7 +83,8 @@ Public Class LocalDatabase
                 DT.Rows.Add(AddRow)
             End SyncLock
         Catch ex As Exception
-            MsgBox("An import error occured with the Local Database: " & ex.Message & " Table: " & TableNameRef, vbInformation, "Import Error")
+            '  MsgBox("An import error occured with the Local Database: " & ex.Message & " Table: " & TableNameRef, vbInformation, "Import Error")
+            Application.DoEvents()
         End Try
 
     End Sub
