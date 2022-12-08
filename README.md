@@ -1,7 +1,9 @@
 # EVE-SDE-Database-Builder
 EVE SDE Database Builder is a Windows app that lets anyone download the most current SDE and allows options for building 6 different Database types whenever they want and they can customize the import by language type and selecting the data they want or do not want from the SDE.
 
-<img src="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Screenshot.png" width="406" height="534">
+<p align="center">
+<img src="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Screenshot.png">
+</p>
 
 ### System Requirements
 * .net 4.8
