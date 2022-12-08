@@ -95,16 +95,6 @@ Public Class frmUpdaterMain
         ' Set the version of the XML file we will use
         LocalXMLFileName = XMLLatestVersionFileName
 
-        ' Create the updates folder
-        If Directory.Exists(UPDATES_FOLDER) Then
-            ' Delete what is there and replace
-            Dim ImageDir As New DirectoryInfo(UPDATES_FOLDER)
-            ImageDir.Delete(True)
-        End If
-
-        ' Create the new folder
-        Directory.CreateDirectory(UPDATES_FOLDER)
-
         BGWorker.WorkerReportsProgress = True
         BGWorker.WorkerSupportsCancellation = True
 
@@ -183,6 +173,20 @@ Public Class frmUpdaterMain
         If File.Exists("SQLite.Interop.dll") Then
             File.Delete("SQLite.Interop.dll")
         End If
+
+        ' Create the updates folder
+        If Directory.Exists(UPDATES_FOLDER) Then
+            ' Delete what is there and replace
+            Dim ImageDir As New DirectoryInfo(UPDATES_FOLDER)
+            ImageDir.Delete(True)
+        End If
+
+        ' Create the new folder
+        Directory.CreateDirectory(UPDATES_FOLDER)
+
+        ' Create the sub folders
+        Directory.CreateDirectory(UPDATES_FOLDER & "x86\")
+        Directory.CreateDirectory(UPDATES_FOLDER & "x64\")
 
         UpdateStatusDelegate = New UpdateStatusSafe(AddressOf UpdateStatus)
         Me.Invoke(UpdateStatusDelegate, False, "Checking for Updates...")
