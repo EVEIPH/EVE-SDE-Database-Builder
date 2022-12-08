@@ -930,7 +930,9 @@ CancelImportProcessing:
 
                 If Response = DialogResult.Yes Then
                     ' Run the updater
+                    Application.UseWaitCursor = True
                     Call Updater.RunUpdate()
+                    Application.UseWaitCursor = False
                 End If
             Case UpdateCheckResult.UpToDate
                 If ShowUpdateMessage Then
