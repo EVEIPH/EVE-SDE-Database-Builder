@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <EVESDEDB Version="Version 2.0.8376.35550">
-  <LastUpdated>12/7/2022 7:50:28 PM</LastUpdated>
+  <LastUpdated>12/7/2022 7:52:49 PM</LastUpdated>
   <result>
     <rowset name="filelist" key="version" columns="Name,Version,MD5,URL">
       <row Name="EVE SDE Database Builder.exe" Version="Version 2.0.8376.35550" MD5="cb5e3aa1b6ada976e9768d62acbaf05c" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe" />
