@@ -3,6 +3,11 @@ EVE SDE Database Builder is a Windows app that lets anyone download the most cur
 
 ![Screenshot of the program](https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Screenshot.png)
 
+### System Requirements
+* .net 4.8
+* Windows 64-bit OS
+* Appropriate server software/connections for SQL Server, PostgreSQL, and MySQL data versions.
+
 ## Key features:
 *Imports all YAML files in about 30 minutes (the universe files take about 23 minutes alone).
 *Settings to import tables with translated fields for English, French, German, Japanese, Chinese, Russian, and Korean. When a field is translatable, the program will import the selected language.
