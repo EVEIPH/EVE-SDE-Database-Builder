@@ -331,6 +331,13 @@ Public Class frmUpdaterMain
 
             Me.Invoke(UpdateStatusDelegate, False, "Updating " & UpdateFileList(i).Name & "...")
 
+            Dim SubFolder As String = ""
+            If UpdateFileList(i).Name.Contains("x64") Then
+                SubFolder = "x64"
+            ElseIf UpdateFileList(i).Name.Contains("x86") Then
+                SubFolder = "x86"
+            End If
+
             ' If an OLD file exists, delete it
             If File.Exists(ROOT_FOLDER & OLD_PREFIX & UpdateFileList(i).Name) Then
                 ProgramErrorLocation = "Error Deleting Old " & UpdateFileList(i).Name & "file"
@@ -338,18 +345,40 @@ Public Class frmUpdaterMain
                 Application.DoEvents()
             End If
 
-            ' Rename old file if it exists to old prefix
-            If File.Exists(ROOT_FOLDER & UpdateFileList(i).Name) Then
-                ProgramErrorLocation = "Error Moving Old " & UpdateFileList(i).Name & "file"
-                File.Move(ROOT_FOLDER & UpdateFileList(i).Name, ROOT_FOLDER & OLD_PREFIX & UpdateFileList(i).Name)
-                Application.DoEvents()
+            ' If the OLD folder exists, delete it too
+            If SubFolder <> "" Then
+                If Directory.Exists(ROOT_FOLDER & OLD_PREFIX & SubFolder) Then
+                    ProgramErrorLocation = "Error Deleting Old " & SubFolder & " folder"
+                    Directory.Delete(ROOT_FOLDER & OLD_PREFIX & SubFolder)
+                    Application.DoEvents()
+                End If
             End If
 
-            ' Move new file
-            ProgramErrorLocation = "Error Moving New " & UpdateFileList(i).Name & "file"
-            File.Move(UPDATES_FOLDER & UpdateFileList(i).Name, ROOT_FOLDER & UpdateFileList(i).Name)
-            Application.DoEvents()
+            ' Rename old file if it exists to old prefix
+            If File.Exists(ROOT_FOLDER & UpdateFileList(i).Name) Then
+                ' If this is a x64 or x86 folder, need to move the folder and not just the file
+                If SubFolder <> "" Then
+                    ProgramErrorLocation = "Error Moving Old " & SubFolder & " folder"
+                    Directory.Move(ROOT_FOLDER & SubFolder, ROOT_FOLDER & OLD_PREFIX & SubFolder)
+                    Application.DoEvents()
+                Else
+                    ' Now move file
+                    ProgramErrorLocation = "Error Moving Old " & UpdateFileList(i).Name & "file"
+                    File.Move(ROOT_FOLDER & UpdateFileList(i).Name, ROOT_FOLDER & OLD_PREFIX & UpdateFileList(i).Name)
+                    Application.DoEvents()
+                End If
+            End If
 
+            ' Move new folder
+            If SubFolder <> "" Then
+                ProgramErrorLocation = "Error Moving New " & SubFolder & " folder"
+                Directory.Move(UPDATES_FOLDER & SubFolder, ROOT_FOLDER & SubFolder)
+                Application.DoEvents()
+            Else ' Move new file
+                ProgramErrorLocation = "Error Moving New " & UpdateFileList(i).Name & "file"
+                File.Move(UPDATES_FOLDER & UpdateFileList(i).Name, ROOT_FOLDER & UpdateFileList(i).Name)
+                Application.DoEvents()
+            End If
         Next
 
         ProgramErrorLocation = ""
