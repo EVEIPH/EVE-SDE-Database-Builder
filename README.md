@@ -11,8 +11,8 @@ EVE SDE Database Builder is a Windows app that lets anyone download the most cur
 * Appropriate server software/connections for SQL Server, PostgreSQL, and MySQL data versions.
 
 ## Key features:
-*Imports all YAML files in about 30 minutes (the universe files take about 23 minutes alone).
-*Settings to import tables with translated fields for English, French, German, Japanese, Chinese, Russian, and Korean. When a field is translatable, the program will import the selected language.
+* Imports all YAML files in about 30 minutes (the universe files take about 23 minutes alone).
+* Settings to import tables with translated fields for English, French, German, Japanese, Chinese, Russian, and Korean. When a field is translatable, the program will import the selected language.
 * Allows the selection of specific YAML files so users don’t have to import or build the entire database each time.
 * Imports the SDE YAML files into Microsoft Access, SQLite, and CSV files with the option to save CSV to SSV – Semi-colon separated values with European decimal format (10.000,00) for use in Excel by non-US decimal format users.
 * Imports the SDE YAML files into local servers for Microsoft SQL Server, PostgreSQL, and MySQL. To use these import types, you need to have a local server installed on your machine to connect to.
