@@ -146,15 +146,6 @@ Public Class frmUpdaterMain
         Dim TempAccessMask As String
         Dim TempExpDate As Date
         Dim TempAccountType As String
-
-        Dim HavePrecentiles As Boolean = False
-        Dim HaveNewAPIFields As Boolean = False
-        Dim HaveNewEVEIPHFields As Boolean = False
-        Dim HasOldOutpostDataField As Boolean = False
-        Dim HaveNewIndustryJobsTable As Boolean = False
-        Dim HaveNewItemPricesFields As Boolean = False
-        Dim HaveNewOwnedBPTable As Boolean = False
-
         Dim Updater As New ProgramUpdater
 
         'Create a variable tracking times
@@ -579,7 +570,7 @@ RevertToOldFileVersions:
     ''' </summary>
     ''' <param name="ErrorMsg">Message to write to log</param>
     Public Sub WriteMsgToLog(ByVal ErrorMsg As String)
-        Dim FilePath As String = "EVEIPH.log"
+        Dim FilePath As String = "ProgramError.log"
         Dim AllText() As String
 
         ' Only write to log if there is an error to write

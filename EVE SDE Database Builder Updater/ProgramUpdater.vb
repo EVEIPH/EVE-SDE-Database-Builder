@@ -84,11 +84,11 @@ Public Class ProgramUpdater
         On Error GoTo DownloadError
 
         ' Wait for a second before running - might solve the problem with incorrectly suggesting an update
-        Threading.Thread.Sleep(2000)
+        Threading.Thread.Sleep(1000)
 
         'Load the server XML file
         m_xmld.Load(ServerXMLLastUpdatePath)
-        m_nodelist = m_xmld.SelectNodes("/EVEIPH/result/rowset/row")
+        m_nodelist = m_xmld.SelectNodes("/EVESDEDB/result/rowset/row")
 
         ' Loop through the nodes and find the MD5 and download URL for the updater and any other files necessary to load the updater
         For Each m_node In m_nodelist

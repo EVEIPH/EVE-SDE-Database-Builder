@@ -8,10 +8,10 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("EVEIPH Updater")> 
+<Assembly: AssemblyTitle("ESDEDB Updater")>
 <Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("EVE IPH")> 
-<Assembly: AssemblyProduct("EVEIPH Updater")> 
+<Assembly: AssemblyCompany("EVE IPH")>
+<Assembly: AssemblyProduct("ESDEDB Updater")>
 <Assembly: AssemblyCopyright("Copyright © Home 2012")> 
 <Assembly: AssemblyTrademark("")> 
 
