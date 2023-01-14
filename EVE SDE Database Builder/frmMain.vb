@@ -369,7 +369,7 @@ Public Class frmMain
 
             ElseIf rbtnMySQL.Checked Then ' MySQL
 
-                Dim NewMySQLDB As New MySQLDB(.DatabaseName, .MySQLConnectionString, .MySQLUserName, .MySQLPassword, WasSuccessful)
+                Dim NewMySQLDB As New MySQLDB(.DatabaseName, .MySQLConnectionString, .MySQLUserName, .MySQLPassword, Trim(txtPort.Text), WasSuccessful)
 
                 If WasSuccessful Then
                     Call BuildEVEDatabase(NewMySQLDB, DatabaseType.MySQL)
@@ -1656,7 +1656,7 @@ CancelImportProcessing:
 
     Private Sub rbtnMySQL_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnMySQL.CheckedChanged
         If rbtnMySQL.Checked Then
-            Call SetFormObjects(True, True, True, False, False, False)
+            Call SetFormObjects(True, True, True, False, True, False)
         End If
     End Sub
 

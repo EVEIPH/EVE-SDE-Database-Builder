@@ -36,7 +36,7 @@ Public Class MySQLDB
     ''' <param name="Password">Root password or password of account with access to create databases, tables, etc.</param>
     ''' <param name="Success">True if the database successfully created.</param>
     Public Sub New(ByVal DatabaseName As String, ByVal ServerName As String, ByVal UserID As String,
-                   ByVal Password As String, ByRef Success As Boolean)
+                   ByVal Password As String, ByVal Port As String, ByRef Success As Boolean)
         MyBase.New(DatabaseName, DatabaseType.MySQL)
 
         Dim DB As New MySqlConnection
@@ -53,8 +53,11 @@ Public Class MySQLDB
             DBUserID = UserID
             DBUserPassword = Password
 
+            If Port <> "" Then
+                Port = " port=" & Port & ";"
+            End If
 
-            DB = New MySqlConnection(String.Format(DBConnectionString, DBServerName, DBUserID, DBUserPassword))
+            DB = New MySqlConnection(String.Format(DBConnectionString, DBServerName, DBUserID, DBUserPassword) & Port)
             DB.Open()
 
             ' See if the Databae exists first and create if not
