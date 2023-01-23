@@ -322,6 +322,7 @@ Public Class postgreSQLDB
     ''' <param name="Translator">YAMLTranslations object to get stored tables from.</param>
     ''' <param name="TranslationTableImportList">List of translation tables to import.</param>
     Public Sub FinalizeDataImport(ByRef Translator As YAMLTranslations, ByVal TranslationTableImportList As List(Of String))
+        Dim i As Integer = 0
 
         Call InitalizeMainProgressBar(BulkInsertTablesData.Count, "Importing Bulk Data...")
         Try
@@ -331,7 +332,7 @@ Public Class postgreSQLDB
                 Application.DoEvents()
 
                 Call BeginSQLTransaction()
-                Call ExecuteNonQuerySQL(BulkInsertTablesData(3).BulkImportSQL)
+                Call ExecuteNonQuerySQL(BulkInsertTablesData(i).BulkImportSQL)
                 Call CommitSQLTransaction()
 
                 ' Since we are done, delete the csv file we just imported
@@ -339,9 +340,8 @@ Public Class postgreSQLDB
 
             Next
         Catch ex As Exception
-            Application.DoEvents()
+            MsgBox("Table: " & BulkInsertTablesData(i).TableName & " did not import. Error: " & ex.Message, vbExclamation, Application.ProductName)
         End Try
-
 
         Call ClearMainProgressBar()
 
