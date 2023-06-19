@@ -50,7 +50,7 @@ Public Class YAMLeveGrpahics
 
         ' Add minor table for sofLayout change in uprising
         Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, False, True))
+        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, False, False))
         Table.Add(New DBTableField("sofLayout", FieldType.varchar_type, 100, True))
 
         Call UpdateDB.CreateTable(eveGraphicssofLayouts, Table)
