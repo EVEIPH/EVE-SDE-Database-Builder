@@ -177,7 +177,6 @@ Public Class CSVDB
     ''' <param name="TableName">Table to insert records.</param>
     ''' <param name="Record">List of table fields that make up the record.</param>
     Public Sub InsertRecord(ByVal TableName As String, Record As List(Of DBField))
-
         Dim TableStream As StreamWriter
         Dim OutputText As String = ""
 

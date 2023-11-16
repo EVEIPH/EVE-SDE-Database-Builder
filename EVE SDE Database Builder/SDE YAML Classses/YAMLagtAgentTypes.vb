@@ -16,11 +16,12 @@ Public Class YAMLagtAgentTypes
     ''' </summary>
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
+        FileNameErrorTracker = agtAgentTypesFile
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
         End If
-        DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
+        DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.Instance)
         Dim DS As New Deserializer
         DS = DSB.Build
 

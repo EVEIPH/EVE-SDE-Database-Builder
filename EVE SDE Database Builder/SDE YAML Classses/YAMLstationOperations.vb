@@ -16,6 +16,7 @@ Public Class YAMLstationOperations
     ''' </summary>
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
+        FileNameErrorTracker = stationOperationsFile
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
@@ -39,7 +40,7 @@ Public Class YAMLstationOperations
         Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, True))
         Table.Add(New DBTableField("border", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("corridor", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 1000, True))
+        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 1500, True))
         Table.Add(New DBTableField("fringe", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("hub", FieldType.real_type, 0, True))
         Table.Add(New DBTableField("manufacturingFactor", FieldType.real_type, 0, True))

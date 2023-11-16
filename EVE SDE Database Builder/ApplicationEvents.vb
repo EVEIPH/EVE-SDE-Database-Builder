@@ -13,7 +13,7 @@
             Dim f2 = New frmError
             frmErrorText = "An Unhandled Exception has occured and the program will now close."
             frmErrorText = frmErrorText & Environment.NewLine & "Copy the data below and send to developer."
-            frmErrorText = frmErrorText & Environment.NewLine & Environment.NewLine & "Source: " & e.Exception.Source
+            frmErrorText = frmErrorText & Environment.NewLine & Environment.NewLine & "Source: " & FileNameErrorTracker
             frmErrorText = frmErrorText & Environment.NewLine & "Message: " & e.Exception.Message & vbCrLf
             frmErrorText = frmErrorText & "Raw Error Text: " & e.Exception.ToString
 

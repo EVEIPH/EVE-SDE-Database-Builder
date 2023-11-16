@@ -41,6 +41,7 @@ Public Class YAMLTranslations
     ''' <param name="ShowProgress">Do we show progress of import or not</param>
     Public Sub ImportTranslationLanguages(ByVal Params As ImportParameters, Optional ImportTable As Boolean = True,
                                           Optional ByVal ShowProgress As Boolean = True)
+        FileNameErrorTracker = "ImportTranslationLanguages"
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()

@@ -16,6 +16,7 @@ Public Class YAMLcharacterAttributes
     ''' </summary>
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
+        FileNameErrorTracker = charactersAttributesFile
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()

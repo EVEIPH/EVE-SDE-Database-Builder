@@ -69,6 +69,7 @@ Public Class YAMLUniverse
     ''' </summary>
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
+        FileNameErrorTracker = invNamesTableName
         Dim UniverseDirs As New List(Of String)
         Dim RegionDirs As New List(Of String)
         Dim ConstellationDirs As New List(Of String)
@@ -299,6 +300,7 @@ Public Class YAMLUniverse
     ''' <param name="DirectoryPath">Directory path with the Region file</param>
     ''' <returns>Region ID as integer</returns>
     Private Function ImportRegion(ByVal DirectoryPath As String) As Integer
+        FileNameErrorTracker = "ImportRegion"
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
@@ -361,6 +363,7 @@ Public Class YAMLUniverse
     ''' <param name="ConstellationRegionID">RegionID for this constellation</param>
     ''' <returns>Contellation ID as integer</returns>
     Private Function ImportConstellation(ByVal DirectoryPath As String, ConstellationRegionID As Integer) As Integer
+        FileNameErrorTracker = "ImportConstellation"
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
@@ -418,6 +421,7 @@ Public Class YAMLUniverse
     ''' <param name="SystemRegionID">Region ID for this System</param>
     ''' <param name="SystemConstellationID">Contellation ID for this System</param>
     Private Sub ImportSolarSystem(ByVal DirectoryPath As String, ByVal SystemRegionID As Integer, ByVal SystemConstellationID As Integer)
+        FileNameErrorTracker = "ImportSolarSystem"
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()

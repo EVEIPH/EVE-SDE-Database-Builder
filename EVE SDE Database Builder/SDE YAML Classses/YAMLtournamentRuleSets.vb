@@ -22,6 +22,7 @@ Public Class YAMLtournamentRuleSets
     ''' </summary>
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
+        FileNameErrorTracker = tournamentRuleSetsFile
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
@@ -99,7 +100,7 @@ Public Class YAMLtournamentRuleSets
     Private Sub BuildTournamentsTable()
         Dim Table As New List(Of DBTableField)
 
-        Table.Add(New DBTableField("ruleSetID", FieldType.varchar_type, 100, False, True))
+        Table.Add(New DBTableField("ruleSetID", FieldType.varchar_type, 100, True))
         Table.Add(New DBTableField("ruleSetName", FieldType.varchar_type, 100, True))
         Table.Add(New DBTableField("maximumPointsMatch", FieldType.int_type, 0, True))
         Table.Add(New DBTableField("maximumPilotsMatch", FieldType.int_type, 0, True))

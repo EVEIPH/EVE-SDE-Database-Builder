@@ -13,6 +13,8 @@ Public Module Globals
 
     Public TestForSDEChanges As Boolean
 
+    Public FileNameErrorTracker As String = ""
+
     Public RetryCall As Boolean = False
 
     ''' <summary>

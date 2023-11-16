@@ -21,6 +21,7 @@ Public Class YAMLinvNames
     ''' </summary>
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Function ImportFile(ByVal Params As ImportParameters) As List(Of invName)
+        FileNameErrorTracker = invNamesFile
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
