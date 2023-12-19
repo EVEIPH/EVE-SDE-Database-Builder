@@ -84,7 +84,6 @@ Public Class YAMLeveGrpahics
         ' Process Data
         For Each DataField In YAMLRecords
             DataFields = New List(Of DBField)
-            DataFields2 = New List(Of DBField)
 
             With DataField.Value
                 ' Build the insert list
@@ -97,6 +96,7 @@ Public Class YAMLeveGrpahics
 
                 If Not IsNothing(.sofLayout) Then
                     For Each sofLayout In .sofLayout
+                        DataFields2 = New List(Of DBField)
                         DataFields2.Add(UpdateDB.BuildDatabaseField("graphicID", DataField.Key, FieldType.int_type))
                         DataFields2.Add(UpdateDB.BuildDatabaseField("sofLayout", sofLayout, FieldType.varchar_type))
                         Call UpdateDB.InsertRecord(eveGraphicssofLayouts, DataFields2)
