@@ -16,8 +16,12 @@ Root Directory/*
 #!**/packages/repositories.config
 # NuGet v3's project.json files produces more ignoreable files
 *.nuget.props
+<<<<<<< HEAD
 *.nuget.targets
 *.vsidx
 *.json
 .vs/EVE-SDE-Database-Builder/v17/.wsuo
 .vs/slnx.sqlite
+=======
+*.nuget.targets
+>>>>>>> parent of fdde43b (Updating to VS 2022)
