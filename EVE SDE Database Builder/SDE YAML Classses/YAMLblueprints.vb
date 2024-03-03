@@ -42,9 +42,8 @@ Public Class YAMLblueprints
 
         Dim YAMLRecords As New Dictionary(Of Long, Blueprint)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build all the tables to insert blueprint data into. This includes the following tables:
         ' - industryBlueprints
@@ -142,11 +141,11 @@ Public Class YAMLblueprints
     End Sub
 
     Private Sub InsertBlueprintActivity(ByVal BPID As Integer, ByVal ActivityID As Integer, ByVal ActivityTime As Integer)
-        Dim DataFields As New List(Of DBField)
-
-        DataFields.Add(UpdateDB.BuildDatabaseField("blueprintTypeID", BPID, FieldType.int_type))
-        DataFields.Add(UpdateDB.BuildDatabaseField("activityID", ActivityID, FieldType.tinyint_type))
-        DataFields.Add(UpdateDB.BuildDatabaseField("time", ActivityTime, FieldType.tinyint_type))
+        Dim DataFields As New List(Of DBField) From {
+            UpdateDB.BuildDatabaseField("blueprintTypeID", BPID, FieldType.int_type),
+            UpdateDB.BuildDatabaseField("activityID", ActivityID, FieldType.tinyint_type),
+            UpdateDB.BuildDatabaseField("time", ActivityTime, FieldType.tinyint_type)
+        }
 
         Call UpdateDB.InsertRecord(industryActivities_Table, DataFields)
 
@@ -157,13 +156,13 @@ Public Class YAMLblueprints
 
         If Not IsNothing(Materials) Then
             For Each mat In Materials
-                DataFields = New List(Of DBField)
-
                 ' Insert material record into industryActivityMaterials
-                DataFields.Add(UpdateDB.BuildDatabaseField("blueprintTypeID", BPID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("activityID", ActivityID, FieldType.tinyint_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("materialTypeID", mat.typeID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("quantity", mat.quantity, FieldType.tinyint_type))
+                DataFields = New List(Of DBField) From {
+                    UpdateDB.BuildDatabaseField("blueprintTypeID", BPID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("activityID", ActivityID, FieldType.tinyint_type),
+                    UpdateDB.BuildDatabaseField("materialTypeID", mat.typeID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("quantity", mat.quantity, FieldType.tinyint_type)
+                }
 
                 Call UpdateDB.InsertRecord(industryActivityMaterials_Table, DataFields)
             Next
@@ -176,13 +175,13 @@ Public Class YAMLblueprints
 
         If Not IsNothing(Skills) Then
             For Each Skill In Skills
-                DataFields = New List(Of DBField)
-
                 ' Insert material record into industryActivityMaterials
-                DataFields.Add(UpdateDB.BuildDatabaseField("blueprintTypeID", BPID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("activityID", ActivityID, FieldType.tinyint_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("skillID", Skill.typeID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("level", Skill.level, FieldType.tinyint_type))
+                DataFields = New List(Of DBField) From {
+                    UpdateDB.BuildDatabaseField("blueprintTypeID", BPID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("activityID", ActivityID, FieldType.tinyint_type),
+                    UpdateDB.BuildDatabaseField("skillID", Skill.typeID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("level", Skill.level, FieldType.tinyint_type)
+                }
 
                 Call UpdateDB.InsertRecord(industryActivitySkills_Table, DataFields)
             Next
@@ -195,13 +194,13 @@ Public Class YAMLblueprints
 
         If Not IsNothing(Products) Then
             For Each Product In Products
-                DataFields = New List(Of DBField)
-
                 ' Insert material record into industryActivityMaterials
-                DataFields.Add(UpdateDB.BuildDatabaseField("blueprintTypeID", BPID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("activityID", ActivityID, FieldType.tinyint_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("productTypeID", Product.typeID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("quantity", Product.quantity, FieldType.int_type))
+                DataFields = New List(Of DBField) From {
+                    UpdateDB.BuildDatabaseField("blueprintTypeID", BPID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("activityID", ActivityID, FieldType.tinyint_type),
+                    UpdateDB.BuildDatabaseField("productTypeID", Product.typeID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("quantity", Product.quantity, FieldType.int_type)
+                }
                 If IsNothing(Product.probability) Then
                     ' Set it to 1 for 100% probability
                     Product.probability = 1
@@ -215,90 +214,101 @@ Public Class YAMLblueprints
     End Sub
 
     Private Sub BuildIndustryBlueprintsTable()
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("blueprintTypeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("maxProductionLimit", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("blueprintTypeID", FieldType.int_type, 0, False, True),
+            New DBTableField("maxProductionLimit", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(industryBlueprints_Table, Table)
 
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("blueprintTypeID")
+        IndexFields = New List(Of String) From {
+            "blueprintTypeID"
+        }
         Call UpdateDB.CreateIndex(industryBlueprints_Table, "IDX_" & industryBlueprints_Table & "_BPID", IndexFields)
 
     End Sub
 
     Private Sub BuildIndustryActivitiesTable()
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("blueprintTypeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("time", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("blueprintTypeID", FieldType.int_type, 0, False, True),
+            New DBTableField("activityID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("time", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(industryActivities_Table, Table)
 
         ' Create index
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("activityID")
+        IndexFields = New List(Of String) From {
+            "activityID"
+        }
         Call UpdateDB.CreateIndex(industryActivities_Table, "IDX_" & industryActivities_Table & "_AID", IndexFields)
 
     End Sub
 
     Private Sub BuildIndustryActivityMaterialsTable()
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("blueprintTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("materialTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("quantity", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("blueprintTypeID", FieldType.int_type, 0, True),
+            New DBTableField("activityID", FieldType.tinyint_type, 0, True),
+            New DBTableField("materialTypeID", FieldType.int_type, 0, True),
+            New DBTableField("quantity", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(industryActivityMaterials_Table, Table)
 
         ' Create index
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("blueprintTypeID")
-        IndexFields.Add("activityID")
+        IndexFields = New List(Of String) From {
+            "blueprintTypeID",
+            "activityID"
+        }
         Call UpdateDB.CreateIndex(industryActivityMaterials_Table, "IDX_" & industryActivityMaterials_Table & "_TID_AID", IndexFields)
 
     End Sub
 
     Private Sub BuildIndustryActivitySkillsTable()
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("blueprintTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("skillID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("level", FieldType.tinyint_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("blueprintTypeID", FieldType.int_type, 0, True),
+            New DBTableField("activityID", FieldType.tinyint_type, 0, True),
+            New DBTableField("skillID", FieldType.int_type, 0, True),
+            New DBTableField("level", FieldType.tinyint_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(industryActivitySkills_Table, Table)
 
         ' Create index
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("blueprintTypeID")
-        IndexFields.Add("activityID")
+        IndexFields = New List(Of String) From {
+            "blueprintTypeID",
+            "activityID"
+        }
         Call UpdateDB.CreateIndex(industryActivitySkills_Table, "IDX_" & industryActivitySkills_Table & "_TID_AID", IndexFields)
 
     End Sub
 
     Private Sub BuildIndustryActivityProductsTable()
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("blueprintTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("productTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("quantity", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("probability", FieldType.real_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("blueprintTypeID", FieldType.int_type, 0, True),
+            New DBTableField("activityID", FieldType.tinyint_type, 0, True),
+            New DBTableField("productTypeID", FieldType.int_type, 0, True),
+            New DBTableField("quantity", FieldType.int_type, 0, True),
+            New DBTableField("probability", FieldType.real_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(industryActivityProducts_Table, Table)
 
         ' Create index
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("blueprintTypeID")
-        IndexFields.Add("activityID")
+        IndexFields = New List(Of String) From {
+            "blueprintTypeID",
+            "activityID"
+        }
         Call UpdateDB.CreateIndex(industryActivityProducts_Table, "IDX_" & industryActivityProducts_Table & "_TID_AID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("productTypeID")
+        IndexFields = New List(Of String) From {
+            "productTypeID"
+        }
         Call UpdateDB.CreateIndex(industryActivityProducts_Table, "IDX_" & industryActivityProducts_Table & "_PTID", IndexFields)
 
     End Sub

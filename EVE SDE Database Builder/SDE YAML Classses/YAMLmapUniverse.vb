@@ -22,29 +22,28 @@ Public Class YAMLmapUniverse
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of mapUniverse)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("universeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("universeName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("x", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("y", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("z", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("x_Min", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("x_Max", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("y_Min", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("y_Max", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("z_Min", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("z_Max", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("radius", FieldType.real_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("universeID", FieldType.int_type, 0, False, True),
+            New DBTableField("universeName", FieldType.varchar_type, 100, True),
+            New DBTableField("x", FieldType.real_type, 0, True),
+            New DBTableField("y", FieldType.real_type, 0, True),
+            New DBTableField("z", FieldType.real_type, 0, True),
+            New DBTableField("x_Min", FieldType.real_type, 0, True),
+            New DBTableField("x_Max", FieldType.real_type, 0, True),
+            New DBTableField("y_Min", FieldType.real_type, 0, True),
+            New DBTableField("y_Max", FieldType.real_type, 0, True),
+            New DBTableField("z_Min", FieldType.real_type, 0, True),
+            New DBTableField("z_Max", FieldType.real_type, 0, True),
+            New DBTableField("radius", FieldType.real_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -67,21 +66,21 @@ Public Class YAMLmapUniverse
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("universeID", DataField.universeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("universeName", DataField.universeName, FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("x_Min", DataField.xMin, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("x_Max", DataField.xMax, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("y_Min", DataField.yMin, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("y_Max", DataField.yMax, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("z_Min", DataField.zMin, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("z_Max", DataField.zMax, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("radius", DataField.radius, FieldType.real_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("universeID", DataField.universeID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("universeName", DataField.universeName, FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("x_Min", DataField.xMin, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("x_Max", DataField.xMax, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("y_Min", DataField.yMin, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("y_Max", DataField.yMax, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("z_Min", DataField.zMin, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("z_Max", DataField.zMax, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("radius", DataField.radius, FieldType.real_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

@@ -15,7 +15,7 @@ Public Class ImportLanguage
     Private Const CHINESE As String = "zh"
     Private Const KOREAN As String = "ko"
 
-    Private SelectedLanguageCode As String
+    Private ReadOnly SelectedLanguageCode As String
 
     Public Sub New(SentCode As LanguageCode)
 
@@ -126,7 +126,7 @@ Public Class ImportLanguage
     ''' <param name="Code">Enumeraged Language Code</param>
     ''' <returns>String language code</returns>
     Private Function GetLanguageStringCode(Code As LanguageCode) As String
-        Dim ReturnCode As String = ""
+        Dim ReturnCode As String
 
         Select Case Code
             Case LanguageCode.English

@@ -28,27 +28,29 @@ Public Class YAMLagentsinSpace
         Dim YAMLRecords As New Dictionary(Of Long, agentInSpace)
         Dim DataFields As List(Of DBField)
         Dim IndexFields As List(Of String)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("agentID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("dungeonID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("spawnPointID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("agentID", FieldType.int_type, 0, False, True),
+            New DBTableField("dungeonID", FieldType.int_type, 0, True),
+            New DBTableField("solarSystemID", FieldType.int_type, 0, True),
+            New DBTableField("spawnPointID", FieldType.int_type, 0, True),
+            New DBTableField("typeID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' Create indexes
-        IndexFields = New List(Of String)
-        IndexFields.Add("agentID")
+        IndexFields = New List(Of String) From {
+            "agentID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_AID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("solarSystemID")
+        IndexFields = New List(Of String) From {
+            "solarSystemID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_SSID", IndexFields)
 
         ' See if we only want to build the table and indexes

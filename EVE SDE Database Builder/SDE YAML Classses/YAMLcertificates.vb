@@ -31,9 +31,8 @@ Public Class YAMLcertificates
 
         Dim YAMLRecords As New Dictionary(Of Long, certificate)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build all the tables to insert certificate data into. This includes the following tables:
         ' - crtCertificates
@@ -94,51 +93,56 @@ Public Class YAMLcertificates
     End Sub
 
     Private Sub BuildCertificatesTable()
-
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("certificateID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("groupID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("name", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("description", FieldType.text_type, MaxFieldLen, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("certificateID", FieldType.int_type, 0, False, True),
+            New DBTableField("groupID", FieldType.int_type, 0, True),
+            New DBTableField("name", FieldType.varchar_type, 100, True),
+            New DBTableField("description", FieldType.text_type, MaxFieldLen, True)
+        }
 
         Call UpdateDB.CreateTable(crtCertificates_Table, Table)
 
     End Sub
 
     Private Sub BuildCertificateSkillsTable()
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("certificateID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("masteryLevel", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("masteryText", FieldType.varchar_type, 10, True))
-        Table.Add(New DBTableField("skillTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("requiredSkillLevel", FieldType.tinyint_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("certificateID", FieldType.int_type, 0, True),
+            New DBTableField("masteryLevel", FieldType.tinyint_type, 0, True),
+            New DBTableField("masteryText", FieldType.varchar_type, 10, True),
+            New DBTableField("skillTypeID", FieldType.int_type, 0, True),
+            New DBTableField("requiredSkillLevel", FieldType.tinyint_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(crtCertificateSkills_Table, Table)
 
         ' Create index
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("certificateID")
+        IndexFields = New List(Of String) From {
+            "certificateID"
+        }
         Call UpdateDB.CreateIndex(crtCertificateSkills_Table, "IDX_" & crtCertificateSkills_Table & "_CID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("skillTypeID")
+        IndexFields = New List(Of String) From {
+            "skillTypeID"
+        }
         Call UpdateDB.CreateIndex(crtCertificateSkills_Table, "IDX_" & crtCertificateSkills_Table & "_SID", IndexFields)
 
     End Sub
 
     Private Sub BuildCertificateRecTypesTable()
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("certificateID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("certificateID", FieldType.int_type, 0, True),
+            New DBTableField("typeID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(crtRecommendedTypes_Table, Table)
 
         ' Create index
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("typeID")
-        IndexFields.Add("certificateID")
+        IndexFields = New List(Of String) From {
+            "typeID",
+            "certificateID"
+        }
         Call UpdateDB.CreateIndex(crtRecommendedTypes_Table, "IDX_" & crtRecommendedTypes_Table & "_TID_CID", IndexFields)
 
     End Sub
@@ -156,8 +160,9 @@ Public Class YAMLcertificates
                 With Skill.Value
                     ' Build the insert list for certificate skills
                     For i = 0 To 4 ' 5 loops for the masteries
-                        DataFields = New List(Of DBField)
-                        DataFields.Add(UpdateDB.BuildDatabaseField("certificateID", CertID, FieldType.int_type))
+                        DataFields = New List(Of DBField) From {
+                            UpdateDB.BuildDatabaseField("certificateID", CertID, FieldType.int_type)
+                        }
                         SkillTypeID = Skill.Key
                         MasteryLevel = i + 1
                         MasteryText = ""
@@ -202,11 +207,11 @@ Public Class YAMLcertificates
 
         If Not IsNothing(TypeList) Then
             For Each recType In TypeList
-                DataFields = New List(Of DBField)
-
                 ' Build the insert list for recomended types
-                DataFields.Add(UpdateDB.BuildDatabaseField("certificateID", CertID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("typeID", recType, FieldType.int_type))
+                DataFields = New List(Of DBField) From {
+                    UpdateDB.BuildDatabaseField("certificateID", CertID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("typeID", recType, FieldType.int_type)
+                }
 
                 Call UpdateDB.InsertRecord(crtRecommendedTypes_Table, DataFields)
             Next

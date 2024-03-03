@@ -22,19 +22,18 @@ Public Class YAMLstaOperationServices
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of staOperationService)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("operationID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("serviceID", FieldType.int_type, 0, False, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("operationID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("serviceID", FieldType.int_type, 0, False, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -57,11 +56,11 @@ Public Class YAMLstaOperationServices
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("operationID", DataField.operationID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("serviceID", DataField.serviceID, FieldType.int_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("operationID", DataField.operationID, FieldType.tinyint_type),
+                UpdateDB.BuildDatabaseField("serviceID", DataField.serviceID, FieldType.int_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

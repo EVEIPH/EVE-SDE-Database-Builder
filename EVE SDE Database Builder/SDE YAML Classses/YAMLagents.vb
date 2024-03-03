@@ -28,29 +28,31 @@ Public Class YAMLagents
         Dim YAMLRecords As New Dictionary(Of Long, agtAgent)
         Dim DataFields As List(Of DBField)
         Dim IndexFields As List(Of String)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("agentID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("divisionID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("locationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("level", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("agentTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("isLocator", FieldType.bit_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("agentID", FieldType.int_type, 0, False, True),
+            New DBTableField("divisionID", FieldType.tinyint_type, 0, True),
+            New DBTableField("corporationID", FieldType.int_type, 0, True),
+            New DBTableField("locationID", FieldType.int_type, 0, True),
+            New DBTableField("level", FieldType.tinyint_type, 0, True),
+            New DBTableField("agentTypeID", FieldType.int_type, 0, True),
+            New DBTableField("isLocator", FieldType.bit_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' Create indexes
-        IndexFields = New List(Of String)
-        IndexFields.Add("corporationID")
+        IndexFields = New List(Of String) From {
+            "corporationID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_CID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("locationID")
+        IndexFields = New List(Of String) From {
+            "locationID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_LID", IndexFields)
 
         ' See if we only want to build the table and indexes

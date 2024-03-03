@@ -11,7 +11,7 @@ Public Class ESI
     ''' <returns>Returns the name if found or empty string if not</returns>
     Public Function GetItemName(ByVal ItemID As Integer) As String
         Dim PublicData As String
-        Dim ESIData As New List(Of ESINameData)
+        Dim ESIData As List(Of ESINameData)
 
         PublicData = GetPublicData("https://esi.evetech.net/latest/" & "universe/names/" & "?datasource=tranquility", "[" & CStr(ItemID) & "]")
 
@@ -35,9 +35,9 @@ Public Class ESI
     Public Function GetPublicESIData(ByVal URL As String, ByRef CacheDate As Date, Optional BodyData As String = "") As String
         Dim Response As String = ""
         Dim WC As New WebClient
-        Dim myWebHeaderCollection As New WebHeaderCollection
-        Dim Expires As String = Nothing
-        Dim Pages As Integer = Nothing
+        Dim myWebHeaderCollection As WebHeaderCollection
+        Dim Expires As String
+        Dim Pages As Integer
 
         Try
 
@@ -106,11 +106,7 @@ Public Class ESI
     ''' <returns>Byte Array of response or nothing if call fails</returns>
     Private Function GetPublicData(ByVal URL As String, Optional BodyData As String = "") As String
         Dim Response As String = ""
-        Dim WC As New WebClient
-        Dim ErrorCode As Integer = 0
-        Dim ErrorResponse As String = ""
-
-        WC.Proxy = Nothing
+        Dim WC As New WebClient With {.Proxy = Nothing}
 
         Try
 

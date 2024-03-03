@@ -23,66 +23,71 @@ Public Class YAMLstaStations
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of staStation)
         Dim DataFields As List(Of DBField)
         Dim IndexFields As List(Of String)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' ESI
-        Dim StructureData As String = ""
+        Dim StructureData As String
         Dim StationOutput As ESIStationData
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("stationID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("security", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("dockingCostPerVolume", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("maxShipVolumeDockable", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("officeRentalCost", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("operationID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("stationTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("constellationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("regionID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("stationName", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("x", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("y", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("z", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("reprocessingEfficiency", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("reprocessingStationsTake", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("reprocessingHangarFlag", FieldType.tinyint_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("stationID", FieldType.int_type, 0, False, True),
+            New DBTableField("security", FieldType.real_type, 0, True),
+            New DBTableField("dockingCostPerVolume", FieldType.real_type, 0, True),
+            New DBTableField("maxShipVolumeDockable", FieldType.real_type, 0, True),
+            New DBTableField("officeRentalCost", FieldType.int_type, 0, True),
+            New DBTableField("operationID", FieldType.tinyint_type, 0, True),
+            New DBTableField("stationTypeID", FieldType.int_type, 0, True),
+            New DBTableField("corporationID", FieldType.int_type, 0, True),
+            New DBTableField("solarSystemID", FieldType.int_type, 0, True),
+            New DBTableField("constellationID", FieldType.int_type, 0, True),
+            New DBTableField("regionID", FieldType.int_type, 0, True),
+            New DBTableField("stationName", FieldType.nvarchar_type, 100, True),
+            New DBTableField("x", FieldType.real_type, 0, True),
+            New DBTableField("y", FieldType.real_type, 0, True),
+            New DBTableField("z", FieldType.real_type, 0, True),
+            New DBTableField("reprocessingEfficiency", FieldType.real_type, 0, True),
+            New DBTableField("reprocessingStationsTake", FieldType.real_type, 0, True),
+            New DBTableField("reprocessingHangarFlag", FieldType.tinyint_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' Create indexes
-        IndexFields = New List(Of String)
-        IndexFields.Add("regionID")
+        IndexFields = New List(Of String) From {
+            "regionID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_RID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("solarSystemID")
+        IndexFields = New List(Of String) From {
+            "solarSystemID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_SSID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("constellationID")
+        IndexFields = New List(Of String) From {
+            "constellationID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_CID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("operationID")
+        IndexFields = New List(Of String) From {
+            "operationID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_OID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("stationTypeID")
+        IndexFields = New List(Of String) From {
+            "stationTypeID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_STID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("corporationID")
+        IndexFields = New List(Of String) From {
+            "corporationID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_CPID", IndexFields)
 
         ' See if we only want to build the table and indexes
@@ -104,20 +109,20 @@ Public Class YAMLstaStations
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("stationID", DataField.stationID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("[security]", DataField.[security], FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("dockingCostPerVolume", DataField.dockingCostPerVolume, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("maxShipVolumeDockable", DataField.maxShipVolumeDockable, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("officeRentalCost", DataField.officeRentalCost, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("operationID", DataField.operationID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("stationTypeID", DataField.stationTypeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", DataField.corporationID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("solarSystemID", DataField.solarSystemID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("constellationID", DataField.constellationID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("regionID", DataField.regionID, FieldType.int_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("stationID", DataField.stationID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("[security]", DataField.[security], FieldType.real_type),
+                UpdateDB.BuildDatabaseField("dockingCostPerVolume", DataField.dockingCostPerVolume, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("maxShipVolumeDockable", DataField.maxShipVolumeDockable, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("officeRentalCost", DataField.officeRentalCost, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("operationID", DataField.operationID, FieldType.tinyint_type),
+                UpdateDB.BuildDatabaseField("stationTypeID", DataField.stationTypeID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("corporationID", DataField.corporationID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("solarSystemID", DataField.solarSystemID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("constellationID", DataField.constellationID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("regionID", DataField.regionID, FieldType.int_type)
+            }
             If DataField.stationName = "ToBeUpdated" Then
                 Dim NameCheckESI As New ESI
                 StructureData = NameCheckESI.GetPublicESIData("https://esi.evetech.net/latest/universe/stations/" & DataField.stationID & "/?datasource=tranquility", Nothing)

@@ -22,28 +22,27 @@ Public Class YAMLstaStationTypes
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of staStationType)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("stationTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("dockEntryX", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("dockEntryY", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("dockEntryZ", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("dockOrientationX", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("dockOrientationY", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("dockOrientationZ", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("operationID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("officeSlots", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("reprocessingEfficiency", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("conquerable", FieldType.bit_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("stationTypeID", FieldType.int_type, 0, True),
+            New DBTableField("dockEntryX", FieldType.real_type, 0, True),
+            New DBTableField("dockEntryY", FieldType.real_type, 0, True),
+            New DBTableField("dockEntryZ", FieldType.real_type, 0, True),
+            New DBTableField("dockOrientationX", FieldType.real_type, 0, True),
+            New DBTableField("dockOrientationY", FieldType.real_type, 0, True),
+            New DBTableField("dockOrientationZ", FieldType.real_type, 0, True),
+            New DBTableField("operationID", FieldType.tinyint_type, 0, True),
+            New DBTableField("officeSlots", FieldType.tinyint_type, 0, True),
+            New DBTableField("reprocessingEfficiency", FieldType.real_type, 0, True),
+            New DBTableField("conquerable", FieldType.bit_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -66,20 +65,20 @@ Public Class YAMLstaStationTypes
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("stationTypeID", DataField.stationTypeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("dockEntryX", DataField.dockEntryX, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("dockEntryY", DataField.dockEntryY, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("dockEntryZ", DataField.dockEntryZ, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("dockOrientationX", DataField.dockOrientationX, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("dockOrientationY", DataField.dockOrientationY, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("dockOrientationZ", DataField.dockOrientationZ, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("operationID", DataField.operationID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("officeSlots", DataField.officeSlots, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("reprocessingEfficiency", DataField.reprocessingEfficiency, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("conquerable", DataField.conquerable, FieldType.bit_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("stationTypeID", DataField.stationTypeID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("dockEntryX", DataField.dockEntryX, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("dockEntryY", DataField.dockEntryY, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("dockEntryZ", DataField.dockEntryZ, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("dockOrientationX", DataField.dockOrientationX, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("dockOrientationY", DataField.dockOrientationY, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("dockOrientationZ", DataField.dockOrientationZ, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("operationID", DataField.operationID, FieldType.tinyint_type),
+                UpdateDB.BuildDatabaseField("officeSlots", DataField.officeSlots, FieldType.tinyint_type),
+                UpdateDB.BuildDatabaseField("reprocessingEfficiency", DataField.reprocessingEfficiency, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("conquerable", DataField.conquerable, FieldType.bit_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

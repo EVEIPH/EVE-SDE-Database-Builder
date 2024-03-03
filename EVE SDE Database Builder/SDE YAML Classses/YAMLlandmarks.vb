@@ -29,22 +29,22 @@ Public Class YAMLlandmarks
 
         Dim YAMLRecords As New Dictionary(Of Long, landmark)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("landmarkID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("descriptionID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("description", FieldType.text_type, -1, True)) ' Field doesn't exist in YAML, but will get from translation table
-        Table.Add(New DBTableField("landmarkNameID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("landmarkName", FieldType.nvarchar_type, 100, True)) ' Field doesn't exist in YAML, but will get from translation table
-        Table.Add(New DBTableField("locationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("x", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("y", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("z", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("landmarkID", FieldType.int_type, 0, False, True),
+            New DBTableField("descriptionID", FieldType.int_type, 0, True),
+            New DBTableField("description", FieldType.text_type, -1, True), ' Field doesn't exist in YAML, but will get from translation table
+            New DBTableField("landmarkNameID", FieldType.int_type, 0, True),
+            New DBTableField("landmarkName", FieldType.nvarchar_type, 100, True), ' Field doesn't exist in YAML, but will get from translation table
+            New DBTableField("locationID", FieldType.int_type, 0, True),
+            New DBTableField("x", FieldType.real_type, 0, True),
+            New DBTableField("y", FieldType.real_type, 0, True),
+            New DBTableField("z", FieldType.real_type, 0, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 

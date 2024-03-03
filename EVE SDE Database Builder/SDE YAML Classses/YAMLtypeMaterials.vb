@@ -22,20 +22,19 @@ Public Class YAMLtypeMaterials
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New Dictionary(Of Long, typeMaterials)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("materialTypeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("quantity", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("typeID", FieldType.int_type, 0, False, True),
+            New DBTableField("materialTypeID", FieldType.int_type, 0, False, True),
+            New DBTableField("quantity", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -61,10 +60,11 @@ Public Class YAMLtypeMaterials
             ' Build the insert list
             Dim typeID As Long = DataField.Key
             For Each record In DataField.Value.materials
-                DataFields = New List(Of DBField)
-                DataFields.Add(UpdateDB.BuildDatabaseField("typeID", typeID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("materialTypeID", record.materialTypeID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("quantity", record.quantity, FieldType.int_type))
+                DataFields = New List(Of DBField) From {
+                    UpdateDB.BuildDatabaseField("typeID", typeID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("materialTypeID", record.materialTypeID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("quantity", record.quantity, FieldType.int_type)
+                }
 
                 Call UpdateDB.InsertRecord(TableName, DataFields)
             Next

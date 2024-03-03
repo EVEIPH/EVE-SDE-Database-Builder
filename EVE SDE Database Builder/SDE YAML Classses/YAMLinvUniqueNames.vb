@@ -22,32 +22,33 @@ Public Class YAMLinvUniqueNames
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of invUniqueName)
         Dim DataFields As List(Of DBField)
         Dim IndexFields As List(Of String)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("itemID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("itemName", FieldType.nvarchar_type, 200, True))
-        Table.Add(New DBTableField("groupID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("itemID", FieldType.int_type, 0, False, True),
+            New DBTableField("itemName", FieldType.nvarchar_type, 200, True),
+            New DBTableField("groupID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' Create indexes
-        IndexFields = New List(Of String)
-        IndexFields.Add("itemName")
+        IndexFields = New List(Of String) From {
+            "itemName"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_IN", IndexFields, True)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("groupID")
-        IndexFields.Add("itemName")
+        IndexFields = New List(Of String) From {
+            "groupID",
+            "itemName"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_GID_IN", IndexFields)
 
         ' See if we only want to build the table and indexes
@@ -69,12 +70,12 @@ Public Class YAMLinvUniqueNames
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("itemID", DataField.itemID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("itemName", DataField.itemName, FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("groupID", DataField.groupID, FieldType.int_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("itemID", DataField.itemID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("itemName", DataField.itemName, FieldType.nvarchar_type),
+                UpdateDB.BuildDatabaseField("groupID", DataField.groupID, FieldType.int_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

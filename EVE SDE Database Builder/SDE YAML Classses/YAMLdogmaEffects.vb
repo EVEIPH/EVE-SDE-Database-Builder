@@ -30,70 +30,70 @@ Public Class YAMLdogmaEffects
 
         Dim YAMLRecords As New Dictionary(Of Long, dogmaEffect)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim TempModInfoDB As New LocalDatabase
 
         ' Build main table
-        Dim Table As New List(Of DBTableField)
-
-        Table.Add(New DBTableField("effectID", FieldType.smallint_type, 0, False, True))
-        Table.Add(New DBTableField("descriptionID", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("disallowAutoRepeat", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("displayNameID", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("dischargeAttributeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("distribution", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("durationAttributeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("effectCategory", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("effectName", FieldType.varchar_type, 400, True))
-        Table.Add(New DBTableField("electronicChance", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("fittingUsageChanceAttributeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("falloffAttributeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("guid", FieldType.varchar_type, 60, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("isAssistance", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("isOffensive", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("isWarpSafe", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("npcUsageChanceAttributeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("npcActivationChanceAttributeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("propulsionChance", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("published", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("rangeAttributeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("resistanceAttributeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("rangeChance", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("sfxName", FieldType.varchar_type, 20, True))
-        Table.Add(New DBTableField("trackingSpeedAttributeID", FieldType.smallint_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("effectID", FieldType.smallint_type, 0, False, True),
+            New DBTableField("descriptionID", FieldType.varchar_type, 1000, True),
+            New DBTableField("disallowAutoRepeat", FieldType.bit_type, 0, True),
+            New DBTableField("displayNameID", FieldType.varchar_type, 1000, True),
+            New DBTableField("dischargeAttributeID", FieldType.smallint_type, 0, True),
+            New DBTableField("distribution", FieldType.varchar_type, 100, True),
+            New DBTableField("durationAttributeID", FieldType.smallint_type, 0, True),
+            New DBTableField("effectCategory", FieldType.varchar_type, 100, True),
+            New DBTableField("effectName", FieldType.varchar_type, 400, True),
+            New DBTableField("electronicChance", FieldType.bit_type, 0, True),
+            New DBTableField("fittingUsageChanceAttributeID", FieldType.smallint_type, 0, True),
+            New DBTableField("falloffAttributeID", FieldType.smallint_type, 0, True),
+            New DBTableField("guid", FieldType.varchar_type, 60, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True),
+            New DBTableField("isAssistance", FieldType.bit_type, 0, True),
+            New DBTableField("isOffensive", FieldType.bit_type, 0, True),
+            New DBTableField("isWarpSafe", FieldType.bit_type, 0, True),
+            New DBTableField("npcUsageChanceAttributeID", FieldType.smallint_type, 0, True),
+            New DBTableField("npcActivationChanceAttributeID", FieldType.smallint_type, 0, True),
+            New DBTableField("propulsionChance", FieldType.bit_type, 0, True),
+            New DBTableField("published", FieldType.bit_type, 0, True),
+            New DBTableField("rangeAttributeID", FieldType.smallint_type, 0, True),
+            New DBTableField("resistanceAttributeID", FieldType.smallint_type, 0, True),
+            New DBTableField("rangeChance", FieldType.bit_type, 0, True),
+            New DBTableField("sfxName", FieldType.varchar_type, 20, True),
+            New DBTableField("trackingSpeedAttributeID", FieldType.smallint_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' Make modifier info table
-        Table = New List(Of DBTableField)
-
-        Table.Add(New DBTableField("effectID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("domain", FieldType.varchar_type, 50, True))
-        Table.Add(New DBTableField("func", FieldType.varchar_type, 50, True))
-        Table.Add(New DBTableField("groupID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("modifiedAttributeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("modifyingAttributeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("operation", FieldType.varchar_type, 50, True))
-        Table.Add(New DBTableField("skillTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("secondaryEffectID", FieldType.smallint_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("effectID", FieldType.smallint_type, 0, True),
+            New DBTableField("domain", FieldType.varchar_type, 50, True),
+            New DBTableField("func", FieldType.varchar_type, 50, True),
+            New DBTableField("groupID", FieldType.int_type, 0, True),
+            New DBTableField("modifiedAttributeID", FieldType.int_type, 0, True),
+            New DBTableField("modifyingAttributeID", FieldType.int_type, 0, True),
+            New DBTableField("operation", FieldType.varchar_type, 50, True),
+            New DBTableField("skillTypeID", FieldType.int_type, 0, True),
+            New DBTableField("secondaryEffectID", FieldType.smallint_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(dogmaEffectsModifierInfoTable, Table)
 
         ' Create unique index on modifier info table
-        Dim IndexFields As New List(Of String)
-        IndexFields.Add("effectID")
-        IndexFields.Add("domain")
-        IndexFields.Add("func")
-        IndexFields.Add("groupID")
-        IndexFields.Add("modifiedAttributeID")
-        IndexFields.Add("modifyingAttributeID")
-        IndexFields.Add("operation")
-        IndexFields.Add("skillTypeID")
-        IndexFields.Add("secondaryEffectID")
+        Dim IndexFields As New List(Of String) From {
+            "effectID",
+            "domain",
+            "func",
+            "groupID",
+            "modifiedAttributeID",
+            "modifyingAttributeID",
+            "operation",
+            "skillTypeID",
+            "secondaryEffectID"
+        }
         Call UpdateDB.CreateIndex(dogmaEffectsModifierInfoTable, "IDX_" & dogmaEffectsModifierInfoTable & "_EID", IndexFields, True)
 
         ' See if we only want to build the table and indexes
@@ -155,19 +155,19 @@ Public Class YAMLdogmaEffects
 
                     If .modifierInfo.Count > 0 Then
                         For Each Record In .modifierInfo
-                            DataFields2 = New List(Of DBField)
+                            DataFields2 = New List(Of DBField) From {
+                                UpdateDB.BuildDatabaseField("effectID", DataField.Key, FieldType.smallint_type),
+                                UpdateDB.BuildDatabaseField("domain", Record.domain, FieldType.varchar_type),
+                                UpdateDB.BuildDatabaseField("func", Record.func, FieldType.varchar_type),
+                                UpdateDB.BuildDatabaseField("groupID", Record.groupID, FieldType.int_type),
+                                UpdateDB.BuildDatabaseField("modifiedAttributeID", Record.modifiedAttributeID, FieldType.int_type),
+                                UpdateDB.BuildDatabaseField("modifyingAttributeID", Record.modifyingAttributeID, FieldType.int_type),
+                                UpdateDB.BuildDatabaseField("operation", Record.operation, FieldType.varchar_type),
+                                UpdateDB.BuildDatabaseField("skillTypeID", Record.skillTypeID, FieldType.int_type),
+                                UpdateDB.BuildDatabaseField("secondaryEffectID", Record.effectID, FieldType.int_type)
+                            }
 
-                            DataFields2.Add(UpdateDB.BuildDatabaseField("effectID", DataField.Key, FieldType.smallint_type))
-                            DataFields2.Add(UpdateDB.BuildDatabaseField("domain", Record.domain, FieldType.varchar_type))
-                            DataFields2.Add(UpdateDB.BuildDatabaseField("func", Record.func, FieldType.varchar_type))
-                            DataFields2.Add(UpdateDB.BuildDatabaseField("groupID", Record.groupID, FieldType.int_type))
-                            DataFields2.Add(UpdateDB.BuildDatabaseField("modifiedAttributeID", Record.modifiedAttributeID, FieldType.int_type))
-                            DataFields2.Add(UpdateDB.BuildDatabaseField("modifyingAttributeID", Record.modifyingAttributeID, FieldType.int_type))
-                            DataFields2.Add(UpdateDB.BuildDatabaseField("operation", Record.operation, FieldType.varchar_type))
-                            DataFields2.Add(UpdateDB.BuildDatabaseField("skillTypeID", Record.skillTypeID, FieldType.int_type))
-                            DataFields2.Add(UpdateDB.BuildDatabaseField("secondaryEffectID", Record.effectID, FieldType.int_type))
-
-                            ' Check for duplicates
+                                ' Check for duplicates
                             If Not RecordinModinfoTable(TempModInfoDB.GetDataTable(dogmaEffectsModifierInfoTable), DataFields2) Then
                                 Call TempModInfoDB.InsertRecord(dogmaEffectsModifierInfoTable, DataFields2)
                                 Call UpdateDB.InsertRecord(dogmaEffectsModifierInfoTable, DataFields2)
@@ -196,7 +196,7 @@ Public Class YAMLdogmaEffects
     Private Function RecordinModinfoTable(ByRef ModInfoTableRef As DataTable, ByVal Record As List(Of DBField)) As Boolean
         Dim SearchRow() As DataRow
         Dim SearchString As String = ""
-        Dim TempFieldValue As String = ""
+        Dim TempFieldValue As String
 
         If ModInfoTableRef.Rows.Count > 0 Then
 

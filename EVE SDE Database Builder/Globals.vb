@@ -157,7 +157,7 @@ Public Module Globals
             ' No more bytes to read
             If bytesread = 0 Then Exit Do
 
-            nRead = nRead + bytesread
+            nRead += bytesread
             ' Update progress 
             If Not IsNothing(PGBar) Then
                 PGBar.Value = (nRead * 100) / FileSize

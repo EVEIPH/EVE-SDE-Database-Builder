@@ -34,31 +34,33 @@ Public Class YAMLeveGrpahics
         Dim YAMLRecords As New Dictionary(Of Long, eveGraphic)
         Dim DataFields As List(Of DBField)
         Dim DataFields2 As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build main table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("graphicFile", FieldType.varchar_type, 150, True))
-        Table.Add(New DBTableField("description", FieldType.text_type, MaxFieldLen, True))
-        Table.Add(New DBTableField("sofFactionName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("sofHullName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("sofRaceName", FieldType.varchar_type, 100, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("graphicID", FieldType.int_type, 0, False, True),
+            New DBTableField("graphicFile", FieldType.varchar_type, 150, True),
+            New DBTableField("description", FieldType.text_type, MaxFieldLen, True),
+            New DBTableField("sofFactionName", FieldType.varchar_type, 100, True),
+            New DBTableField("sofHullName", FieldType.varchar_type, 100, True),
+            New DBTableField("sofRaceName", FieldType.varchar_type, 100, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' Add minor table for sofLayout change in uprising
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, False, False))
-        Table.Add(New DBTableField("sofLayout", FieldType.varchar_type, 100, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("graphicID", FieldType.int_type, 0, False, False),
+            New DBTableField("sofLayout", FieldType.varchar_type, 100, True)
+        }
 
         Call UpdateDB.CreateTable(eveGraphicssofLayouts, Table)
 
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("graphicID")
+        IndexFields = New List(Of String) From {
+            "graphicID"
+        }
         Call UpdateDB.CreateIndex(eveGraphicssofLayouts, "IDX_" & eveGraphicssofLayouts & "_GID", IndexFields)
 
         ' Set up the tables for icon info
@@ -96,9 +98,10 @@ Public Class YAMLeveGrpahics
 
                 If Not IsNothing(.sofLayout) Then
                     For Each sofLayout In .sofLayout
-                        DataFields2 = New List(Of DBField)
-                        DataFields2.Add(UpdateDB.BuildDatabaseField("graphicID", DataField.Key, FieldType.int_type))
-                        DataFields2.Add(UpdateDB.BuildDatabaseField("sofLayout", sofLayout, FieldType.varchar_type))
+                        DataFields2 = New List(Of DBField) From {
+                            UpdateDB.BuildDatabaseField("graphicID", DataField.Key, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("sofLayout", sofLayout, FieldType.varchar_type)
+                        }
                         Call UpdateDB.InsertRecord(eveGraphicssofLayouts, DataFields2)
                     Next
                 End If
@@ -125,27 +128,29 @@ Public Class YAMLeveGrpahics
         Dim DataFields As List(Of DBField)
 
         If Not IsNothing(TypeList) Then
-            DataFields = New List(Of DBField)
-
             ' Build the insert list for recomended types
-            DataFields.Add(UpdateDB.BuildDatabaseField("graphicID", graphicID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("folder", TypeList.folder, FieldType.varchar_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("graphicID", graphicID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("folder", TypeList.folder, FieldType.varchar_type)
+            }
             Call UpdateDB.InsertRecord(eveGraphicsIconInfoTableName, DataFields)
 
             If Not IsNothing(TypeList.backgrounds) Then
                 For Each BG In TypeList.backgrounds
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("graphicID", graphicID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("backgroundProperty", BG, FieldType.varchar_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("graphicID", graphicID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("backgroundProperty", BG, FieldType.varchar_type)
+                    }
                     Call UpdateDB.InsertRecord(eveGraphicsIconBackgroundsTableName, DataFields)
                 Next
             End If
 
             If Not IsNothing(TypeList.foregrounds) Then
                 For Each FG In TypeList.foregrounds
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("graphicID", graphicID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("foregroundProperty", FG, FieldType.varchar_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("graphicID", graphicID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("foregroundProperty", FG, FieldType.varchar_type)
+                    }
                     Call UpdateDB.InsertRecord(eveGraphicsIconForegroundsTableName, DataFields)
                 Next
             End If
@@ -154,36 +159,41 @@ Public Class YAMLeveGrpahics
     End Sub
 
     Private Sub BuildIconInfoTables()
-
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("folder", FieldType.varchar_type, 100, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("graphicID", FieldType.int_type, 0, True),
+            New DBTableField("folder", FieldType.varchar_type, 100, True)
+        }
 
         Call UpdateDB.CreateTable(eveGraphicsIconInfoTableName, Table)
 
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("graphicID")
+        IndexFields = New List(Of String) From {
+            "graphicID"
+        }
         Call UpdateDB.CreateIndex(eveGraphicsIconInfoTableName, "IDX_" & eveGraphicsIconInfoTableName & "_GID", IndexFields)
 
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("backgroundProperty", FieldType.varchar_type, 50, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("graphicID", FieldType.int_type, 0, True),
+            New DBTableField("backgroundProperty", FieldType.varchar_type, 50, True)
+        }
 
         Call UpdateDB.CreateTable(eveGraphicsIconBackgroundsTableName, Table)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("graphicID")
+        IndexFields = New List(Of String) From {
+            "graphicID"
+        }
         Call UpdateDB.CreateIndex(eveGraphicsIconBackgroundsTableName, "IDX_" & eveGraphicsIconBackgroundsTableName & "_GID", IndexFields)
 
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("foregroundProperty", FieldType.varchar_type, 50, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("graphicID", FieldType.int_type, 0, True),
+            New DBTableField("foregroundProperty", FieldType.varchar_type, 50, True)
+        }
 
         Call UpdateDB.CreateTable(eveGraphicsIconForegroundsTableName, Table)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("graphicID")
+        IndexFields = New List(Of String) From {
+            "graphicID"
+        }
         Call UpdateDB.CreateIndex(eveGraphicsIconForegroundsTableName, "IDX_" & eveGraphicsIconForegroundsTableName & "_GID", IndexFields)
 
     End Sub

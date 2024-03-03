@@ -5,7 +5,7 @@
 ''' </summary>
 Public Class LocalDatabase
 
-    Private DataTablesList As New ConcurrentQueue(Of DataTable)
+    Private ReadOnly DataTablesList As New ConcurrentQueue(Of DataTable)
 
     Public Function GetTables() As List(Of DataTable)
         Return DataTablesList.ToList
@@ -18,10 +18,10 @@ Public Class LocalDatabase
     ''' <param name="SentRecord">Record to insert as a DB Field type</param>
     Public Sub InsertRecord(ByVal TableNameRef As String, ByVal SentRecord As List(Of DBField))
         ' Save data in new data table
-        Dim DT As New DataTable
+        Dim DT As DataTable
         Dim DC As DataColumn
         Dim FT As Type
-        Dim TempRecordFieldValue As String = ""
+        Dim TempRecordFieldValue As String
         Dim Data(SentRecord.Count - 1) As Object
 
         DT = GetDataTable(TableNameRef)
@@ -41,8 +41,10 @@ Public Class LocalDatabase
                     Case Else
                         FT = GetType(Object)
                 End Select
-                DC = New DataColumn(SentRecord(i).FieldName, FT)
-                DC.AllowDBNull = True
+
+                DC = New DataColumn(SentRecord(i).FieldName, FT) With {
+                    .AllowDBNull = True
+                }
                 DT.Columns.Add(DC)
             Next
             ' Insert the table in the list for reference
@@ -96,9 +98,7 @@ Public Class LocalDatabase
     ''' <returns>Reference to the DataTable for use</returns>
     Public Function GetDataTable(ByVal TableNameRef As String) As DataTable
         Dim ReturnTable As DataTable
-        Dim TempList As New List(Of DataTable)
-
-        TempList = GetTables()
+        Dim TempList As List(Of DataTable) = GetTables()
 
         ' Find the table if it is in the list and return a reference to it
         For Each ReturnTable In TempList

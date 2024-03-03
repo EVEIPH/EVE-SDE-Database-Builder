@@ -27,16 +27,16 @@ Public Class YAMLskinLicenses
 
         Dim YAMLRecords As New Dictionary(Of Long, skinLicense)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("licenseTypeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("duration", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("isSingleUse", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("skinID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("licenseTypeID", FieldType.int_type, 0, False, True),
+            New DBTableField("duration", FieldType.int_type, 0, True),
+            New DBTableField("isSingleUse", FieldType.int_type, 0, True),
+            New DBTableField("skinID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 

@@ -30,30 +30,30 @@ Public Class YAMLdogmaAttributeTypes
 
         Dim YAMLRecords As New Dictionary(Of Long, dogmaAttributeType)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("attributeID", FieldType.smallint_type, 0, False)) ' Dupes ok in uprising expansion
-        Table.Add(New DBTableField("attributeName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("description", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("displayNameID", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("dataType", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("defaultValue", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("published", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("stackable", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("name", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("unitID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("highIsGood", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("categoryID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("tooltipDescriptionID", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("tooltipTitleID", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("maxAttributeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("chargeRechargeTimeID", FieldType.smallint_type, 0, True))
-        Table.Add(New DBTableField("displayWhenZero", FieldType.bit_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("attributeID", FieldType.smallint_type, 0, False), ' Dupes ok in uprising expansion
+            New DBTableField("attributeName", FieldType.varchar_type, 100, True),
+            New DBTableField("description", FieldType.varchar_type, 1000, True),
+            New DBTableField("displayNameID", FieldType.varchar_type, 1000, True),
+            New DBTableField("dataType", FieldType.varchar_type, 100, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True),
+            New DBTableField("defaultValue", FieldType.real_type, 0, True),
+            New DBTableField("published", FieldType.bit_type, 0, True),
+            New DBTableField("stackable", FieldType.bit_type, 0, True),
+            New DBTableField("name", FieldType.varchar_type, 1000, True),
+            New DBTableField("unitID", FieldType.tinyint_type, 0, True),
+            New DBTableField("highIsGood", FieldType.bit_type, 0, True),
+            New DBTableField("categoryID", FieldType.tinyint_type, 0, True),
+            New DBTableField("tooltipDescriptionID", FieldType.varchar_type, 1000, True),
+            New DBTableField("tooltipTitleID", FieldType.varchar_type, 1000, True),
+            New DBTableField("maxAttributeID", FieldType.int_type, 0, True),
+            New DBTableField("chargeRechargeTimeID", FieldType.smallint_type, 0, True),
+            New DBTableField("displayWhenZero", FieldType.bit_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -77,27 +77,27 @@ Public Class YAMLdogmaAttributeTypes
         ' Process Data
         For Each DataField In YAMLRecords
             With DataField.Value
-                DataFields = New List(Of DBField)
-
                 ' Build the insert list
-                DataFields.Add(UpdateDB.BuildDatabaseField("attributeID", .attributeID, FieldType.smallint_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("attributeName", .name, FieldType.varchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("description", .description, FieldType.varchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("displayNameID", NameTranslation.GetLanguageTranslationData(.displayNameID), FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("dataType", .dataType, FieldType.varchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("defaultValue", .defaultValue, FieldType.real_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("published", .published, FieldType.bit_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("stackable", .stackable, FieldType.bit_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("name", .name, FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("unitID", .unitID, FieldType.tinyint_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("highIsGood", .highIsGood, FieldType.bit_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("categoryID", .categoryID, FieldType.tinyint_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("tooltipDescriptionID", NameTranslation.GetLanguageTranslationData(.tooltipDescriptionID), FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("tooltipTitleID", NameTranslation.GetLanguageTranslationData(.tooltipTitleID), FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("maxAttributeID", .maxAttributeID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("chargeRechargeTimeID", .chargeRechargeTimeID, FieldType.smallint_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("displayWhenZero", .displayWhenZero, FieldType.bit_type))
+                DataFields = New List(Of DBField) From {
+                    UpdateDB.BuildDatabaseField("attributeID", .attributeID, FieldType.smallint_type),
+                    UpdateDB.BuildDatabaseField("attributeName", .name, FieldType.varchar_type),
+                    UpdateDB.BuildDatabaseField("description", .description, FieldType.varchar_type),
+                    UpdateDB.BuildDatabaseField("displayNameID", NameTranslation.GetLanguageTranslationData(.displayNameID), FieldType.nvarchar_type),
+                    UpdateDB.BuildDatabaseField("dataType", .dataType, FieldType.varchar_type),
+                    UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("defaultValue", .defaultValue, FieldType.real_type),
+                    UpdateDB.BuildDatabaseField("published", .published, FieldType.bit_type),
+                    UpdateDB.BuildDatabaseField("stackable", .stackable, FieldType.bit_type),
+                    UpdateDB.BuildDatabaseField("name", .name, FieldType.nvarchar_type),
+                    UpdateDB.BuildDatabaseField("unitID", .unitID, FieldType.tinyint_type),
+                    UpdateDB.BuildDatabaseField("highIsGood", .highIsGood, FieldType.bit_type),
+                    UpdateDB.BuildDatabaseField("categoryID", .categoryID, FieldType.tinyint_type),
+                    UpdateDB.BuildDatabaseField("tooltipDescriptionID", NameTranslation.GetLanguageTranslationData(.tooltipDescriptionID), FieldType.nvarchar_type),
+                    UpdateDB.BuildDatabaseField("tooltipTitleID", NameTranslation.GetLanguageTranslationData(.tooltipTitleID), FieldType.nvarchar_type),
+                    UpdateDB.BuildDatabaseField("maxAttributeID", .maxAttributeID, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("chargeRechargeTimeID", .chargeRechargeTimeID, FieldType.smallint_type),
+                    UpdateDB.BuildDatabaseField("displayWhenZero", .displayWhenZero, FieldType.bit_type)
+                }
 
                 Call UpdateDB.InsertRecord(TableName, DataFields)
 
@@ -108,8 +108,9 @@ Public Class YAMLdogmaAttributeTypes
         Next
 
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("attributeID")
+        IndexFields = New List(Of String) From {
+            "attributeID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_AID", IndexFields)
 
         YAMLRecords.Clear()

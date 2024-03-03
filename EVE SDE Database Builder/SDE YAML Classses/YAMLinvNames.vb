@@ -27,20 +27,19 @@ Public Class YAMLinvNames
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of invName)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table unless we just want the data
         If Not Params.ReturnList Then
-            Dim Table As New List(Of DBTableField)
-            Table.Add(New DBTableField("itemID", FieldType.bigint_type, 0, False, True))
-            Table.Add(New DBTableField("itemName", FieldType.nvarchar_type, 200, True))
+            Dim Table As New List(Of DBTableField) From {
+                New DBTableField("itemID", FieldType.bigint_type, 0, False, True),
+                New DBTableField("itemName", FieldType.nvarchar_type, 200, True)
+            }
 
             Call UpdateDB.CreateTable(TableName, Table)
 
@@ -68,11 +67,11 @@ Public Class YAMLinvNames
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("itemID", DataField.itemID, FieldType.bigint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("itemName", DataField.itemName, FieldType.nvarchar_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("itemID", DataField.itemID, FieldType.bigint_type),
+                UpdateDB.BuildDatabaseField("itemName", DataField.itemName, FieldType.nvarchar_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

@@ -79,7 +79,6 @@ Public Class frmUpdaterMain
     Public LocalCulture As New CultureInfo("en-US")
 
     Public Sub New()
-        Dim UserPath As String = ""
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -385,7 +384,7 @@ RevertToOldFileVersions:
         On Error Resume Next
 
         ' If we get here, try to delete everything we downloaded and rename any files saved as "Old" to original names
-        ProgramErrorLocation = ProgramErrorLocation & " - Reverted to Old file versions"
+        ProgramErrorLocation &= " - Reverted to Old file versions"
         ' Save the error
         ThrownError = Err.Description
 
@@ -504,10 +503,11 @@ RevertToOldFileVersions:
         End If
 
         ' Shell to program
-        Dim ProcInfo As New ProcessStartInfo
-        ProcInfo.FileName = SHELL_PATH
-        ProcInfo.UseShellExecute = True
-        ProcInfo.WindowStyle = ProcessWindowStyle.Normal
+        Dim ProcInfo As New ProcessStartInfo With {
+            .FileName = SHELL_PATH,
+            .UseShellExecute = True,
+            .WindowStyle = ProcessWindowStyle.Normal
+        }
 
         Process.Start(SHELL_PATH)
 

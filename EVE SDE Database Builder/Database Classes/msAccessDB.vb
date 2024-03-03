@@ -9,10 +9,10 @@ Imports System.Collections.Concurrent
 Public Class msAccessDB
     Inherits DBFilesBase
 
-    Private DB As Database
-    Private DBE As DBEngine
+    Private ReadOnly DB As Database
+    Private ReadOnly DBE As DBEngine
 
-    Private BulkInsertTablesData As ConcurrentQueue(Of BulkInsertData)
+    Private ReadOnly BulkInsertTablesData As ConcurrentQueue(Of BulkInsertData)
 
     ' For inserting bulk data
     Private Structure BulkInsertData
@@ -139,7 +139,7 @@ Public Class msAccessDB
     ''' <param name="TableName">Name of the table to create.</param>
     ''' <param name="TableStructure">List of table fields that define the table.</param>
     Public Sub CreateTable(ByVal TableName As String, ByVal TableStructure As List(Of DBTableField))
-        Dim SQL As String = ""
+        Dim SQL As String
         Dim FieldLength As String = "0" ' For char types
         Dim PKFields As New List(Of String)
         Dim SchemaString As String = ""
@@ -274,7 +274,7 @@ Public Class msAccessDB
     ''' <param name="Clustered">Optional - If the index is clustered or unclustered (not used).</param>
     Public Sub CreateIndex(ByVal TableName As String, ByVal IndexName As String, IndexFields As List(Of String),
                            Optional Unique As Boolean = False, Optional Clustered As Boolean = False)
-        Dim SQL As String = ""
+        Dim SQL As String
 
         SQL = "CREATE" & SPACE
 

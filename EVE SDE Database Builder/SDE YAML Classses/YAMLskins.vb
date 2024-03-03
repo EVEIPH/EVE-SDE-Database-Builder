@@ -28,27 +28,28 @@ Public Class YAMLskins
         Dim YAMLRecords As New Dictionary(Of Long, skin)
         Dim DataFields As List(Of DBField)
         Dim IndexFields As List(Of String)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("skinID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("skinDescription", FieldType.text_type, MaxFieldLen, True))
-        Table.Add(New DBTableField("internalName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("skinMaterialID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("isStructureSkin", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("allowCCPDevs", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("visibleSerenity", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("visibleTranquility", FieldType.bit_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("skinID", FieldType.int_type, 0, True),
+            New DBTableField("skinDescription", FieldType.text_type, MaxFieldLen, True),
+            New DBTableField("internalName", FieldType.varchar_type, 100, True),
+            New DBTableField("skinMaterialID", FieldType.int_type, 0, True),
+            New DBTableField("isStructureSkin", FieldType.int_type, 0, True),
+            New DBTableField("typeID", FieldType.int_type, 0, True),
+            New DBTableField("allowCCPDevs", FieldType.bit_type, 0, True),
+            New DBTableField("visibleSerenity", FieldType.bit_type, 0, True),
+            New DBTableField("visibleTranquility", FieldType.bit_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' Create indexes
-        IndexFields = New List(Of String)
-        IndexFields.Add("skinID")
+        IndexFields = New List(Of String) From {
+            "skinID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_SID", IndexFields)
 
         ' See if we only want to build the table and indexes

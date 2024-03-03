@@ -22,21 +22,20 @@ Public Class YAMLinvTypeReactions
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of invTypeReaction)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("reactionTypeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("input", FieldType.bit_type, 0, False, True))
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("quantity", FieldType.smallint_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("reactionTypeID", FieldType.int_type, 0, False, True),
+            New DBTableField("input", FieldType.bit_type, 0, False, True),
+            New DBTableField("typeID", FieldType.int_type, 0, False, True),
+            New DBTableField("quantity", FieldType.smallint_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -59,13 +58,13 @@ Public Class YAMLinvTypeReactions
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("reactionTypeID", DataField.reactionTypeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("input", DataField.input, FieldType.bit_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.typeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("quantity", DataField.quantity, FieldType.smallint_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("reactionTypeID", DataField.reactionTypeID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("input", DataField.input, FieldType.bit_type),
+                UpdateDB.BuildDatabaseField("typeID", DataField.typeID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("quantity", DataField.quantity, FieldType.smallint_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

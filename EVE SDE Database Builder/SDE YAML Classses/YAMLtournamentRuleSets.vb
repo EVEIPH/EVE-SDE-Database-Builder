@@ -33,9 +33,8 @@ Public Class YAMLtournamentRuleSets
 
         Dim YAMLRecords As New List(Of tournamentRuleSet)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build all the tables to insert tournament rule set data into. This includes the following tables:
         ' - tntTournaments
@@ -98,12 +97,12 @@ Public Class YAMLtournamentRuleSets
     End Sub
 
     Private Sub BuildTournamentsTable()
-        Dim Table As New List(Of DBTableField)
-
-        Table.Add(New DBTableField("ruleSetID", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("ruleSetName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("maximumPointsMatch", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("maximumPilotsMatch", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("ruleSetID", FieldType.varchar_type, 100, True),
+            New DBTableField("ruleSetName", FieldType.varchar_type, 100, True),
+            New DBTableField("maximumPointsMatch", FieldType.int_type, 0, True),
+            New DBTableField("maximumPilotsMatch", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(tntTournaments_Table, Table)
 
@@ -120,8 +119,9 @@ Public Class YAMLtournamentRuleSets
         Call UpdateDB.CreateTable(tntTournamentTypePoints_Table, Table)
 
         ' Create index
-        IndexFields = New List(Of String)
-        IndexFields.Add("ruleSetID")
+        IndexFields = New List(Of String) From {
+            "ruleSetID"
+        }
         Call UpdateDB.CreateIndex(tntTournamentTypePoints_Table, "IDX_" & tntTournamentTypePoints_Table & "_RSID", IndexFields)
 
     End Sub
@@ -137,8 +137,9 @@ Public Class YAMLtournamentRuleSets
         Call UpdateDB.CreateTable(tntTournamentGroupPoints_Table, Table)
 
         ' Create index
-        IndexFields = New List(Of String)
-        IndexFields.Add("ruleSetID")
+        IndexFields = New List(Of String) From {
+            "ruleSetID"
+        }
         Call UpdateDB.CreateIndex(tntTournamentGroupPoints_Table, "IDX_" & tntTournamentGroupPoints_Table & "_RSID", IndexFields)
 
     End Sub
@@ -153,8 +154,9 @@ Public Class YAMLtournamentRuleSets
         Call UpdateDB.CreateTable(tntTournamentBannedTypes_Table, Table)
 
         ' Create index
-        IndexFields = New List(Of String)
-        IndexFields.Add("ruleSetID")
+        IndexFields = New List(Of String) From {
+            "ruleSetID"
+        }
         Call UpdateDB.CreateIndex(tntTournamentBannedTypes_Table, "IDX_" & tntTournamentBannedTypes_Table & "_RSID", IndexFields)
 
     End Sub
@@ -169,57 +171,62 @@ Public Class YAMLtournamentRuleSets
         Call UpdateDB.CreateTable(tntTournamentBannedGroups_Table, Table)
 
         ' Create index
-        IndexFields = New List(Of String)
-        IndexFields.Add("ruleSetID")
+        IndexFields = New List(Of String) From {
+            "ruleSetID"
+        }
         Call UpdateDB.CreateIndex(tntTournamentBannedGroups_Table, "IDX_" & tntTournamentBannedGroups_Table & "_RSID", IndexFields)
 
     End Sub
 
     Private Sub InsertTournamentGroupTypePoints(ByVal RuleSetID As String, ByVal TypePoints As tournamentRuleSet.tournamentPoints)
-        Dim DataFields As New List(Of DBField)
+        Dim DataFields As List(Of DBField)
 
         ' Insert groups first
         For Each record In TypePoints.groups
-            DataFields = New List(Of DBField)
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("ruleSetID", RuleSetID, FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("groupID", record.groupID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("points", record.points, FieldType.int_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("ruleSetID", RuleSetID, FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("groupID", record.groupID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("points", record.points, FieldType.int_type)
+            }
 
             Call UpdateDB.InsertRecord(tntTournamentGroupPoints_Table, DataFields)
         Next
 
         ' Now types
         For Each record In TypePoints.types
-            DataFields = New List(Of DBField)
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("ruleSetID", RuleSetID, FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("typeID", record.typeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("points", record.points, FieldType.int_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("ruleSetID", RuleSetID, FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("typeID", record.typeID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("points", record.points, FieldType.int_type)
+            }
 
             Call UpdateDB.InsertRecord(tntTournamentTypePoints_Table, DataFields)
         Next
     End Sub
 
     Private Sub InsertTournamentBannedGroupsTypes(ByVal RuleSetID As String, ByVal BannedGTs As tournamentRuleSet.bannedGroupsTypes)
-        Dim DataFields As New List(Of DBField)
+        Dim DataFields As List(Of DBField)
 
         ' Insert groups first
         For Each GroupID In BannedGTs.groups
-            DataFields = New List(Of DBField)
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("ruleSetID", RuleSetID, FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("groupID", GroupID, FieldType.int_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("ruleSetID", RuleSetID, FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("groupID", GroupID, FieldType.int_type)
+            }
 
             Call UpdateDB.InsertRecord(tntTournamentBannedGroups_Table, DataFields)
         Next
 
         ' Now types
         For Each TypeID In BannedGTs.types
-            DataFields = New List(Of DBField)
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("ruleSetID", RuleSetID, FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("ruleSetID", RuleSetID, FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type)
+            }
 
             Call UpdateDB.InsertRecord(tntTournamentBannedTypes_Table, DataFields)
         Next

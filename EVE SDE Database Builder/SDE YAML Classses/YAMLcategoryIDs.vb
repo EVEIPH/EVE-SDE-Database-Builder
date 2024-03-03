@@ -31,22 +31,24 @@ Public Class YAMLcategoryIDs
         Dim DataFields As List(Of DBField)
         Dim CategoryName As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("categoryID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("categoryName", FieldType.nvarchar_type, 500, True))
-        Table.Add(New DBTableField("published", FieldType.bit_type, -1, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("categoryID", FieldType.int_type, 0, False, True),
+            New DBTableField("categoryName", FieldType.nvarchar_type, 500, True),
+            New DBTableField("published", FieldType.bit_type, -1, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("categoryID")
+        IndexFields = New List(Of String) From {
+            "categoryID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_CID", IndexFields)
 
         ' See if we only want to build the table and indexes

@@ -22,26 +22,25 @@ Public Class YAMLramAssemblyLineTypes
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of ramAssemblyLineType)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("assemblyLineTypeID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("assemblyLineTypeName", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 1000, True))
-        Table.Add(New DBTableField("baseTimeMultiplier", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("baseMaterialMultiplier", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("baseCostMultiplier", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("volume", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("minCostPerHour", FieldType.real_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("assemblyLineTypeID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("assemblyLineTypeName", FieldType.nvarchar_type, 100, True),
+            New DBTableField("description", FieldType.nvarchar_type, 1000, True),
+            New DBTableField("baseTimeMultiplier", FieldType.real_type, 0, True),
+            New DBTableField("baseMaterialMultiplier", FieldType.real_type, 0, True),
+            New DBTableField("baseCostMultiplier", FieldType.real_type, 0, True),
+            New DBTableField("volume", FieldType.real_type, 0, True),
+            New DBTableField("activityID", FieldType.tinyint_type, 0, True),
+            New DBTableField("minCostPerHour", FieldType.real_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -64,18 +63,18 @@ Public Class YAMLramAssemblyLineTypes
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("assemblyLineTypeID", DataField.assemblyLineTypeID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("assemblyLineTypeName", DataField.assemblyLineTypeName, FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("description", DataField.description, FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("baseTimeMultiplier", DataField.baseTimeMultiplier, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("baseMaterialMultiplier", DataField.baseMaterialMultiplier, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("baseCostMultiplier", DataField.baseCostMultiplier, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("volume", DataField.volume, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("activityID", DataField.activityID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("minCostPerHour", DataField.minCostPerHour, FieldType.real_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("assemblyLineTypeID", DataField.assemblyLineTypeID, FieldType.tinyint_type),
+                UpdateDB.BuildDatabaseField("assemblyLineTypeName", DataField.assemblyLineTypeName, FieldType.nvarchar_type),
+                UpdateDB.BuildDatabaseField("description", DataField.description, FieldType.nvarchar_type),
+                UpdateDB.BuildDatabaseField("baseTimeMultiplier", DataField.baseTimeMultiplier, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("baseMaterialMultiplier", DataField.baseMaterialMultiplier, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("baseCostMultiplier", DataField.baseCostMultiplier, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("volume", DataField.volume, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("activityID", DataField.activityID, FieldType.tinyint_type),
+                UpdateDB.BuildDatabaseField("minCostPerHour", DataField.minCostPerHour, FieldType.real_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

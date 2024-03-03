@@ -22,22 +22,21 @@ Public Class YAMLwarCombatZones
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.Instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of warCombatZone)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("combatZoneID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("combatZoneName", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("factionID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("centerSystemID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 500, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("combatZoneID", FieldType.int_type, 0, False, True),
+            New DBTableField("combatZoneName", FieldType.nvarchar_type, 100, True),
+            New DBTableField("factionID", FieldType.int_type, 0, True),
+            New DBTableField("centerSystemID", FieldType.int_type, 0, True),
+            New DBTableField("description", FieldType.nvarchar_type, 500, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -60,14 +59,14 @@ Public Class YAMLwarCombatZones
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("combatZoneID", DataField.combatZoneID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("combatZoneName", DataField.combatZoneName, FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("factionID", DataField.factionID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("centerSystemID", DataField.centerSystemID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("description", DataField.description, FieldType.nvarchar_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("combatZoneID", DataField.combatZoneID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("combatZoneName", DataField.combatZoneName, FieldType.nvarchar_type),
+                UpdateDB.BuildDatabaseField("factionID", DataField.factionID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("centerSystemID", DataField.centerSystemID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("description", DataField.description, FieldType.nvarchar_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

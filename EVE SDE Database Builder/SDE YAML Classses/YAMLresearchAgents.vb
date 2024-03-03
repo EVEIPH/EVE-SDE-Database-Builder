@@ -22,27 +22,27 @@ Public Class YAMLresearchAgents
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New Dictionary(Of Long, researchAgent)
         Dim DataFields As List(Of DBField)
         Dim IndexFields As List(Of String)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("agentID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("agentID", FieldType.int_type, 0, False, True),
+            New DBTableField("typeID", FieldType.int_type, 0, False, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("typeID")
+        IndexFields = New List(Of String) From {
+            "typeID"
+        }
         Call UpdateDB.createindex(TableName, "IDX_" & TableName & "_TID", IndexFields)
 
         ' See if we only want to build the table and indexes
@@ -66,9 +66,10 @@ Public Class YAMLresearchAgents
         For Each DataField In YAMLRecords
             ' Build the insert list
             For Each Skill In DataField.Value.skills
-                DataFields = New List(Of DBField)
-                DataFields.Add(UpdateDB.BuildDatabaseField("agentID", DataField.Key, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("typeID", Skill.typeID, FieldType.int_type))
+                DataFields = New List(Of DBField) From {
+                    UpdateDB.BuildDatabaseField("agentID", DataField.Key, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("typeID", Skill.typeID, FieldType.int_type)
+                }
                 Call UpdateDB.InsertRecord(TableName, DataFields)
             Next
 

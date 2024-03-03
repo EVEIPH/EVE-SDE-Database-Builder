@@ -28,25 +28,26 @@ Public Class YAMLmarketGroups
         Dim YAMLRecords As New Dictionary(Of Long, marketGroup)
         Dim IndexFields As List(Of String)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("marketGroupID ", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("descriptionID", FieldType.nvarchar_type, 300, True))
-        Table.Add(New DBTableField("hasTypes ", FieldType.bit_type, -1, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("nameID", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("parentGroupID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("marketGroupID ", FieldType.int_type, 0, False, True),
+            New DBTableField("descriptionID", FieldType.nvarchar_type, 300, True),
+            New DBTableField("hasTypes ", FieldType.bit_type, -1, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True),
+            New DBTableField("nameID", FieldType.nvarchar_type, 100, True),
+            New DBTableField("parentGroupID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("marketGroupID")
+        IndexFields = New List(Of String) From {
+            "marketGroupID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_MGID", IndexFields)
 
         ' See if we only want to build the table and indexes

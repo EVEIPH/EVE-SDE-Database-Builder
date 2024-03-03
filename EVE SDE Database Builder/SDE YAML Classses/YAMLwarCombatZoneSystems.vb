@@ -22,19 +22,18 @@ Public Class YAMLwarCombatZoneSystems
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.Instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of warCombatZoneSystem)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("combatZoneID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("solarSystemID", FieldType.int_type, 0, False, True),
+            New DBTableField("combatZoneID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -57,11 +56,11 @@ Public Class YAMLwarCombatZoneSystems
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("solarSystemID", DataField.solarSystemID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("combatZoneID", DataField.combatZoneID, FieldType.int_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("solarSystemID", DataField.solarSystemID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("combatZoneID", DataField.combatZoneID, FieldType.int_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

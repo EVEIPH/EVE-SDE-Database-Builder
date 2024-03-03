@@ -115,11 +115,11 @@ Public Class ProgramUpdater
         ' then it will copy over the new xml file when it closes
 
         ' Get the directory path of this program to send to updater
-        Dim ProcInfo As New ProcessStartInfo
-
-        ProcInfo.WindowStyle = ProcessWindowStyle.Normal
-        ProcInfo.FileName = UpdaterFileName
-        ProcInfo.Arguments = String.Empty
+        Dim ProcInfo As New ProcessStartInfo With {
+            .WindowStyle = ProcessWindowStyle.Normal,
+            .FileName = UpdaterFileName,
+            .Arguments = String.Empty
+        }
         Process.Start(ProcInfo)
 
         ' Close this program
@@ -146,8 +146,8 @@ DownloadError:
     ''' <param name="Filename">File name we are comparing</param>
     ''' <returns>If it errors, will return text stating error, else empty string</returns>
     Private Function DownloadUpdatedFile(ServerFileMD5 As String, ServerFileURL As String, Filename As String) As String
-        Dim LocalFileMD5 As String = ""
-        Dim ServerFilePath As String = ""
+        Dim LocalFileMD5 As String
+        Dim ServerFilePath As String
         Dim fi As FileInfo
 
         ' Get the local updater MD5, if not found, we run update anyway
@@ -186,8 +186,8 @@ DownloadError:
     ''' </summary>
     ''' <returns>Returns the result of checking for the update</returns>
     Public Function IsProgramUpdatable() As UpdateCheckResult
-        Dim LocalMD5 As String = ""
-        Dim ServerMD5 As String = ""
+        Dim LocalMD5 As String
+        Dim ServerMD5 As String
 
         Try
 

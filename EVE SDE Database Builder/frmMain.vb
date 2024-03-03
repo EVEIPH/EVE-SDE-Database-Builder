@@ -17,7 +17,7 @@ Public Class frmMain
     Public Const ThreadsFileName As String = "NumberofThreads.txt"
 
     ' For deploying the files to XML for updates
-    Private LatestFilesFolder As String
+    Private ReadOnly LatestFilesFolder As String
     Private Const MainEXEFile As String = "EVE SDE Database Builder.exe"
     Private Const UpdaterEXEFile As String = "ESDEDB Updater.exe"
     Private Const MainEXEConfig As String = "EVE SDE Database Builder.exe.config"
@@ -29,10 +29,10 @@ Public Class frmMain
     Private Const LatestVersionXML As String = "LatestVersionESDEDB.xml"
 
     ' File URLs
-    Private MainEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe"
-    Private UpdaterEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe"
-    Private MainEXEConfigURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe.config"
-    Private UpdaterEXEConfigURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe.config"
+    Private Const MainEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe"
+    Private Const UpdaterEXEFileURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe"
+    Private Const MainEXEConfigURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe.config"
+    Private Const UpdaterEXEConfigURL As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe.config"
     Private Const SQLiteInteropURL86 As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/x86/SQLite.Interop.dll"
     Private Const SQLiteInteropURL64 As String = "https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/x64/SQLite.Interop.dll"
 
@@ -41,7 +41,7 @@ Public Class frmMain
 
     Private CheckedFilesList As List(Of String)
 
-    Private LocalCulture As New CultureInfo("en-US")
+    Private ReadOnly LocalCulture As New CultureInfo("en-US")
 
     Private CSVImport As Boolean ' If we are using CSV to bulk import the data
 
@@ -206,10 +206,10 @@ Public Class frmMain
     ''' </summary>
     Private Sub GetGridSettings()
         ' Read the settings file and save all the files checked
-        Dim BPStream As StreamReader = Nothing
+        Dim BPStream As StreamReader
         CheckedFilesList = New List(Of String)
 
-        Dim Line As String = ""
+        Dim Line As String
 
         If File.Exists(GridSettingsFileName) Then
             BPStream = New StreamReader(GridSettingsFileName)
@@ -231,10 +231,10 @@ Public Class frmMain
     ''' <returns>Number of threads, if not found then returns -1</returns>
     Private Function GetThreadSetting() As Integer
         ' Read the settings file and save all the files checked
-        Dim BPStream As StreamReader = Nothing
+        Dim BPStream As StreamReader
         CheckedFilesList = New List(Of String)
 
-        Dim Line As String = ""
+        Dim Line As String
 
         If File.Exists(ThreadsFileName) Then
             BPStream = New StreamReader(ThreadsFileName)
@@ -807,31 +807,30 @@ CancelImportProcessing:
     ''' </summary>
     ''' <returns>List of table names requiring translation table input</returns>
     Private Function GetRequiredTablesForTranslations() As List(Of String)
-        Dim TempList As New List(Of String)
-        TempList.Add("ancestries.yaml")
-        TempList.Add("bloodlines.yaml")
-        TempList.Add("characterAttributes.yaml")
-        TempList.Add("factions.yaml")
-        TempList.Add("races.yaml")
-        TempList.Add("corporationActivities.yaml")
-        TempList.Add("npcCorporations.yaml")
-        TempList.Add("npcCorporationDivisions.yaml")
-
-        TempList.Add("dogmaAttributes.yaml")
-        TempList.Add("dogmaEffects.yaml")
         ' TempList.Add("eveUnits.yaml")
-        TempList.Add("invCategories.yaml")
-        TempList.Add("marketGroups.yaml")
-        TempList.Add("metaGroups.yaml")
-        TempList.Add("landmarks.staticdata")
-        TempList.Add("planetSchematics.yaml")
-        TempList.Add("ramActivities.yaml")
-        TempList.Add("stationOperations.yaml")
-        TempList.Add("stationServices.yaml")
-
-        TempList.Add("typeIDs.yaml")
-        TempList.Add("groupIDs.yaml")
-        TempList.Add("categoryIDs.yaml")
+        Dim TempList As New List(Of String) From {
+            "ancestries.yaml",
+            "bloodlines.yaml",
+            "characterAttributes.yaml",
+            "factions.yaml",
+            "races.yaml",
+            "corporationActivities.yaml",
+            "npcCorporations.yaml",
+            "npcCorporationDivisions.yaml",
+            "dogmaAttributes.yaml",
+            "dogmaEffects.yaml",
+            "invCategories.yaml",
+            "marketGroups.yaml",
+            "metaGroups.yaml",
+            "landmarks.staticdata",
+            "planetSchematics.yaml",
+            "ramActivities.yaml",
+            "stationOperations.yaml",
+            "stationServices.yaml",
+            "typeIDs.yaml",
+            "groupIDs.yaml",
+            "categoryIDs.yaml"
+        }
 
         Return TempList
     End Function
@@ -1036,8 +1035,9 @@ CancelImportProcessing:
         Dim Updater As New ProgramUpdater
 
         ' Create XmlWriterSettings.
-        Dim XMLSettings As XmlWriterSettings = New XmlWriterSettings()
-        XMLSettings.Indent = True
+        Dim XMLSettings As New XmlWriterSettings With {
+            .Indent = True
+        }
 
         ' Delete the current latestversion file to rebuild
         File.Delete(LatestVersionXML)
@@ -1207,8 +1207,7 @@ CancelImportProcessing:
         Dim AddUniverseFiles As Boolean = False
 
         ' Build the list of tables that will require Translation Table data
-        Dim FileListRequiringTranslationTables As New List(Of String)
-        FileListRequiringTranslationTables = GetRequiredTablesForTranslations()
+        Dim FileListRequiringTranslationTables As List(Of String) = GetRequiredTablesForTranslations()
 
         If UserApplicationSettings.SDEDirectory <> "" Then
             ' First load all that are checked and sort by size decending - universe is always biggest at top (add at end)
@@ -1431,10 +1430,10 @@ CancelImportProcessing:
     ''' </summary>
     Private Sub ResetProgressColumn()
         ' Reset the grid progress
-        Dim PColumn As New ProgressColumn
-
         ' Add the progress column
-        PColumn.Name = "Progress"
+        Dim PColumn As New ProgressColumn With {
+            .Name = "Progress"
+        }
 
         If dgMain.Columns.Count = 3 Then
             dgMain.Columns.Remove("Progress")
@@ -1689,8 +1688,9 @@ CancelImportProcessing:
 #Region "Click event handlers"
 
     Private Sub SetThreadsUsedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SetThreadsUsedToolStripMenuItem.Click
-        Dim f1 As New frmThreadSelect
-        f1.Threads = SelectedThreads
+        Dim f1 As New frmThreadSelect With {
+            .Threads = SelectedThreads
+        }
         f1.ShowDialog()
     End Sub
 
@@ -1880,9 +1880,9 @@ CancelImportProcessing:
     Private Sub btnDownloadSDE_Click(sender As Object, e As EventArgs) Handles btnDownloadSDE.Click
         Dim ChecksumFileName As String = UserApplicationSettings.DownloadFolderPath & "\" & "checksum"
         Dim OldChecksumFileName As String = UserApplicationSettings.DownloadFolderPath & "\" & "checksum-old"
-        Dim NewDownloadDirectory As String = "" ' Folder I'll download into and work with
+        Dim NewDownloadDirectory As String ' Folder I'll download into and work with
         Dim NewChecksum As StreamReader
-        Dim NewChecksumValue As String = ""
+        Dim NewChecksumValue As String
         Dim OldChecksum As StreamReader
         Dim OldChecksumValue As String = ""
         Dim FileDate As Date ' to save the date of the download
@@ -2041,7 +2041,7 @@ Public Class ProgressColumn
         End Get
         Set(ByVal Value As DataGridViewCell)
             ' Ensure that the cell used for the template is a ProgressCell.
-            If Value IsNot Nothing And Not TypeOf (Value) Is ProgressCell Then
+            If Value IsNot Nothing And TypeOf (Value) IsNot ProgressCell Then
                 Throw New InvalidCastException("Must be a ProgressCell")
             End If
             MyBase.CellTemplate = Value
@@ -2057,7 +2057,7 @@ Public Class ProgressCell
                                                    ByVal formattedValueTypeConverter As System.ComponentModel.TypeConverter,
                                                    ByVal context As DataGridViewDataErrorContexts) As Object
         ' Create bitmap.
-        Dim bmp As Bitmap = New Bitmap(Me.Size.Width, Me.Size.Height)
+        Dim bmp As New Bitmap(Me.Size.Width, Me.Size.Height)
 
         Using g As Graphics = Graphics.FromImage(bmp)
 
@@ -2068,7 +2068,7 @@ Public Class ProgressCell
                 Dim text As String = percentage.ToString() + " %"
 
                 ' Get width and height of text.
-                Dim f As Font = New Font("Microsoft Sans Serif", 8.5, FontStyle.Regular)
+                Dim f As New Font("Microsoft Sans Serif", 8.5, FontStyle.Regular)
                 Dim w As Integer = CType(g.MeasureString(text, f).Width, Integer)
                 Dim h As Integer = CType(g.MeasureString(text, f).Height, Integer)
 
@@ -2079,10 +2079,10 @@ Public Class ProgressCell
                 g.DrawRectangle(Pens.Black, 1, 1, Me.Size.Width - 6, Me.Size.Height - 6)
                 g.FillRectangle(Brushes.LimeGreen, 2, 2, CInt((Me.Size.Width - 7) * percentage / 100), CInt(Me.Size.Height - 7))
 
-                Dim rect As RectangleF = New RectangleF(0, 3, bmp.Width, bmp.Height)
-                Dim sf As StringFormat = New StringFormat()
-
-                sf.Alignment = StringAlignment.Center
+                Dim rect As New RectangleF(0, 3, bmp.Width, bmp.Height)
+                Dim sf As New StringFormat With {
+                    .Alignment = StringAlignment.Center
+                }
                 g.DrawString(text, f, Brushes.Black, rect, sf)
             End If
         End Using

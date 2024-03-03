@@ -22,21 +22,20 @@ Public Class YAMLeveUnits
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of eveUnit)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("unitID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("unitName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("displayName", FieldType.varchar_type, 50, True))
-        Table.Add(New DBTableField("description", FieldType.varchar_type, 1000, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("unitID", FieldType.tinyint_type, 0, True),
+            New DBTableField("unitName", FieldType.varchar_type, 100, True),
+            New DBTableField("displayName", FieldType.varchar_type, 50, True),
+            New DBTableField("description", FieldType.varchar_type, 1000, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -59,13 +58,13 @@ Public Class YAMLeveUnits
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("unitID", DataField.unitID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("unitName", DataField.unitName, FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("displayName", Translator.TranslateData(TableName, "displayName", "unitID", DataField.unitID, Params.ImportLanguageCode, DataField.displayName), FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("description", Translator.TranslateData(TableName, "description", "unitID", DataField.unitID, Params.ImportLanguageCode, DataField.description), FieldType.varchar_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("unitID", DataField.unitID, FieldType.tinyint_type),
+                UpdateDB.BuildDatabaseField("unitName", DataField.unitName, FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("displayName", Translator.TranslateData(TableName, "displayName", "unitID", DataField.unitID, Params.ImportLanguageCode, DataField.displayName), FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("description", Translator.TranslateData(TableName, "description", "unitID", DataField.unitID, Params.ImportLanguageCode, DataField.description), FieldType.varchar_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

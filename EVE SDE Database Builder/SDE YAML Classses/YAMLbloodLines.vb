@@ -27,33 +27,34 @@ Public Class YAMLbloodLines
 
         Dim YAMLRecords As New Dictionary(Of Long, chrBloodLine)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
         Dim LastNamesTable As String = "bloodlineLastNames"
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("bloodlineID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("bloodlineName", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("raceID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 1000, True))
-        Table.Add(New DBTableField("shipTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("perception", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("willpower", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("charisma", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("memory", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("intelligence", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("bloodlineID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("bloodlineName", FieldType.nvarchar_type, 100, True),
+            New DBTableField("raceID", FieldType.tinyint_type, 0, True),
+            New DBTableField("description", FieldType.nvarchar_type, 1000, True),
+            New DBTableField("shipTypeID", FieldType.int_type, 0, True),
+            New DBTableField("corporationID", FieldType.int_type, 0, True),
+            New DBTableField("perception", FieldType.tinyint_type, 0, True),
+            New DBTableField("willpower", FieldType.tinyint_type, 0, True),
+            New DBTableField("charisma", FieldType.tinyint_type, 0, True),
+            New DBTableField("memory", FieldType.tinyint_type, 0, True),
+            New DBTableField("intelligence", FieldType.tinyint_type, 0, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("bloodlineID", FieldType.tinyint_type, 0, False))
-        Table.Add(New DBTableField("lastName", FieldType.nvarchar_type, 100, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("bloodlineID", FieldType.tinyint_type, 0, False),
+            New DBTableField("lastName", FieldType.nvarchar_type, 100, True)
+        }
 
         Call UpdateDB.CreateTable(LastNamesTable, Table)
 
@@ -104,9 +105,10 @@ Public Class YAMLbloodLines
             ' Insert all the last names into the separate table for this id
             If Not IsNothing(DataField.Value.lastNames) Then
                 For Each LN In DataField.Value.lastNames
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("bloodlineID", DataField.Key, FieldType.tinyint_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("lastname", LN, FieldType.nvarchar_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("bloodlineID", DataField.Key, FieldType.tinyint_type),
+                        UpdateDB.BuildDatabaseField("lastname", LN, FieldType.nvarchar_type)
+                    }
 
                     Call UpdateDB.InsertRecord(LastNamesTable, DataFields)
                 Next

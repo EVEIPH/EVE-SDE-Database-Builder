@@ -27,19 +27,19 @@ Public Class YAMLmetaGroups
 
         Dim YAMLRecords As New Dictionary(Of Long, metaGroup)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("metaGroupID", FieldType.smallint_type, 0, False, True))
-        Table.Add(New DBTableField("descriptionID", FieldType.nvarchar_type, 1000, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("iconSuffix", FieldType.nvarchar_type, 30, True))
-        Table.Add(New DBTableField("nameID", FieldType.nvarchar_type, 100, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("metaGroupID", FieldType.smallint_type, 0, False, True),
+            New DBTableField("descriptionID", FieldType.nvarchar_type, 1000, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True),
+            New DBTableField("iconSuffix", FieldType.nvarchar_type, 30, True),
+            New DBTableField("nameID", FieldType.nvarchar_type, 100, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 

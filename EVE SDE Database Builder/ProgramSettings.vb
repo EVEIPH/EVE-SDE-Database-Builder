@@ -31,10 +31,11 @@ Public Class ProgramSettings
         Dim TempFileName As String = FileName & XMLfileType
 
         ' Create XmlWriterSettings.
-        Dim XMLSettings As XmlWriterSettings = New XmlWriterSettings()
-        XMLSettings.Indent = True
+        Dim XMLSettings As New XmlWriterSettings With {
+            .Indent = True
+        }
 
-        ' Delete and make a fresh copy
+            ' Delete and make a fresh copy
         If File.Exists(TempFileName) Then
             File.Delete(TempFileName)
         End If

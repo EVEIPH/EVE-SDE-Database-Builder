@@ -22,22 +22,21 @@ Public Class YAMLramActivities
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of ramActivity)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("activityName", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("iconNo", FieldType.varchar_type, 5, True))
-        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 1000, True))
-        Table.Add(New DBTableField("published", FieldType.bit_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("activityID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("activityName", FieldType.nvarchar_type, 100, True),
+            New DBTableField("iconNo", FieldType.varchar_type, 5, True),
+            New DBTableField("description", FieldType.nvarchar_type, 1000, True),
+            New DBTableField("published", FieldType.bit_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -60,14 +59,14 @@ Public Class YAMLramActivities
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("activityID", DataField.activityID, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("activityName", Translator.TranslateData(TableName, "activityName", "activityID", DataField.activityID, Params.ImportLanguageCode, DataField.activityName), FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("iconNo", DataField.iconNo, FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("description", Translator.TranslateData(TableName, "description", "activityID", DataField.activityID, Params.ImportLanguageCode, DataField.description), FieldType.nvarchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("published", DataField.published, FieldType.bit_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("activityID", DataField.activityID, FieldType.tinyint_type),
+                UpdateDB.BuildDatabaseField("activityName", Translator.TranslateData(TableName, "activityName", "activityID", DataField.activityID, Params.ImportLanguageCode, DataField.activityName), FieldType.nvarchar_type),
+                UpdateDB.BuildDatabaseField("iconNo", DataField.iconNo, FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("description", Translator.TranslateData(TableName, "description", "activityID", DataField.activityID, Params.ImportLanguageCode, DataField.description), FieldType.nvarchar_type),
+                UpdateDB.BuildDatabaseField("published", DataField.published, FieldType.bit_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

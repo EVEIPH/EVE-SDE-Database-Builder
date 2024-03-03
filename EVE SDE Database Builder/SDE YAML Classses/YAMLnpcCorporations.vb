@@ -27,91 +27,97 @@ Public Class YAMLnpcCorporations
 
         Dim YAMLRecords As New Dictionary(Of Long, crpNPCCorporation)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("tickerName", FieldType.nvarchar_type, 5, True))
-        Table.Add(New DBTableField("corporationName", FieldType.nvarchar_type, 50, True))
-        Table.Add(New DBTableField("corporationDescription", FieldType.nvarchar_type, 1500, True))
-        Table.Add(New DBTableField("uniqueName", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("taxRate", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("memberLimit", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("hasPlayerPersonnelManager", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("factionID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("ceoID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("deleted", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("extent", FieldType.char_type, 1, True))
-        Table.Add(New DBTableField("friendID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("enemyID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("stationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("minSecurity", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("minimumJoinStanding", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("publicShares", FieldType.bigint_type, 0, True))
-        Table.Add(New DBTableField("shares", FieldType.bigint_type, 0, True))
-        Table.Add(New DBTableField("initialPrice", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("mainActivityID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("secondaryActivityID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("size", FieldType.char_type, 1, True))
-        Table.Add(New DBTableField("sizeFactor", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("raceID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("sendCharTerminationMessage", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("url", FieldType.nvarchar_type, 1000, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("corporationID", FieldType.int_type, 0, False, True),
+            New DBTableField("tickerName", FieldType.nvarchar_type, 5, True),
+            New DBTableField("corporationName", FieldType.nvarchar_type, 50, True),
+            New DBTableField("corporationDescription", FieldType.nvarchar_type, 1500, True),
+            New DBTableField("uniqueName", FieldType.bit_type, 0, True),
+            New DBTableField("taxRate", FieldType.real_type, 0, True),
+            New DBTableField("memberLimit", FieldType.int_type, 0, True),
+            New DBTableField("hasPlayerPersonnelManager", FieldType.bit_type, 0, True),
+            New DBTableField("factionID", FieldType.int_type, 0, True),
+            New DBTableField("ceoID", FieldType.int_type, 0, True),
+            New DBTableField("deleted", FieldType.bit_type, 0, True),
+            New DBTableField("extent", FieldType.char_type, 1, True),
+            New DBTableField("friendID", FieldType.int_type, 0, True),
+            New DBTableField("enemyID", FieldType.int_type, 0, True),
+            New DBTableField("solarSystemID", FieldType.int_type, 0, True),
+            New DBTableField("stationID", FieldType.int_type, 0, True),
+            New DBTableField("minSecurity", FieldType.real_type, 0, True),
+            New DBTableField("minimumJoinStanding", FieldType.real_type, 0, True),
+            New DBTableField("publicShares", FieldType.bigint_type, 0, True),
+            New DBTableField("shares", FieldType.bigint_type, 0, True),
+            New DBTableField("initialPrice", FieldType.real_type, 0, True),
+            New DBTableField("mainActivityID", FieldType.int_type, 0, True),
+            New DBTableField("secondaryActivityID", FieldType.int_type, 0, True),
+            New DBTableField("size", FieldType.char_type, 1, True),
+            New DBTableField("sizeFactor", FieldType.real_type, 0, True),
+            New DBTableField("raceID", FieldType.int_type, 0, True),
+            New DBTableField("sendCharTerminationMessage", FieldType.bit_type, 0, True),
+            New DBTableField("url", FieldType.nvarchar_type, 1000, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         Dim CorporationAllowedMemberRacesTableName As String = "corporationAllowedMemberRaces"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("memberRace", FieldType.int_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("corporationID", FieldType.int_type, 0, False),
+            New DBTableField("memberRace", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(CorporationAllowedMemberRacesTableName, Table)
 
         Dim CorporationTradesTableName As String = "corporationTrades"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("value", FieldType.real_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("corporationID", FieldType.int_type, 0, False),
+            New DBTableField("typeID", FieldType.int_type, 0, True),
+            New DBTableField("value", FieldType.real_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(CorporationTradesTableName, Table)
 
         Dim CorporationDivisionsTableName As String = "corporationDivisions"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("divisionID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("divisionNumber", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("leaderID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("size", FieldType.int_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("corporationID", FieldType.int_type, 0, False),
+            New DBTableField("divisionID", FieldType.int_type, 0, False),
+            New DBTableField("divisionNumber", FieldType.int_type, 0, True),
+            New DBTableField("leaderID", FieldType.int_type, 0, True),
+            New DBTableField("size", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(CorporationDivisionsTableName, Table)
 
         Dim CorporationExchangeRatesTableName As String = "corporationExchangeRates"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("exchangeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("exchangeRate", FieldType.real_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("corporationID", FieldType.int_type, 0, False),
+            New DBTableField("exchangeID", FieldType.int_type, 0, True),
+            New DBTableField("exchangeRate", FieldType.real_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(CorporationExchangeRatesTableName, Table)
 
         Dim CorporationInvestorsTableName As String = "corporationInvestors"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("investorID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("shares", FieldType.real_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("corporationID", FieldType.int_type, 0, False),
+            New DBTableField("investorID", FieldType.int_type, 0, True),
+            New DBTableField("shares", FieldType.real_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(CorporationInvestorsTableName, Table)
 
         Dim CorporationLPOffersTableName As String = "corporationLPOffers"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("lpOfferTableID", FieldType.int_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("corporationID", FieldType.int_type, 0, False),
+            New DBTableField("lpOfferTableID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(CorporationLPOffersTableName, Table)
 
@@ -178,60 +184,66 @@ Public Class YAMLnpcCorporations
             ' Add other tables now
             If Not IsNothing(DataField.Value.allowedMemberRaces) Then
                 For Each AMR In DataField.Value.allowedMemberRaces
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("memberRace", AMR, FieldType.int_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("memberRace", AMR, FieldType.int_type)
+                    }
                     Call UpdateDB.InsertRecord(CorporationAllowedMemberRacesTableName, DataFields)
                 Next
             End If
 
             If Not IsNothing(DataField.Value.corporationTrades) Then
                 For Each CT In DataField.Value.corporationTrades
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("typeID", CT.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("value", CT.Value, FieldType.real_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("typeID", CT.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("value", CT.Value, FieldType.real_type)
+                    }
                     Call UpdateDB.InsertRecord(CorporationTradesTableName, DataFields)
                 Next
             End If
 
             If Not IsNothing(DataField.Value.divisions) Then
                 For Each CD In DataField.Value.divisions
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("divisionID", CD.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("divisionNumber", CD.Value.divisionNumber, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("leaderID", CD.Value.leaderID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("size", CD.Value.size, FieldType.int_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("divisionID", CD.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("divisionNumber", CD.Value.divisionNumber, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("leaderID", CD.Value.leaderID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("size", CD.Value.size, FieldType.int_type)
+                    }
                     Call UpdateDB.InsertRecord(CorporationDivisionsTableName, DataFields)
                 Next
             End If
 
             If Not IsNothing(DataField.Value.exchangeRates) Then
                 For Each ER In DataField.Value.exchangeRates
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("exchangeID", ER.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("exchangeRate", ER.Value, FieldType.real_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("exchangeID", ER.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("exchangeRate", ER.Value, FieldType.real_type)
+                    }
                     Call UpdateDB.InsertRecord(CorporationExchangeRatesTableName, DataFields)
                 Next
             End If
 
             If Not IsNothing(DataField.Value.investors) Then
                 For Each CI In DataField.Value.investors
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("investorID", CI.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("shares", CI.Value, FieldType.real_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("investorID", CI.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("shares", CI.Value, FieldType.real_type)
+                    }
                     Call UpdateDB.InsertRecord(CorporationInvestorsTableName, DataFields)
                 Next
             End If
 
             If Not IsNothing(DataField.Value.lpOfferTables) Then
                 For Each LPO In DataField.Value.lpOfferTables
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("lpOfferTableID", LPO, FieldType.int_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("corporationID", DataField.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("lpOfferTableID", LPO, FieldType.int_type)
+                    }
                     Call UpdateDB.InsertRecord(CorporationLPOffersTableName, DataFields)
                 Next
             End If

@@ -27,26 +27,27 @@ Public Class YAMLtypeDogma
 
         Dim YAMLRecords As New Dictionary(Of Long, typeDogma)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim AttributesTableName As String = "dogmaTypeAttributes"
         Dim EffectsTableName As String = "dogmaTypeEffects"
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("attributeID", FieldType.smallint_type, 0, False, True))
-        Table.Add(New DBTableField("value", FieldType.real_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("typeID", FieldType.int_type, 0, False, True),
+            New DBTableField("attributeID", FieldType.smallint_type, 0, False, True),
+            New DBTableField("value", FieldType.real_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(AttributesTableName, Table)
 
         ' Build table
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("effectID", FieldType.smallint_type, 0, False, True))
-        Table.Add(New DBTableField("isDefault", FieldType.bit_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("typeID", FieldType.int_type, 0, False, True),
+            New DBTableField("effectID", FieldType.smallint_type, 0, False, True),
+            New DBTableField("isDefault", FieldType.bit_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(EffectsTableName, Table)
 
@@ -73,10 +74,11 @@ Public Class YAMLtypeDogma
                 ' For each record, insert the attribute values and the effect values
                 If .dogmaAttributes.Count > 0 Then
                     For Each attribute In .dogmaAttributes
-                        DataFields = New List(Of DBField)
-                        DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.Key, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("attributeID", attribute.attributeID, FieldType.smallint_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("value", attribute.value, FieldType.real_type))
+                        DataFields = New List(Of DBField) From {
+                            UpdateDB.BuildDatabaseField("typeID", DataField.Key, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("attributeID", attribute.attributeID, FieldType.smallint_type),
+                            UpdateDB.BuildDatabaseField("value", attribute.value, FieldType.real_type)
+                        }
                         Call UpdateDB.InsertRecord(AttributesTableName, DataFields)
                     Next
                 End If
@@ -84,10 +86,11 @@ Public Class YAMLtypeDogma
                 If .dogmaEffects.Count > 0 Then
 
                     For Each effect In .dogmaEffects
-                        DataFields = New List(Of DBField)
-                        DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.Key, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("effectID", effect.effectID, FieldType.smallint_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("isDefault", effect.isDefault, FieldType.bit_type))
+                        DataFields = New List(Of DBField) From {
+                            UpdateDB.BuildDatabaseField("typeID", DataField.Key, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("effectID", effect.effectID, FieldType.smallint_type),
+                            UpdateDB.BuildDatabaseField("isDefault", effect.isDefault, FieldType.bit_type)
+                        }
                         Call UpdateDB.InsertRecord(EffectsTableName, DataFields)
                     Next
                 End If

@@ -27,20 +27,20 @@ Public Class YAMLnpcCorporationDivisions
 
         Dim YAMLRecords As New Dictionary(Of Long, npcCorporationDivision)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("divisionID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("internalName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("description", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("descriptionID", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("leaderTypeNameID", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("nameID", FieldType.varchar_type, 100, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("divisionID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("internalName", FieldType.varchar_type, 100, True),
+            New DBTableField("description", FieldType.varchar_type, 100, True),
+            New DBTableField("descriptionID", FieldType.varchar_type, 1000, True),
+            New DBTableField("leaderTypeNameID", FieldType.varchar_type, 100, True),
+            New DBTableField("nameID", FieldType.varchar_type, 100, True)
+        }
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' See if we only want to build the table and indexes

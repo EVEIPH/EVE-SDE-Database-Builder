@@ -9,13 +9,13 @@ Imports System.Collections.Concurrent
 Public Class postgreSQLDB
     Inherits DBFilesBase
 
-    Private BulkInsertTablesData As ConcurrentQueue(Of BulkInsertData)
+    Private ReadOnly BulkInsertTablesData As ConcurrentQueue(Of BulkInsertData)
 
     ' Save the database information for later connections
-    Private DBServerName As String
-    Private DBUserName As String
-    Private DBUserPassword As String
-    Private DBPort As String
+    Private ReadOnly DBServerName As String
+    Private ReadOnly DBUserName As String
+    Private ReadOnly DBUserPassword As String
+    Private ReadOnly DBPort As String
 
     ' For inserting bulk data imports
     Private Structure BulkInsertData
@@ -115,9 +115,7 @@ Public Class postgreSQLDB
     ''' </summary>
     ''' <param name="SQL">SQL query to execute.</param>
     Public Sub ExecuteNonQuerySQL(ByVal SQL As String)
-        Dim DBRef As New NpgsqlConnection
-        DBRef = DBConnectionRef(MainDatabase)
-
+        Dim DBRef As NpgsqlConnection = DBConnectionRef(MainDatabase)
         Dim Command As New NpgsqlCommand(SQL, DBRef)
         Command.ExecuteNonQuery()
         Command.Dispose()
@@ -160,7 +158,7 @@ Public Class postgreSQLDB
     ''' <param name="TableName">Name of the table to create.</param>
     ''' <param name="TableStructure">List of table fields that define the table.</param>
     Public Sub CreateTable(ByVal TableName As String, ByVal TableStructure As List(Of DBTableField))
-        Dim SQL As String = ""
+        Dim SQL As String
         Dim FieldLength As String = "0" ' For char types
         Dim PKFields As New List(Of String)
 
@@ -267,7 +265,7 @@ Public Class postgreSQLDB
     ''' <param name="Clustered">Optional - If the index is clustered or unclustered (not used).</param>
     Public Sub CreateIndex(ByVal TableName As String, ByVal IndexName As String, IndexFields As List(Of String),
                            Optional Unique As Boolean = False, Optional Clustered As Boolean = False)
-        Dim SQL As String = ""
+        Dim SQL As String
 
         SQL = "CREATE" & SPACE
 
@@ -297,7 +295,7 @@ Public Class postgreSQLDB
     ''' <param name="TableName">Table to insert records.</param>
     ''' <param name="Record">List of table fields that make up the record.</param>
     Public Sub InsertRecord(ByVal TableName As String, Record As List(Of DBField))
-        Dim SQL As String = ""
+        Dim SQL As String
         Dim Fields As String = ""
         Dim FieldValues As String = ""
 

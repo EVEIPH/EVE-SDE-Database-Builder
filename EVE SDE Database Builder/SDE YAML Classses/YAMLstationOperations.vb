@@ -27,40 +27,42 @@ Public Class YAMLstationOperations
 
         Dim YAMLRecords As New Dictionary(Of Long, stationOperation)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("operationID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("operationName", FieldType.nvarchar_type, 1000, True))
-        Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("border", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("corridor", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 1500, True))
-        Table.Add(New DBTableField("fringe", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("hub", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("manufacturingFactor", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("ratio", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("researchFactor", FieldType.real_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("operationID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("operationName", FieldType.nvarchar_type, 1000, True),
+            New DBTableField("activityID", FieldType.tinyint_type, 0, True),
+            New DBTableField("border", FieldType.real_type, 0, True),
+            New DBTableField("corridor", FieldType.real_type, 0, True),
+            New DBTableField("description", FieldType.nvarchar_type, 1500, True),
+            New DBTableField("fringe", FieldType.real_type, 0, True),
+            New DBTableField("hub", FieldType.real_type, 0, True),
+            New DBTableField("manufacturingFactor", FieldType.real_type, 0, True),
+            New DBTableField("ratio", FieldType.real_type, 0, True),
+            New DBTableField("researchFactor", FieldType.real_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         Dim StationOperationServicesTableName As String = "stationOperationServices"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("operationID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("serviceID", FieldType.int_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("operationID", FieldType.int_type, 0, False),
+            New DBTableField("serviceID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(StationOperationServicesTableName, Table)
 
         Dim StationOperationTypesTableName As String = "stationOperationTypes"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("operationID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("raceID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("stationTypeID", FieldType.int_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("operationID", FieldType.int_type, 0, False),
+            New DBTableField("raceID", FieldType.int_type, 0, True),
+            New DBTableField("stationTypeID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(StationOperationTypesTableName, Table)
 
@@ -109,19 +111,21 @@ Public Class YAMLstationOperations
 
             If Not IsNothing(DataField.Value.services) Then
                 For Each Service In DataField.Value.services
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("operationID", DataField.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("serviceID", Service, FieldType.int_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("operationID", DataField.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("serviceID", Service, FieldType.int_type)
+                    }
                     Call UpdateDB.InsertRecord(StationOperationServicesTableName, DataFields)
                 Next
             End If
 
             If Not IsNothing(DataField.Value.stationTypes) Then
                 For Each StationType In DataField.Value.stationTypes
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("operationID", DataField.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("raceID", StationType.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("stationTypeID", StationType.Value, FieldType.int_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("operationID", DataField.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("raceID", StationType.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("stationTypeID", StationType.Value, FieldType.int_type)
+                    }
                     Call UpdateDB.InsertRecord(StationOperationTypesTableName, DataFields)
                 Next
             End If

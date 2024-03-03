@@ -9,7 +9,7 @@ Public Class SQLiteDB
     Inherits DBFilesBase
 
     Public DB As New SQLiteConnection ' keep open for all updates
-    Private DBFileNameandPath As String ' For later use if needed
+    Private ReadOnly DBFileNameandPath As String ' For later use if needed
 
     ''' <summary>
     ''' Constructor class for a SQLite database. Class builds a new database file, 
@@ -37,8 +37,9 @@ Public Class SQLiteDB
             End If
 
             ' Open connection
-            DB = New SQLiteConnection
-            DB.ConnectionString = "Data Source=" & DatabaseFileNameandPath & ";Version=3;"
+            DB = New SQLiteConnection With {
+                .ConnectionString = "Data Source=" & DatabaseFileNameandPath & ";Version=3;"
+            }
             DB.Open()
 
             ' Set DB settings
@@ -63,9 +64,9 @@ Public Class SQLiteDB
     ''' </summary>
     ''' <returns>Returns a SQLiteConnection for use.</returns>
     Private Function DBConnectionRef() As SQLiteConnection
-        Dim DBRef As New SQLiteConnection
-
-        DBRef.ConnectionString = "Data Source=" & DBFileNameandPath & ";Version=3;"
+        Dim DBRef As New SQLiteConnection With {
+            .ConnectionString = "Data Source=" & DBFileNameandPath & ";Version=3;"
+        }
         DBRef.Open()
 
         Return DBRef
@@ -137,7 +138,7 @@ Public Class SQLiteDB
         Dim ReturnValues As New List(Of List(Of Object))
         Dim SelectClause As String = ""
         Dim SelectFieldCount As Integer = SelectFieldValues.Count
-        Dim TempRecord As New List(Of Object)
+        Dim TempRecord As List(Of Object)
 
         ' Build select query
         For i = 0 To SelectFieldValues.Count - 1
@@ -176,9 +177,7 @@ Public Class SQLiteDB
         End While
 
         SQLReader.Close()
-        SQLReader = Nothing
         SQLQuery.Dispose()
-        SQLQuery = Nothing
 
         Return ReturnValues
 
@@ -189,12 +188,11 @@ Public Class SQLiteDB
     ''' </summary>
     ''' <param name="TableName">Table you want to drop</param>
     Private Sub DropTable(TableName As String)
-        Dim WhereValues As New List(Of String)
-        Dim SelectValues As New List(Of String)
-
-        SelectValues.Add("name")
-        WhereValues.Add("type='table'")
-        WhereValues.Add("name='" & TableName & "'")
+        Dim SelectValues As New List(Of String) From {"name"}
+        Dim WhereValues As New List(Of String) From {
+            "type='table'",
+            "name='" & TableName & "'"
+        }
         Dim ReturnValue As Object = SelectfromTable(SelectValues, "sqlite_master", WhereValues)
 
         If ReturnValue.count = 0 Then
@@ -216,7 +214,7 @@ Public Class SQLiteDB
     ''' <param name="TableName">Name of the table to create.</param>
     ''' <param name="TableStructure">List of table fields that define the table.</param>
     Public Sub CreateTable(ByVal TableName As String, ByVal TableStructure As List(Of DBTableField))
-        Dim SQL As String = ""
+dim SQL As string
         Dim PKFields As New List(Of String)
 
         ' Drop the table first
@@ -316,7 +314,7 @@ Public Class SQLiteDB
     ''' <param name="Clustered">Optional value - If the index is clustered or unclustered (not used).</param>
     Public Sub CreateIndex(ByVal TableName As String, ByVal IndexName As String, IndexFields As List(Of String),
                            Optional Unique As Boolean = False, Optional Clustered As Boolean = False)
-        Dim SQL As String = ""
+dim SQL As string
 
         SQL = "CREATE" & SPACE
 
@@ -373,11 +371,8 @@ Public Class SQLiteDB
     ''' <param name="Translator">YAMLTranslations object to get stored tables from.</param>
     ''' <param name="TranslationTableImportList">List of translation tables to import.</param>
     Public Sub FinalizeDataImport(ByRef Translator As YAMLTranslations, ByVal TranslationTableImportList As List(Of String))
-        Dim Tables As New List(Of DataTable)
+        Dim Tables As List(Of DataTable) = Translator.TranslationTables.GetTables
         Dim Counter As Integer
-
-        Tables = New List(Of DataTable)
-        Tables = Translator.TranslationTables.GetTables
 
         ' Import the translation tables only if they were selected - otherwise skip
         For i = 0 To Translator.TranslationTables.GetTables.Count - 1

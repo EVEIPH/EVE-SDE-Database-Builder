@@ -27,20 +27,20 @@ Public Class YAMLcharacterAttributes
 
         Dim YAMLRecords As New Dictionary(Of Long, characterAttribute)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("attributeID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("attributeName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("description", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("shortDescription", FieldType.nvarchar_type, 500, True))
-        Table.Add(New DBTableField("notes", FieldType.nvarchar_type, 500, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("attributeID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("attributeName", FieldType.varchar_type, 100, True),
+            New DBTableField("description", FieldType.varchar_type, 1000, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True),
+            New DBTableField("shortDescription", FieldType.nvarchar_type, 500, True),
+            New DBTableField("notes", FieldType.nvarchar_type, 500, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 

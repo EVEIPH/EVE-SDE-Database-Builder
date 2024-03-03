@@ -27,23 +27,24 @@ Public Class YAMLcontrolTowerResources
 
         Dim YAMLRecords As New Dictionary(Of Long, controlTowerResources)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("purpose", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("factionID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("minSecurityLevel", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("quantity", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("resourceTypeID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("typeID", FieldType.int_type, 0, True),
+            New DBTableField("purpose", FieldType.int_type, 0, True),
+            New DBTableField("factionID", FieldType.int_type, 0, True),
+            New DBTableField("minSecurityLevel", FieldType.real_type, 0, True),
+            New DBTableField("quantity", FieldType.int_type, 0, True),
+            New DBTableField("resourceTypeID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
-        Dim IndexFields As New List(Of String)
-        IndexFields.Add("typeID")
+        Dim IndexFields As New List(Of String) From {
+            "typeID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_TID", IndexFields)
 
         ' See if we only want to build the table and indexes
@@ -68,14 +69,15 @@ Public Class YAMLcontrolTowerResources
             With DataField.Value
                 If .resources.Count > 0 Then
                     For Each resource In DataField.Value.resources
-                        DataFields = New List(Of DBField)
                         ' Build the insert list
-                        DataFields.Add(UpdateDB.BuildDatabaseField("typeID", DataField.Key, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("purpose", resource.purpose, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("factionID", resource.factionID, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("minSecurityLevel", resource.minSecurityLevel, FieldType.real_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("quantity", resource.quantity, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("resourceTypeID", resource.resourceTypeID, FieldType.int_type))
+                        DataFields = New List(Of DBField) From {
+                            UpdateDB.BuildDatabaseField("typeID", DataField.Key, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("purpose", resource.purpose, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("factionID", resource.factionID, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("minSecurityLevel", resource.minSecurityLevel, FieldType.real_type),
+                            UpdateDB.BuildDatabaseField("quantity", resource.quantity, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("resourceTypeID", resource.resourceTypeID, FieldType.int_type)
+                        }
 
                         Call UpdateDB.InsertRecord(TableName, DataFields)
                     Next

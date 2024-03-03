@@ -27,15 +27,15 @@ Public Class YAMLskinMaterials
 
         Dim YAMLRecords As New Dictionary(Of Long, skinMaterial)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("skinMaterialID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("displayNameID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("materialSetID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("skinMaterialID", FieldType.int_type, 0, False, True),
+            New DBTableField("displayNameID", FieldType.int_type, 0, True),
+            New DBTableField("materialSetID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 

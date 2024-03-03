@@ -22,21 +22,20 @@ Public Class YAMLinvFlags
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of invFlag)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("flagID", FieldType.smallint_type, 0, False, True))
-        Table.Add(New DBTableField("flagName", FieldType.varchar_type, 200, True))
-        Table.Add(New DBTableField("flagText", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("orderID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("flagID", FieldType.smallint_type, 0, False, True),
+            New DBTableField("flagName", FieldType.varchar_type, 200, True),
+            New DBTableField("flagText", FieldType.varchar_type, 100, True),
+            New DBTableField("orderID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -59,13 +58,13 @@ Public Class YAMLinvFlags
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("flagID", DataField.flagID, FieldType.smallint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("flagName", DataField.flagName, FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("flagText", DataField.flagText, FieldType.varchar_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("orderID", DataField.orderID, FieldType.int_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("flagID", DataField.flagID, FieldType.smallint_type),
+                UpdateDB.BuildDatabaseField("flagName", DataField.flagName, FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("flagText", DataField.flagText, FieldType.varchar_type),
+                UpdateDB.BuildDatabaseField("orderID", DataField.orderID, FieldType.int_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

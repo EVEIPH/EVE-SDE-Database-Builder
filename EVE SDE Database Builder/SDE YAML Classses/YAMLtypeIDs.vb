@@ -13,9 +13,9 @@ Public Class YAMLtypeIDs
 
     Private BonusIDCounter As Integer = 0 ' For assigning unique bonusIDs in traits but linking to translation tables
 
-    Private PackagedItems As List(Of PackagedItem)
+    Private ReadOnly PackagedItems As List(Of PackagedItem)
     Private PackagedItemtoFind As PackagedItem
-    Private PackagedGroups As List(Of PackagedGroup)
+    Private ReadOnly PackagedGroups As List(Of PackagedGroup)
     Private PackagedGrouptoFind As PackagedGroup
 
     Private Class PackagedItem
@@ -53,77 +53,78 @@ Public Class YAMLtypeIDs
         TableName = "invTypes"
 
         ' Load up the packaged groups for ships
-        PackagedGroups = New List(Of PackagedGroup)
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 25, .PackagedVolume = 2500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 26, .PackagedVolume = 10000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 27, .PackagedVolume = 50000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 28, .PackagedVolume = 20000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 29, .PackagedVolume = 500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 30, .PackagedVolume = 10000000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 31, .PackagedVolume = 500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 237, .PackagedVolume = 2500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 324, .PackagedVolume = 2500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 358, .PackagedVolume = 10000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 380, .PackagedVolume = 20000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 381, .PackagedVolume = 50000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 419, .PackagedVolume = 15000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 420, .PackagedVolume = 5000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 463, .PackagedVolume = 3750})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 485, .PackagedVolume = 1300000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 513, .PackagedVolume = 1300000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 540, .PackagedVolume = 15000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 541, .PackagedVolume = 5000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 543, .PackagedVolume = 3750})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 547, .PackagedVolume = 1300000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 659, .PackagedVolume = 1300000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 830, .PackagedVolume = 2500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 831, .PackagedVolume = 2500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 832, .PackagedVolume = 10000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 833, .PackagedVolume = 10000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 834, .PackagedVolume = 2500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 883, .PackagedVolume = 1300000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 893, .PackagedVolume = 2500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 894, .PackagedVolume = 10000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 898, .PackagedVolume = 50000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 900, .PackagedVolume = 50000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 902, .PackagedVolume = 1300000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 906, .PackagedVolume = 10000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 941, .PackagedVolume = 500000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 963, .PackagedVolume = 5000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1022, .PackagedVolume = 500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1201, .PackagedVolume = 15000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1202, .PackagedVolume = 20000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1283, .PackagedVolume = 2500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1305, .PackagedVolume = 5000})
-
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1527, .PackagedVolume = 2500})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1534, .PackagedVolume = 5000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1538, .PackagedVolume = 1300000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 1972, .PackagedVolume = 10000})
-        PackagedGroups.Add(New PackagedGroup With {.GroupID = 2001, .PackagedVolume = 2500})
+        PackagedGroups = New List(Of PackagedGroup) From {
+            New PackagedGroup With {.GroupID = 25, .PackagedVolume = 2500},
+            New PackagedGroup With {.GroupID = 26, .PackagedVolume = 10000},
+            New PackagedGroup With {.GroupID = 27, .PackagedVolume = 50000},
+            New PackagedGroup With {.GroupID = 28, .PackagedVolume = 20000},
+            New PackagedGroup With {.GroupID = 29, .PackagedVolume = 500},
+            New PackagedGroup With {.GroupID = 30, .PackagedVolume = 10000000},
+            New PackagedGroup With {.GroupID = 31, .PackagedVolume = 500},
+            New PackagedGroup With {.GroupID = 237, .PackagedVolume = 2500},
+            New PackagedGroup With {.GroupID = 324, .PackagedVolume = 2500},
+            New PackagedGroup With {.GroupID = 358, .PackagedVolume = 10000},
+            New PackagedGroup With {.GroupID = 380, .PackagedVolume = 20000},
+            New PackagedGroup With {.GroupID = 381, .PackagedVolume = 50000},
+            New PackagedGroup With {.GroupID = 419, .PackagedVolume = 15000},
+            New PackagedGroup With {.GroupID = 420, .PackagedVolume = 5000},
+            New PackagedGroup With {.GroupID = 463, .PackagedVolume = 3750},
+            New PackagedGroup With {.GroupID = 485, .PackagedVolume = 1300000},
+            New PackagedGroup With {.GroupID = 513, .PackagedVolume = 1300000},
+            New PackagedGroup With {.GroupID = 540, .PackagedVolume = 15000},
+            New PackagedGroup With {.GroupID = 541, .PackagedVolume = 5000},
+            New PackagedGroup With {.GroupID = 543, .PackagedVolume = 3750},
+            New PackagedGroup With {.GroupID = 547, .PackagedVolume = 1300000},
+            New PackagedGroup With {.GroupID = 659, .PackagedVolume = 1300000},
+            New PackagedGroup With {.GroupID = 830, .PackagedVolume = 2500},
+            New PackagedGroup With {.GroupID = 831, .PackagedVolume = 2500},
+            New PackagedGroup With {.GroupID = 832, .PackagedVolume = 10000},
+            New PackagedGroup With {.GroupID = 833, .PackagedVolume = 10000},
+            New PackagedGroup With {.GroupID = 834, .PackagedVolume = 2500},
+            New PackagedGroup With {.GroupID = 883, .PackagedVolume = 1300000},
+            New PackagedGroup With {.GroupID = 893, .PackagedVolume = 2500},
+            New PackagedGroup With {.GroupID = 894, .PackagedVolume = 10000},
+            New PackagedGroup With {.GroupID = 898, .PackagedVolume = 50000},
+            New PackagedGroup With {.GroupID = 900, .PackagedVolume = 50000},
+            New PackagedGroup With {.GroupID = 902, .PackagedVolume = 1300000},
+            New PackagedGroup With {.GroupID = 906, .PackagedVolume = 10000},
+            New PackagedGroup With {.GroupID = 941, .PackagedVolume = 500000},
+            New PackagedGroup With {.GroupID = 963, .PackagedVolume = 5000},
+            New PackagedGroup With {.GroupID = 1022, .PackagedVolume = 500},
+            New PackagedGroup With {.GroupID = 1201, .PackagedVolume = 15000},
+            New PackagedGroup With {.GroupID = 1202, .PackagedVolume = 20000},
+            New PackagedGroup With {.GroupID = 1283, .PackagedVolume = 2500},
+            New PackagedGroup With {.GroupID = 1305, .PackagedVolume = 5000},
+            New PackagedGroup With {.GroupID = 1527, .PackagedVolume = 2500},
+            New PackagedGroup With {.GroupID = 1534, .PackagedVolume = 5000},
+            New PackagedGroup With {.GroupID = 1538, .PackagedVolume = 1300000},
+            New PackagedGroup With {.GroupID = 1972, .PackagedVolume = 10000},
+            New PackagedGroup With {.GroupID = 2001, .PackagedVolume = 2500}
+        }
 
         ' Now add the container data
-        PackagedItems = New List(Of PackagedItem)
-        PackagedItems.Add(New PackagedItem With {.typeID = 3293, .PackagedVolume = 33})
-        PackagedItems.Add(New PackagedItem With {.typeID = 3296, .PackagedVolume = 65})
-        PackagedItems.Add(New PackagedItem With {.typeID = 3297, .PackagedVolume = 10})
-        PackagedItems.Add(New PackagedItem With {.typeID = 3465, .PackagedVolume = 65})
-        PackagedItems.Add(New PackagedItem With {.typeID = 3466, .PackagedVolume = 33})
-        PackagedItems.Add(New PackagedItem With {.typeID = 3467, .PackagedVolume = 10})
-        PackagedItems.Add(New PackagedItem With {.typeID = 11488, .PackagedVolume = 150})
-        PackagedItems.Add(New PackagedItem With {.typeID = 11489, .PackagedVolume = 300})
-        PackagedItems.Add(New PackagedItem With {.typeID = 17363, .PackagedVolume = 10})
-        PackagedItems.Add(New PackagedItem With {.typeID = 17364, .PackagedVolume = 33})
-        PackagedItems.Add(New PackagedItem With {.typeID = 17365, .PackagedVolume = 65})
-        PackagedItems.Add(New PackagedItem With {.typeID = 17366, .PackagedVolume = 10000})
-        PackagedItems.Add(New PackagedItem With {.typeID = 17367, .PackagedVolume = 50000})
-        PackagedItems.Add(New PackagedItem With {.typeID = 17368, .PackagedVolume = 100000})
-        PackagedItems.Add(New PackagedItem With {.typeID = 24445, .PackagedVolume = 1200})
-        PackagedItems.Add(New PackagedItem With {.typeID = 33003, .PackagedVolume = 2500})
-        PackagedItems.Add(New PackagedItem With {.typeID = 33005, .PackagedVolume = 5000})
-        PackagedItems.Add(New PackagedItem With {.typeID = 33007, .PackagedVolume = 1000})
-        PackagedItems.Add(New PackagedItem With {.typeID = 33009, .PackagedVolume = 500})
-        PackagedItems.Add(New PackagedItem With {.typeID = 33011, .PackagedVolume = 100})
+        PackagedItems = New List(Of PackagedItem) From {
+            New PackagedItem With {.TypeID = 3293, .PackagedVolume = 33},
+            New PackagedItem With {.TypeID = 3296, .PackagedVolume = 65},
+            New PackagedItem With {.TypeID = 3297, .PackagedVolume = 10},
+            New PackagedItem With {.TypeID = 3465, .PackagedVolume = 65},
+            New PackagedItem With {.TypeID = 3466, .PackagedVolume = 33},
+            New PackagedItem With {.TypeID = 3467, .PackagedVolume = 10},
+            New PackagedItem With {.TypeID = 11488, .PackagedVolume = 150},
+            New PackagedItem With {.TypeID = 11489, .PackagedVolume = 300},
+            New PackagedItem With {.TypeID = 17363, .PackagedVolume = 10},
+            New PackagedItem With {.TypeID = 17364, .PackagedVolume = 33},
+            New PackagedItem With {.TypeID = 17365, .PackagedVolume = 65},
+            New PackagedItem With {.TypeID = 17366, .PackagedVolume = 10000},
+            New PackagedItem With {.TypeID = 17367, .PackagedVolume = 50000},
+            New PackagedItem With {.TypeID = 17368, .PackagedVolume = 100000},
+            New PackagedItem With {.TypeID = 24445, .PackagedVolume = 1200},
+            New PackagedItem With {.TypeID = 33003, .PackagedVolume = 2500},
+            New PackagedItem With {.TypeID = 33005, .PackagedVolume = 5000},
+            New PackagedItem With {.TypeID = 33007, .PackagedVolume = 1000},
+            New PackagedItem With {.TypeID = 33009, .PackagedVolume = 500},
+            New PackagedItem With {.TypeID = 33011, .PackagedVolume = 100}
+        }
 
     End Sub
 
@@ -137,7 +138,7 @@ Public Class YAMLtypeIDs
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
         End If
-        DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
+        DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.Instance)
         Dim DS As New Deserializer
         DS = DSB.Build
 
@@ -145,7 +146,7 @@ Public Class YAMLtypeIDs
         Dim DataFields As List(Of DBField)
         Dim CategoryName As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
@@ -201,7 +202,7 @@ Public Class YAMLtypeIDs
                 DataFields.Add(UpdateDB.BuildDatabaseField("sofFactionName", .sofFactionName, FieldType.varchar_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("sofMaterialSetID", .sofMaterialSetID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("metaGroupID", .metaGroupID, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("variationparentTypeID", .variationparentTypeID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("variationparentTypeID", .variationParentTypeID, FieldType.int_type))
 
                 ' Insert the translated data into translation tables
                 Call Translator.InsertTranslationData(DataField.Key, "typeID", "typeName", invTypes_Table, NameTranslation.GetAllTranslations(.name))
@@ -228,90 +229,96 @@ Public Class YAMLtypeIDs
     End Sub
 
     Private Sub BuildInventoryTypesTable()
-        Dim Table As New List(Of DBTableField)
-
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("groupID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("typeName", FieldType.nvarchar_type, 500, True))
-        Table.Add(New DBTableField("description", FieldType.text_type, MaxFieldLen, True))
-        Table.Add(New DBTableField("mass", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("volume", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("packagedVolume", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("capacity", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("portionSize", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("factionID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("raceID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("basePrice", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("published", FieldType.bit_type, 0, True))
-        Table.Add(New DBTableField("marketGroupID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("graphicID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("radius", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("soundID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("sofFactionName", FieldType.nvarchar_type, 100, True))
-        Table.Add(New DBTableField("sofMaterialSetID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("metaGroupID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("variationparentTypeID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("typeID", FieldType.int_type, 0, False, True),
+            New DBTableField("groupID", FieldType.int_type, 0, True),
+            New DBTableField("typeName", FieldType.nvarchar_type, 500, True),
+            New DBTableField("description", FieldType.text_type, MaxFieldLen, True),
+            New DBTableField("mass", FieldType.real_type, 0, True),
+            New DBTableField("volume", FieldType.real_type, 0, True),
+            New DBTableField("packagedVolume", FieldType.real_type, 0, True),
+            New DBTableField("capacity", FieldType.real_type, 0, True),
+            New DBTableField("portionSize", FieldType.int_type, 0, True),
+            New DBTableField("factionID", FieldType.int_type, 0, True),
+            New DBTableField("raceID", FieldType.tinyint_type, 0, True),
+            New DBTableField("basePrice", FieldType.real_type, 0, True),
+            New DBTableField("published", FieldType.bit_type, 0, True),
+            New DBTableField("marketGroupID", FieldType.int_type, 0, True),
+            New DBTableField("graphicID", FieldType.int_type, 0, True),
+            New DBTableField("radius", FieldType.real_type, 0, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True),
+            New DBTableField("soundID", FieldType.int_type, 0, True),
+            New DBTableField("sofFactionName", FieldType.nvarchar_type, 100, True),
+            New DBTableField("sofMaterialSetID", FieldType.int_type, 0, True),
+            New DBTableField("metaGroupID", FieldType.int_type, 0, True),
+            New DBTableField("variationparentTypeID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(invTypes_Table, Table)
 
         ' Create indexes
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String)
-        IndexFields.Add("typeID")
+        IndexFields = New List(Of String) From {
+            "typeID"
+        }
         Call UpdateDB.CreateIndex(invTypes_Table, "IDX_" & invTypes_Table & "_TID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("groupID")
+        IndexFields = New List(Of String) From {
+            "groupID"
+        }
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_GID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("marketGroupID")
+        IndexFields = New List(Of String) From {
+            "marketGroupID"
+        }
         Call UpdateDB.CreateIndex(invTypes_Table, "IDX_" & invTypes_Table & "_MGID", IndexFields)
 
     End Sub
 
     Private Sub BuildInventoryTraitsTable()
         Dim IndexFields As List(Of String)
-        Dim Table As New List(Of DBTableField)
-
-        Table.Add(New DBTableField("bonusID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("skilltypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("bonus", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("bonusText", FieldType.text_type, MaxFieldLen, True))
-        Table.Add(New DBTableField("importance", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("nameID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("unitID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("isPositive", FieldType.bit_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("bonusID", FieldType.int_type, 0, True),
+            New DBTableField("typeID", FieldType.int_type, 0, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True),
+            New DBTableField("skilltypeID", FieldType.int_type, 0, True),
+            New DBTableField("bonus", FieldType.real_type, 0, True),
+            New DBTableField("bonusText", FieldType.text_type, MaxFieldLen, True),
+            New DBTableField("importance", FieldType.int_type, 0, True),
+            New DBTableField("nameID", FieldType.int_type, 0, True),
+            New DBTableField("unitID", FieldType.int_type, 0, True),
+            New DBTableField("isPositive", FieldType.bit_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(invTraits_Table, Table)
 
         ' Create indexes
-        IndexFields = New List(Of String)
-        IndexFields.Add("typeID")
+        IndexFields = New List(Of String) From {
+            "typeID"
+        }
         Call UpdateDB.CreateIndex(invTraits_Table, "IDX_" & invTraits_Table & "_TID", IndexFields)
 
-        IndexFields = New List(Of String)
-        IndexFields.Add("bonusID")
+        IndexFields = New List(Of String) From {
+            "bonusID"
+        }
         Call UpdateDB.CreateIndex(invTraits_Table, "IDX_" & invTraits_Table & "_BID", IndexFields)
 
     End Sub
 
     Private Sub BuildCertificateMasteriesTable()
         Dim IndexFields As List(Of String)
-        Dim Table As New List(Of DBTableField)
-
-        Table.Add(New DBTableField("typeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("masteryLevel", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("masteryRecommendedTypeID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("typeID", FieldType.int_type, 0, True),
+            New DBTableField("masteryLevel", FieldType.tinyint_type, 0, True),
+            New DBTableField("masteryRecommendedTypeID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(crtMasteries_Table, Table)
 
         ' Create indexes
-        IndexFields = New List(Of String)
-        IndexFields.Add("typeID")
+        IndexFields = New List(Of String) From {
+            "typeID"
+        }
         Call UpdateDB.CreateIndex(crtMasteries_Table, "IDX_" & crtMasteries_Table & "_TID", IndexFields)
 
     End Sub
@@ -322,11 +329,11 @@ Public Class YAMLtypeIDs
         If Not IsNothing(SentMasteries) Then
             For Each Mastery In SentMasteries
                 For Each ID In Mastery.Value
-                    DataFields = New List(Of DBField)
-
-                    DataFields.Add(UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("masteryLevel", Mastery.Key + 1, FieldType.tinyint_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("masteryRecommendedTypeID", ID, FieldType.int_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("masteryLevel", Mastery.Key + 1, FieldType.tinyint_type),
+                        UpdateDB.BuildDatabaseField("masteryRecommendedTypeID", ID, FieldType.int_type)
+                    }
 
                     Call UpdateDB.InsertRecord(crtMasteries_Table, DataFields)
                 Next
@@ -345,18 +352,18 @@ Public Class YAMLtypeIDs
             If Not IsNothing(Traits.roleBonuses) Then
                 BonusIDCounter += 1
                 For Each R_bonus In Traits.roleBonuses
-                    DataFields = New List(Of DBField)
-
-                    DataFields.Add(UpdateDB.BuildDatabaseField("bonusID", BonusIDCounter, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("iconID", Traits.iconID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("skilltypeID", -1, FieldType.int_type)) ' -1 for role bonuses that don't have skills associated with them
-                    DataFields.Add(UpdateDB.BuildDatabaseField("bonus", R_bonus.bonus, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("bonusText", NameTranslation.GetLanguageTranslationData(R_bonus.bonusText), FieldType.text_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("importance", R_bonus.importance, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("nameID", R_bonus.nameID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("unitID", R_bonus.unitID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("isPositive", R_bonus.isPositive, FieldType.int_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("bonusID", BonusIDCounter, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("iconID", Traits.iconID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("skilltypeID", -1, FieldType.int_type), ' -1 for role bonuses that don't have skills associated with them
+                        UpdateDB.BuildDatabaseField("bonus", R_bonus.bonus, FieldType.real_type),
+                        UpdateDB.BuildDatabaseField("bonusText", NameTranslation.GetLanguageTranslationData(R_bonus.bonusText), FieldType.text_type),
+                        UpdateDB.BuildDatabaseField("importance", R_bonus.importance, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("nameID", R_bonus.nameID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("unitID", R_bonus.unitID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("isPositive", R_bonus.isPositive, FieldType.int_type)
+                    }
 
                     Call UpdateDB.InsertRecord(invTraits_Table, DataFields)
 
@@ -370,18 +377,18 @@ Public Class YAMLtypeIDs
             If Not IsNothing(Traits.miscBonuses) Then
                 BonusIDCounter += 1
                 For Each M_bonus In Traits.miscBonuses
-                    DataFields = New List(Of DBField)
-
-                    DataFields.Add(UpdateDB.BuildDatabaseField("bonusID", BonusIDCounter, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("iconID", Traits.iconID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("skilltypeID", -1, FieldType.int_type)) ' -1 for misc bonuses that don't have skills associated with them
-                    DataFields.Add(UpdateDB.BuildDatabaseField("bonus", M_bonus.bonus, FieldType.real_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("bonusText", NameTranslation.GetLanguageTranslationData(M_bonus.bonusText), FieldType.text_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("importance", M_bonus.importance, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("nameID", M_bonus.nameID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("unitID", M_bonus.unitID, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("isPositive", M_bonus.isPositive, FieldType.int_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("bonusID", BonusIDCounter, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("iconID", Traits.iconID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("skilltypeID", -1, FieldType.int_type), ' -1 for misc bonuses that don't have skills associated with them
+                        UpdateDB.BuildDatabaseField("bonus", M_bonus.bonus, FieldType.real_type),
+                        UpdateDB.BuildDatabaseField("bonusText", NameTranslation.GetLanguageTranslationData(M_bonus.bonusText), FieldType.text_type),
+                        UpdateDB.BuildDatabaseField("importance", M_bonus.importance, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("nameID", M_bonus.nameID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("unitID", M_bonus.unitID, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("isPositive", M_bonus.isPositive, FieldType.int_type)
+                    }
 
                     Call UpdateDB.InsertRecord(invTraits_Table, DataFields)
 
@@ -396,18 +403,18 @@ Public Class YAMLtypeIDs
                 BonusIDCounter += 1
                 For Each TypeTrait In Traits.types
                     For Each S_bonus In TypeTrait.Value
-                        DataFields = New List(Of DBField)
-
-                        DataFields.Add(UpdateDB.BuildDatabaseField("bonusID", BonusIDCounter, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("iconID", Traits.iconID, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("skilltypeID", TypeTrait.Key, FieldType.int_type)) ' -1 for misc bonuses that don't have skills associated with them
-                        DataFields.Add(UpdateDB.BuildDatabaseField("bonus", S_bonus.bonus, FieldType.real_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("bonusText", NameTranslation.GetLanguageTranslationData(S_bonus.bonusText), FieldType.text_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("importance", S_bonus.importance, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("nameID", S_bonus.nameID, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("unitID", S_bonus.unitID, FieldType.int_type))
-                        DataFields.Add(UpdateDB.BuildDatabaseField("isPositive", S_bonus.isPositive, FieldType.int_type))
+                        DataFields = New List(Of DBField) From {
+                            UpdateDB.BuildDatabaseField("bonusID", BonusIDCounter, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("typeID", TypeID, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("iconID", Traits.iconID, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("skilltypeID", TypeTrait.Key, FieldType.int_type), ' -1 for misc bonuses that don't have skills associated with them
+                            UpdateDB.BuildDatabaseField("bonus", S_bonus.bonus, FieldType.real_type),
+                            UpdateDB.BuildDatabaseField("bonusText", NameTranslation.GetLanguageTranslationData(S_bonus.bonusText), FieldType.text_type),
+                            UpdateDB.BuildDatabaseField("importance", S_bonus.importance, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("nameID", S_bonus.nameID, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("unitID", S_bonus.unitID, FieldType.int_type),
+                            UpdateDB.BuildDatabaseField("isPositive", S_bonus.isPositive, FieldType.int_type)
+                        }
 
                         Call UpdateDB.InsertRecord(invTraits_Table, DataFields)
 

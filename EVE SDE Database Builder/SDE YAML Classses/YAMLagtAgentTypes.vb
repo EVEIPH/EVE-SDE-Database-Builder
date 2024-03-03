@@ -22,19 +22,18 @@ Public Class YAMLagtAgentTypes
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.Instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of agtAgentType)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("agentTypeID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("agentType", FieldType.varchar_type, 50, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("agentTypeID", FieldType.int_type, 0, False, True),
+            New DBTableField("agentType", FieldType.varchar_type, 50, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -57,11 +56,11 @@ Public Class YAMLagtAgentTypes
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("agentTypeID", DataField.agentTypeID, FieldType.int_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("agentType", DataField.agentType, FieldType.varchar_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("agentTypeID", DataField.agentTypeID, FieldType.int_type),
+                UpdateDB.BuildDatabaseField("agentType", DataField.agentType, FieldType.varchar_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

@@ -12,7 +12,7 @@ Public Class DBFilesBase
     Protected Const NULL As String = "NULL"
 
     Protected MainDatabase As String
-    Private SelectedDBType As DatabaseType
+    Private ReadOnly SelectedDBType As DatabaseType
     Protected CSVDirectory As String ' For bulk inserts
 
     ''' <summary>
@@ -89,7 +89,7 @@ Public Class DBFilesBase
     ''' <param name="FieldDataType">Datatype of the field</param>
     ''' <returns></returns>
     Public Function BuildDatabaseField(ByVal FieldName As String, ByVal FieldValue As Object, FieldDataType As FieldType) As DBField
-        Dim ReturnFieldValue As String = ""
+        Dim ReturnFieldValue As String
 
         ' Format the field value and return a DB field
         If IsNothing(FieldValue) Or IsDBNull(FieldValue) Then

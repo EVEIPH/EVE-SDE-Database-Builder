@@ -31,25 +31,27 @@ Public Class YAMLraces
         Dim DataFields As List(Of DBField)
         Dim TranslatedField As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+dim TotalRecords as Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("raceID", FieldType.tinyint_type, 0, True))
-        Table.Add(New DBTableField("raceName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("raceDescription", FieldType.varchar_type, 1000, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("shipTypeID", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("raceID", FieldType.tinyint_type, 0, True),
+            New DBTableField("raceName", FieldType.varchar_type, 100, True),
+            New DBTableField("raceDescription", FieldType.varchar_type, 1000, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True),
+            New DBTableField("shipTypeID", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         Dim RaceSkillsTableName As String = "raceSkills"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("raceID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("skillTypeID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("level", FieldType.int_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("raceID", FieldType.int_type, 0, False),
+            New DBTableField("skillTypeID", FieldType.int_type, 0, True),
+            New DBTableField("level", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(RaceSkillsTableName, Table)
 
@@ -87,10 +89,11 @@ Public Class YAMLraces
 
             If Not IsNothing(DataField.Value.skills) Then
                 For Each Skill In DataField.Value.skills
-                    DataFields = New List(Of DBField)
-                    DataFields.Add(UpdateDB.BuildDatabaseField("raceID", DataField.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("skillTypeID", Skill.Key, FieldType.int_type))
-                    DataFields.Add(UpdateDB.BuildDatabaseField("level", Skill.Value, FieldType.int_type))
+                    DataFields = New List(Of DBField) From {
+                        UpdateDB.BuildDatabaseField("raceID", DataField.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("skillTypeID", Skill.Key, FieldType.int_type),
+                        UpdateDB.BuildDatabaseField("level", Skill.Value, FieldType.int_type)
+                    }
                     Call UpdateDB.InsertRecord(RaceSkillsTableName, DataFields)
                 Next
             End If

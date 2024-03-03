@@ -8,11 +8,11 @@ Public Class msSQLDB
     Inherits DBFilesBase
 
     ' Save the database name and instance for later
-    Private DBServerName As String
-    Private DBUserName As String
-    Private DBPassword As String
-    Private DBName As String
-    Private TempDB As New LocalDatabase ' for doing bulk inserts
+    Private ReadOnly DBServerName As String
+    Private ReadOnly DBUserName As String
+    Private ReadOnly DBPassword As String
+    Private ReadOnly DBName As String
+    Private ReadOnly TempDB As New LocalDatabase ' for doing bulk inserts
 
     ''' <summary>
     ''' Constructor class for a Microsoft SQL Server database. Class connects to the server name sent.
@@ -115,8 +115,7 @@ Public Class msSQLDB
     ''' </summary>
     ''' <param name="SQL">SQL query to execute.</param>
     Public Sub ExecuteNonQuerySQL(ByVal SQL As String)
-        Dim DBRef As New SqlConnection
-        DBRef = DBConnectionRef()
+        Dim DBRef As SqlConnection = DBConnectionRef()
         Dim Command As New SqlCommand(SQL, DBRef)
         Command.ExecuteNonQuery()
         Command.Dispose()
@@ -150,7 +149,7 @@ Public Class msSQLDB
     ''' </summary>
     ''' <param name="TableName">Table you want to drop</param>
     Public Sub CreateTable(ByVal TableName As String, ByVal TableStructure As List(Of DBTableField))
-        Dim SQL As String = ""
+        Dim SQL As String
         Dim FieldLength As String = "0" ' For char types
         Dim PKFields As New List(Of String)
 
@@ -245,7 +244,7 @@ Public Class msSQLDB
     ''' <param name="Clustered">Optional - If the index is clustered or unclustered (not used).</param>
     Public Sub CreateIndex(ByVal TableName As String, ByVal IndexName As String, IndexFields As List(Of String),
                            Optional Unique As Boolean = False, Optional Clustered As Boolean = False)
-        Dim SQL As String = ""
+        Dim SQL As String
 
         SQL = "CREATE" & SPACE
 
@@ -314,10 +313,7 @@ Public Class msSQLDB
     ''' <param name="TranslationTableImportList">List of translation tables to import.</param>
     Public Sub FinalizeDataImport(ByRef Translator As YAMLTranslations, ByVal TranslationTableImportList As List(Of String))
         Dim DBREf As SqlConnection = DBConnectionRef()
-        Dim Tables As New List(Of DataTable)
-
-        Tables = New List(Of DataTable)
-        Tables = Translator.TranslationTables.GetTables
+        Dim Tables As List(Of DataTable) = Translator.TranslationTables.GetTables
 
         Call InitalizeMainProgressBar(Tables.Count, "Importing Translation data...")
 
@@ -342,7 +338,6 @@ Public Class msSQLDB
 
         Call ClearMainProgressBar()
 
-        Tables = New List(Of DataTable)
         Tables = TempDB.GetTables
         Call InitalizeMainProgressBar(Tables.Count, "Importing Bulk data...")
 

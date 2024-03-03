@@ -22,24 +22,23 @@ Public Class YAMLinvPositions
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New List(Of invPosition)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("itemID", FieldType.bigint_type, 0, False, True))
-        Table.Add(New DBTableField("x", FieldType.real_type, 0, False))
-        Table.Add(New DBTableField("y", FieldType.real_type, 0, False))
-        Table.Add(New DBTableField("z", FieldType.real_type, 0, False))
-        Table.Add(New DBTableField("yaw", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("pitch", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("roll", FieldType.real_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("itemID", FieldType.bigint_type, 0, False, True),
+            New DBTableField("x", FieldType.real_type, 0, False),
+            New DBTableField("y", FieldType.real_type, 0, False),
+            New DBTableField("z", FieldType.real_type, 0, False),
+            New DBTableField("yaw", FieldType.real_type, 0, True),
+            New DBTableField("pitch", FieldType.real_type, 0, True),
+            New DBTableField("roll", FieldType.real_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -62,16 +61,16 @@ Public Class YAMLinvPositions
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("itemID", DataField.itemID, FieldType.bigint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("yaw", DataField.yaw, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("pitch", DataField.pitch, FieldType.real_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("roll", DataField.roll, FieldType.real_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("itemID", DataField.itemID, FieldType.bigint_type),
+                UpdateDB.BuildDatabaseField("x", DataField.x, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("y", DataField.y, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("z", DataField.z, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("yaw", DataField.yaw, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("pitch", DataField.pitch, FieldType.real_type),
+                UpdateDB.BuildDatabaseField("roll", DataField.roll, FieldType.real_type)
+            }
 
             Call UpdateDB.InsertRecord(TableName, DataFields)
 

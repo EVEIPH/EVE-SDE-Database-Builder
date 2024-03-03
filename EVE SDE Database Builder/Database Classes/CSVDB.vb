@@ -8,11 +8,11 @@ Imports System.Security.AccessControl
 Public Class CSVDB
     Inherits DBFilesBase
 
-    Private DB As String ' Folder Path for all 'tables' as files
+    Private ReadOnly DB As String ' Folder Path for all 'tables' as files
 
-    Private DELIMITER As String = ""
+    Private ReadOnly DELIMITER As String = ""
     Private Const CSVExtention As String = ".csv"
-    Private UseNullforBlanks As Boolean = False
+    Private ReadOnly UseNullforBlanks As Boolean = False
 
     ''' <summary>
     ''' Constructor class for a CSV "database". 
@@ -37,7 +37,7 @@ Public Class CSVDB
             ' Set the folder access if needed (mainly for postgresql bulk import)
             If AllowDirectoryFullAccess Then
                 Dim UserAccount As String = "EVERYONE" 'Specify the user here, to allow stuff like postgresql to have access to the folder
-                Dim FolderInfo As DirectoryInfo = New DirectoryInfo(DatabaseFileNameandPath)
+                Dim FolderInfo As New DirectoryInfo(DatabaseFileNameandPath)
                 Dim FolderSecurity As New DirectorySecurity
                 FolderSecurity.AddAccessRule(New FileSystemAccessRule(UserAccount, FileSystemRights.Read, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
                 FolderInfo.SetAccessControl(FolderSecurity)
@@ -217,10 +217,8 @@ Public Class CSVDB
     ''' <param name="Translator">YAMLTranslations object to get stored tables from.</param>
     ''' <param name="TranslationTableImportList">List of translation tables to import.</param>
     Public Sub FinalizeDataImport(ByRef Translator As YAMLTranslations, ByVal TranslationTableImportList As List(Of String))
-        Dim Tables As New List(Of DataTable)
+        Dim Tables As List(Of DataTable) = Translator.TranslationTables.GetTables
         Dim i As Integer
-
-        Tables = Translator.TranslationTables.GetTables
 
         Call InitalizeMainProgressBar(Tables.Count, "Importing Translation data...")
 

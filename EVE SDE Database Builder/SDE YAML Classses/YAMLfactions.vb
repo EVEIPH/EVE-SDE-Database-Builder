@@ -27,31 +27,32 @@ Public Class YAMLfactions
 
         Dim YAMLRecords As New Dictionary(Of Long, faction)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("factionID", FieldType.int_type, 0, False, True))
-        Table.Add(New DBTableField("factionName", FieldType.varchar_type, 100, True))
-        Table.Add(New DBTableField("description", FieldType.varchar_type, 1500, True))
-        Table.Add(New DBTableField("shortDescriptionID", FieldType.varchar_type, 500, True))
-        Table.Add(New DBTableField("solarSystemID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("corporationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("sizeFactor", FieldType.real_type, 0, True))
-        Table.Add(New DBTableField("militiaCorporationID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("iconID", FieldType.int_type, 0, True))
-        Table.Add(New DBTableField("uniqueName", FieldType.int_type, 0, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("factionID", FieldType.int_type, 0, False, True),
+            New DBTableField("factionName", FieldType.varchar_type, 100, True),
+            New DBTableField("description", FieldType.varchar_type, 1500, True),
+            New DBTableField("shortDescriptionID", FieldType.varchar_type, 500, True),
+            New DBTableField("solarSystemID", FieldType.int_type, 0, True),
+            New DBTableField("corporationID", FieldType.int_type, 0, True),
+            New DBTableField("sizeFactor", FieldType.real_type, 0, True),
+            New DBTableField("militiaCorporationID", FieldType.int_type, 0, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True),
+            New DBTableField("uniqueName", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
         Dim MemberRacesTableName As String = "factionsMemberRaces"
-        Table = New List(Of DBTableField)
-        Table.Add(New DBTableField("factionID", FieldType.int_type, 0, False))
-        Table.Add(New DBTableField("memberRace", FieldType.int_type, 0, True))
+        Table = New List(Of DBTableField) From {
+            New DBTableField("factionID", FieldType.int_type, 0, False),
+            New DBTableField("memberRace", FieldType.int_type, 0, True)
+        }
 
         Call UpdateDB.CreateTable(MemberRacesTableName, Table)
 
@@ -99,9 +100,10 @@ Public Class YAMLfactions
             Call UpdateDB.InsertRecord(TableName, DataFields)
 
             For Each MR In DataField.Value.memberRaces
-                DataFields = New List(Of DBField)
-                DataFields.Add(UpdateDB.BuildDatabaseField("factionID", DataField.Key, FieldType.int_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("memberRace", MR, FieldType.int_type))
+                DataFields = New List(Of DBField) From {
+                    UpdateDB.BuildDatabaseField("factionID", DataField.Key, FieldType.int_type),
+                    UpdateDB.BuildDatabaseField("memberRace", MR, FieldType.int_type)
+                }
                 Call UpdateDB.InsertRecord(MemberRacesTableName, DataFields)
             Next
 

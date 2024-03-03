@@ -22,21 +22,20 @@ Public Class YAMLcorporationActivities
             DSB.IgnoreUnmatchedProperties()
         End If
         DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.instance)
-        Dim DS As New Deserializer
-        DS = DSB.Build
+        Dim DS As Deserializer = DSB.Build
 
         Dim YAMLRecords As New Dictionary(Of Long, corporationActivity)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("activityID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("activityName", FieldType.nvarchar_type, 100, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("activityID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("activityName", FieldType.nvarchar_type, 100, True)
+        }
         Call UpdateDB.CreateTable(TableName, Table)
 
         ' See if we only want to build the table and indexes
@@ -58,13 +57,13 @@ Public Class YAMLcorporationActivities
 
         ' Process Data
         For Each DataField In YAMLRecords
-            DataFields = New List(Of DBField)
-
             ' Build the insert list
-            DataFields.Add(UpdateDB.BuildDatabaseField("activityID", DataField.Key, FieldType.tinyint_type))
-            DataFields.Add(UpdateDB.BuildDatabaseField("activityName", NameTranslation.GetLanguageTranslationData(DataField.Value.nameID), FieldType.nvarchar_type))
+            DataFields = New List(Of DBField) From {
+                UpdateDB.BuildDatabaseField("activityID", DataField.Key, FieldType.tinyint_type),
+                UpdateDB.BuildDatabaseField("activityName", NameTranslation.GetLanguageTranslationData(DataField.Value.nameID), FieldType.nvarchar_type)
+            }
 
-            ' Insert the translated data into translation tables
+                ' Insert the translated data into translation tables
             Call Translator.InsertTranslationData(DataField.Key, "activityID", "activityName", TableName, NameTranslation.GetAllTranslations(DataField.Value.nameID))
 
             Call UpdateDB.InsertRecord(TableName, DataFields)

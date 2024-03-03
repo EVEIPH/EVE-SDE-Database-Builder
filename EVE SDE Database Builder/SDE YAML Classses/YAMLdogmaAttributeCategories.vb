@@ -27,15 +27,15 @@ Public Class YAMLdogmaAttributeCategories
 
         Dim YAMLRecords As New Dictionary(Of Long, dogmaAttributeCategory)
         Dim DataFields As List(Of DBField)
-        Dim SQL As String = ""
         Dim Count As Long = 0
-        Dim TotalRecords As Long = 0
+        Dim TotalRecords As Long
 
         ' Build table
-        Dim Table As New List(Of DBTableField)
-        Table.Add(New DBTableField("categoryID", FieldType.tinyint_type, 0, False, True))
-        Table.Add(New DBTableField("name", FieldType.nvarchar_type, 50, True))
-        Table.Add(New DBTableField("description", FieldType.nvarchar_type, 200, True))
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("categoryID", FieldType.tinyint_type, 0, False, True),
+            New DBTableField("name", FieldType.nvarchar_type, 50, True),
+            New DBTableField("description", FieldType.nvarchar_type, 200, True)
+        }
 
         Call UpdateDB.CreateTable(TableName, Table)
 
@@ -59,12 +59,12 @@ Public Class YAMLdogmaAttributeCategories
         ' Process Data
         For Each DataField In YAMLRecords
             With DataField.Value
-                DataFields = New List(Of DBField)
-
                 ' Build the insert list
-                DataFields.Add(UpdateDB.BuildDatabaseField("categoryID", DataField.Key, FieldType.tinyint_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("name", .name, FieldType.nvarchar_type))
-                DataFields.Add(UpdateDB.BuildDatabaseField("description", .description, FieldType.nvarchar_type))
+                DataFields = New List(Of DBField) From {
+                    UpdateDB.BuildDatabaseField("categoryID", DataField.Key, FieldType.tinyint_type),
+                    UpdateDB.BuildDatabaseField("name", .name, FieldType.nvarchar_type),
+                    UpdateDB.BuildDatabaseField("description", .description, FieldType.nvarchar_type)
+                }
 
                 Call UpdateDB.InsertRecord(TableName, DataFields)
 

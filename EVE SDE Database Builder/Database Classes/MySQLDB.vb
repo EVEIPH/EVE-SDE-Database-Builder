@@ -10,12 +10,12 @@ Imports System.Collections.Concurrent
 Public Class MySQLDB
     Inherits DBFilesBase
 
-    Private BulkInsertTablesData As ConcurrentQueue(Of BulkInsertData)
+    Private ReadOnly BulkInsertTablesData As ConcurrentQueue(Of BulkInsertData)
 
     ' Save the database information for later connections
-    Private DBServerName As String
-    Private DBUserID As String
-    Private DBUserPassword As String
+    Private ReadOnly DBServerName As String
+    Private ReadOnly DBUserID As String
+    Private ReadOnly DBUserPassword As String
 
     Private Const DBConnectionString As String = "Server={0}; userid={1}; password={2}; pooling=false; default command timeout=600; AllowLoadLocalInfile=true;"
 
@@ -117,9 +117,7 @@ Public Class MySQLDB
     ''' </summary>
     ''' <param name="SQL">SQL query to execute.</param>
     Public Sub ExecuteNonQuerySQL(ByVal SQL As String)
-        Dim DBRef As New MySqlConnection
-        DBRef = DBConnectionRef()
-
+        Dim DBRef As MySqlConnection = DBConnectionRef()
         Dim Command As MySqlCommand
         Command = New MySqlCommand(SQL, DBRef)
         Command.ExecuteNonQuery()
@@ -178,7 +176,7 @@ Public Class MySQLDB
     ''' <param name="TableName">Name of the table to create.</param>
     ''' <param name="TableStructure">List of table fields that define the table.</param>
     Public Sub CreateTable(ByVal TableName As String, ByVal TableStructure As List(Of DBTableField))
-        Dim SQL As String = ""
+        Dim SQL As String
         Dim FieldLength As String = "0" ' For char types
         Dim PKFields As New List(Of String)
 
@@ -281,7 +279,7 @@ Public Class MySQLDB
     ''' <param name="Clustered">Optional - If the index is clustered or unclustered (not used).</param>
     Public Sub CreateIndex(ByVal TableName As String, ByVal IndexName As String, IndexFields As List(Of String),
                            Optional Unique As Boolean = False, Optional Clustered As Boolean = False)
-        Dim SQL As String = ""
+        Dim SQL As String
 
         SQL = "CREATE" & SPACE
 
@@ -311,7 +309,7 @@ Public Class MySQLDB
     ''' <param name="TableName">Table to insert records.</param>
     ''' <param name="Record">List of table fields that make up the record.</param>
     Public Sub InsertRecord(ByVal TableName As String, Record As List(Of DBField))
-        Dim SQL As String = ""
+        Dim SQL As String
         Dim Fields As String = ""
         Dim FieldValues As String = ""
 
