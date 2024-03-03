@@ -620,7 +620,7 @@ Partial Class frmMain
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.AboutToolStripMenuItem, Me.DeveloperToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(540, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(540, 28)
         Me.MenuStrip1.TabIndex = 24
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -628,64 +628,64 @@ Partial Class frmMain
         '
         Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SetThreadsUsedToolStripMenuItem, Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
-        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(44, 24)
         Me.FileToolStripMenuItem.Text = "File"
         '
         'SetThreadsUsedToolStripMenuItem
         '
         Me.SetThreadsUsedToolStripMenuItem.Name = "SetThreadsUsedToolStripMenuItem"
-        Me.SetThreadsUsedToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
+        Me.SetThreadsUsedToolStripMenuItem.Size = New System.Drawing.Size(192, 24)
         Me.SetThreadsUsedToolStripMenuItem.Text = "Set Threads Used"
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(192, 24)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckForUpdatesToolStripMenuItem, Me.AboutToolStripMenuItem1})
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(52, 20)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(62, 24)
         Me.AboutToolStripMenuItem.Text = "About"
         '
         'CheckForUpdatesToolStripMenuItem
         '
         Me.CheckForUpdatesToolStripMenuItem.Name = "CheckForUpdatesToolStripMenuItem"
-        Me.CheckForUpdatesToolStripMenuItem.Size = New System.Drawing.Size(243, 22)
+        Me.CheckForUpdatesToolStripMenuItem.Size = New System.Drawing.Size(297, 24)
         Me.CheckForUpdatesToolStripMenuItem.Text = "Check for Updates"
         '
         'AboutToolStripMenuItem1
         '
         Me.AboutToolStripMenuItem1.Name = "AboutToolStripMenuItem1"
-        Me.AboutToolStripMenuItem1.Size = New System.Drawing.Size(243, 22)
+        Me.AboutToolStripMenuItem1.Size = New System.Drawing.Size(297, 24)
         Me.AboutToolStripMenuItem1.Text = "About EVE SDE Database Builder"
         '
         'DeveloperToolStripMenuItem
         '
         Me.DeveloperToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PrepareFilesForUpdateToolStripMenuItem, Me.BuildBinaryToolStripMenuItem, Me.TestForSDEChangesToolStripMenuItem})
         Me.DeveloperToolStripMenuItem.Name = "DeveloperToolStripMenuItem"
-        Me.DeveloperToolStripMenuItem.Size = New System.Drawing.Size(72, 20)
+        Me.DeveloperToolStripMenuItem.Size = New System.Drawing.Size(90, 24)
         Me.DeveloperToolStripMenuItem.Text = "Developer"
         '
         'PrepareFilesForUpdateToolStripMenuItem
         '
         Me.PrepareFilesForUpdateToolStripMenuItem.Name = "PrepareFilesForUpdateToolStripMenuItem"
-        Me.PrepareFilesForUpdateToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
+        Me.PrepareFilesForUpdateToolStripMenuItem.Size = New System.Drawing.Size(238, 24)
         Me.PrepareFilesForUpdateToolStripMenuItem.Text = "Prepare Files for Update"
         '
         'BuildBinaryToolStripMenuItem
         '
         Me.BuildBinaryToolStripMenuItem.Name = "BuildBinaryToolStripMenuItem"
-        Me.BuildBinaryToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
+        Me.BuildBinaryToolStripMenuItem.Size = New System.Drawing.Size(238, 24)
         Me.BuildBinaryToolStripMenuItem.Text = "Build Binary"
         '
         'TestForSDEChangesToolStripMenuItem
         '
         Me.TestForSDEChangesToolStripMenuItem.CheckOnClick = True
         Me.TestForSDEChangesToolStripMenuItem.Name = "TestForSDEChangesToolStripMenuItem"
-        Me.TestForSDEChangesToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
+        Me.TestForSDEChangesToolStripMenuItem.Size = New System.Drawing.Size(238, 24)
         Me.TestForSDEChangesToolStripMenuItem.Text = "Test for SDE Changes"
         '
         'frmMain

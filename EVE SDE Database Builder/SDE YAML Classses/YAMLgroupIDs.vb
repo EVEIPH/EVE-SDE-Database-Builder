@@ -31,7 +31,7 @@ Public Class YAMLgroupIDs
         Dim DataFields As List(Of DBField)
         Dim CategoryName As String = ""
         Dim Count As Long = 0
-dim TotalRecords as Long
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 
@@ -51,14 +51,10 @@ dim TotalRecords as Long
         Call UpdateDB.CreateTable(TableName, Table)
 
         Dim IndexFields As List(Of String)
-        IndexFields = New List(Of String) From {
-            "groupID"
-        }
+        IndexFields = New List(Of String) From {"groupID"}
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_GID", IndexFields)
 
-        IndexFields = New List(Of String) From {
-            "categoryID"
-        }
+        IndexFields = New List(Of String) From {"categoryID"}
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_CID", IndexFields)
 
         ' See if we only want to build the table and indexes

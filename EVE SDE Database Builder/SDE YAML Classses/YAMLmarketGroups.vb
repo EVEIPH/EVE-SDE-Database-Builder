@@ -26,7 +26,6 @@ Public Class YAMLmarketGroups
         DS = DSB.Build
 
         Dim YAMLRecords As New Dictionary(Of Long, marketGroup)
-        Dim IndexFields As List(Of String)
         Dim DataFields As List(Of DBField)
         Dim Count As Long = 0
         Dim TotalRecords As Long
@@ -35,7 +34,7 @@ Public Class YAMLmarketGroups
 
         ' Build table
         Dim Table As New List(Of DBTableField) From {
-            New DBTableField("marketGroupID ", FieldType.int_type, 0, False, True),
+            New DBTableField("marketGroupID", FieldType.int_type, 0, False, True),
             New DBTableField("descriptionID", FieldType.nvarchar_type, 300, True),
             New DBTableField("hasTypes ", FieldType.bit_type, -1, True),
             New DBTableField("iconID", FieldType.int_type, 0, True),
@@ -45,9 +44,8 @@ Public Class YAMLmarketGroups
 
         Call UpdateDB.CreateTable(TableName, Table)
 
-        IndexFields = New List(Of String) From {
-            "marketGroupID"
-        }
+        Dim IndexFields As List(Of String)
+        IndexFields = New List(Of String) From {"marketGroupID"}
         Call UpdateDB.CreateIndex(TableName, "IDX_" & TableName & "_MGID", IndexFields)
 
         ' See if we only want to build the table and indexes

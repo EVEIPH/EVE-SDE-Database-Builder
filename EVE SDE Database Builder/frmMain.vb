@@ -747,6 +747,10 @@ ExitProc:
                 CSVImport = False
         End Select
 
+        lblStatus.Text = "Finalizing import..."
+        Me.Cursor = Cursors.WaitCursor
+        Application.DoEvents()
+
         ' Finalize
         If Not CancelImport Then
             ' Finalize
@@ -770,8 +774,9 @@ CancelImportProcessing:
         Call ResetProgressColumn()
         Call Translator.Close()
         Call UF.Close()
-        Application.DoEvents()
         lblStatus.Text = ""
+        Me.Cursor = Cursors.Default
+        Application.DoEvents()
         GC.Collect()
         GC.WaitForPendingFinalizers()
         On Error GoTo 0
