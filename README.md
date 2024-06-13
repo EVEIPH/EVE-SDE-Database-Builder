@@ -33,4 +33,4 @@ If needed: Select the SDE folder (the ‘sde’ folder part of whatever folder y
 # Click here to download the [Binaries for installing the program](https://github.com/EVEIPH/EVE-SDE-Database-Builder/raw/master/Latest%20Files/EVE%20SDE%20Database%20Builder%20Install.zip)
 
 ## Known Issues:
-* Spanish, Italian, and Korean languages are inconsistent throughout data with translations. When CCP updates this data, the program will be updated to allow for those language downloads
+* Spanish and Italian languages are inconsistent throughout data with translations. When CCP updates this data, the program will be updated to allow for those language downloads
