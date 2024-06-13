@@ -17,8 +17,6 @@ Public Class YAMLraces
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
         FileNameErrorTracker = racesFile
-
-        FileNameErrorTracker = racesFile
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()
@@ -31,7 +29,7 @@ Public Class YAMLraces
         Dim DataFields As List(Of DBField)
         Dim TranslatedField As String = ""
         Dim Count As Long = 0
-dim TotalRecords as Long
+        Dim TotalRecords As Long
 
         Dim NameTranslation As New ImportLanguage(Params.ImportLanguageCode)
 

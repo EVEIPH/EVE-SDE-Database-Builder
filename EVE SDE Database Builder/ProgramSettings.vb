@@ -11,6 +11,7 @@ Public Class ProgramSettings
     Private Const DefaultSelectedLanguage As String = "English"
     Private Const DefaultpostgreSQLPort As String = "5432"
     Private Const DefaultEUCheck As Boolean = False
+    Private Const DefaultUseLargerVersion As Boolean = False
 
     ' Local version of settings
     Private AppSettings As ApplicationSettings
@@ -179,6 +180,7 @@ Public Class ProgramSettings
                     .MySQLPassword = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "MySQLPassword", ""))
                     .CSVEUCheck = CBool(GetSettingValue(AppSettingsFileName, SettingTypes.TypeBoolean, AppSettingsFileName, "CSVEUCheck", DefaultEUCheck))
                     .SelectedLanguage = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SelectedLanguage", DefaultSelectedLanguage))
+                    .UseLargerVersion = CBool(GetSettingValue(AppSettingsFileName, SettingTypes.TypeBoolean, AppSettingsFileName, "UseLargerVersion", DefaultUseLargerVersion))
                 End With
 
             Else
@@ -221,6 +223,7 @@ Public Class ProgramSettings
             .MySQLUserName = ""
             .MySQLPassword = ""
             .CSVEUCheck = DefaultEUCheck
+            .UseLargerVersion = DefaultUseLargerVersion
             .SelectedLanguage = DefaultSelectedLanguage
             .DownloadFolderPath = ""
         End With
@@ -233,7 +236,7 @@ Public Class ProgramSettings
 
     ' Saves the application settings to XML
     Public Sub SaveApplicationSettings(SentSettings As ApplicationSettings)
-        Dim ApplicationSettingsList(17) As Setting
+        Dim ApplicationSettingsList(18) As Setting
 
         Try
             With SentSettings
@@ -255,6 +258,7 @@ Public Class ProgramSettings
                 ApplicationSettingsList(15) = New Setting("SelectedLanguage", .SelectedLanguage)
                 ApplicationSettingsList(16) = New Setting("SelectedDB", .SelectedDB)
                 ApplicationSettingsList(17) = New Setting("DownloadFolderPath", .DownloadFolderPath)
+                ApplicationSettingsList(18) = New Setting("UseLargerVersion", .UseLargerVersion)
             End With
 
             Call WriteSettingsToFile(AppSettingsFileName, ApplicationSettingsList, AppSettingsFileName)
@@ -304,6 +308,8 @@ Public Structure ApplicationSettings
     Dim MySQLPassword As String
 
     Dim CSVEUCheck As Boolean
+
+    Dim UseLargerVersion As Boolean
 
     Dim SelectedLanguage As String
 

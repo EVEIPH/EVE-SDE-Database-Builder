@@ -20,10 +20,12 @@ Public Class YAMLUniverse
     Private Const mapDisallowedAnchorCategories_Table As String = "mapDisallowedAnchorCategories"
     Private Const mapDisallowedAnchorGroups_Table As String = "mapDisallowedAnchorGroups"
     Private Const mapItemEffectBeacons_Table As String = "mapItemEffectBeacons"
+    Private Const mapLandmarks_Table As String = "mapLandmarks"
 
-    Public Const regionFile As String = "region.staticdata"
-    Public Const constellationFile As String = "constellation.staticdata"
-    Public Const solarsystemFile As String = "solarsystem.staticdata"
+    Public Const regionFile As String = "region.yaml"
+    Public Const constellationFile As String = "constellation.yaml"
+    Public Const solarsystemFile As String = "solarsystem.yaml"
+    Public Const landmarksFile As String = "landmarks.yaml"
 
     Public Const UniverseFiles As String = "Universe Data (multiple files)"
 
@@ -42,24 +44,16 @@ Public Class YAMLUniverse
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
         FilePath = YAMLFilePath
 
+        ' Go up one directory so we can use this for storing temp files, etc.
+        BaseYAMLPath = System.IO.Directory.GetParent(YAMLFilePath.Substring(0, Len(YAMLFilePath) - 1)).FullName
+
         ' Set the local db location 
-        LocalDBsLocation = YAMLFilePath & "UniverseTemp\"
+        LocalDBsLocation = BaseYAMLPath & "\universetemp\"
 
         ' Clean up the directory if there
         If Directory.Exists(LocalDBsLocation) Then
             Call Directory.Delete(LocalDBsLocation, True)
         End If
-
-        BaseYAMLPath = YAMLFilePath
-
-        ' walk back directory until it's the "sde" for later use
-        Do Until BaseYAMLPath.Substring(Len(BaseYAMLPath) - 3) = "sde"
-            BaseYAMLPath = Directory.GetParent(BaseYAMLPath).FullName
-        Loop
-
-        ' Delete anything there
-        On Error Resume Next
-        Call Directory.Delete(LocalDBsLocation, True)
 
     End Sub
 
@@ -68,7 +62,7 @@ Public Class YAMLUniverse
     ''' </summary>
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
-        FileNameErrorTracker = invNamesTableName
+        FileNameErrorTracker = "universe"
         Dim UniverseDirs As List(Of String)
         Dim RegionDirs As List(Of String)
         Dim ConstellationDirs As List(Of String)
@@ -89,8 +83,8 @@ Public Class YAMLUniverse
         ' - mapRegions
         ' - mapSolarSystemJumps
         ' - mapSolarSystems
-        ' - mapDisallowedAnchorCategories * new
-        ' - mapDisallowedAnchorGroups * new
+        ' - mapDisallowedAnchorCategories
+        ' - mapDisallowedAnchorGroups
 
         Call CreatemapRegionsTable()
         Call CreatemapConstellationsTable()
@@ -108,6 +102,8 @@ Public Class YAMLUniverse
         Call CreatemapDisallowedAnchorGroups()
         Call CreatemapItemEffectBeacons()
 
+        Call CreateLandmarksTable()
+
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then
             Exit Sub
@@ -123,38 +119,44 @@ Public Class YAMLUniverse
         Call InitGridRow(Params.RowLocation)
 
         ' Get total count of files as the total count for updating the progress
-        Dim TotalRecords As Integer = Directory.GetFiles(FilePath, "*.staticdata", SearchOption.AllDirectories).Count
+        Dim TotalRecords As Integer = Directory.GetFiles(FilePath, "*.yaml", SearchOption.AllDirectories).Count
 
-        ' Begin looping through the universe folders (eve and wormholes) for regions
+        ' Begin looping through the universe folders for regions by type (e.g., abyssal, wormhole)
         UniverseDirs = New List(Of String)(Directory.EnumerateDirectories(FilePath))
 
+        '  Call ImportLandmarksFile(Params)
+
         For Each UniverseFolder In UniverseDirs
-            ' For this universe folder, get the regions
-            RegionDirs = New List(Of String)(Directory.EnumerateDirectories(UniverseFolder))
+            If Not UniverseFolder.Contains("\landmarks") Then
+                ' For this universe folder, get the regions
+                RegionDirs = New List(Of String)(Directory.EnumerateDirectories(UniverseFolder))
 
-            For Each RegionFolder In RegionDirs
-                ' Import the region file from this region folder first
-                RegionID = ImportRegion(RegionFolder)
+                For Each RegionFolder In RegionDirs
+                    ' Import the region file from this region folder first
+                    RegionID = ImportRegion(RegionFolder)
 
-                ' Now load the constellation yaml data from this region folder
-                ConstellationDirs = New List(Of String)(Directory.EnumerateDirectories(RegionFolder))
-                For Each ConstellationFolder In ConstellationDirs
-                    ' Import the constellation data
-                    ConstellationID = ImportConstellation(ConstellationFolder, RegionID)
+                    ' Now load the constellation yaml data from this region folder
+                    ConstellationDirs = New List(Of String)(Directory.EnumerateDirectories(RegionFolder))
+                    For Each ConstellationFolder In ConstellationDirs
+                        ' Import the constellation data
+                        ConstellationID = ImportConstellation(ConstellationFolder, RegionID)
 
-                    SystemDirs = New List(Of String)(Directory.EnumerateDirectories(ConstellationFolder))
-                    For Each SystemFolder In SystemDirs
-                        ' Import the system data, which includes all the planets, moons, celestial statistics, and mapdenormalize data
-                        Call ImportSolarSystem(SystemFolder, RegionID, ConstellationID)
+                        SystemDirs = New List(Of String)(Directory.EnumerateDirectories(ConstellationFolder))
+                        For Each SystemFolder In SystemDirs
+                            ' Import the system data, which includes all the planets, moons, celestial statistics, and mapdenormalize data
+                            Call ImportSolarSystem(SystemFolder, RegionID, ConstellationID)
 
-                        ' Update grid progress
-                        Call UpdateGridRowProgress(Params.RowLocation, RecordCount, TotalRecords)
-                        RecordCount += 1 ' Count after so we never get to 100 until finished
+                            ' Update grid progress
+                            Call UpdateGridRowProgress(Params.RowLocation, RecordCount, TotalRecords)
+                            RecordCount += 1 ' Count after so we never get to 100 until finished
+                        Next
+                        RecordCount += 1
                     Next
                     RecordCount += 1
                 Next
-                RecordCount += 1
-            Next
+            Else
+                Call ImportLandmarksFile(Params)
+            End If
         Next
 
         ' Build the mapjump tables now that we have all the data imported
@@ -1122,6 +1124,77 @@ Public Class YAMLUniverse
 
     End Sub
 
+    Private Sub ImportLandmarksFile(ByVal Params As ImportParameters)
+        FileNameErrorTracker = "landmarks.yaml"
+        Dim DSB = New DeserializerBuilder()
+        If Not TestForSDEChanges Then
+            DSB.IgnoreUnmatchedProperties()
+        End If
+        DSB = DSB.WithNamingConvention(NamingConventions.NullNamingConvention.Instance)
+        Dim DS As New Deserializer
+        DS = DSB.Build
+
+        Dim YAMLRecords As New Dictionary(Of Long, landmark)
+        Dim DataFields As List(Of DBField)
+
+        ' See if we only want to build the table and indexes
+        If Not Params.InsertRecords Then
+            Exit Sub
+        End If
+
+        Try
+            ' Parse the input text
+            YAMLRecords = DS.Deserialize(Of Dictionary(Of Long, landmark))(New StringReader(File.ReadAllText(YAMLFile & "landmarks\landmarks.yaml")))
+        Catch ex As Exception
+            Call ShowErrorMessage(ex)
+        End Try
+
+        ' Process Data
+        For Each DataField In YAMLRecords
+            DataFields = New List(Of DBField)
+
+            With DataField.Value
+                ' Build the insert list
+                DataFields.Add(UpdateDB.BuildDatabaseField("landmarkID", DataField.Key, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("descriptionID", .descriptionID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("description", Translator.TranslateData(mapLandmarks_Table, "description", "landmarkID", DataField.Key, Params.ImportLanguageCode, ""), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("landmarkNameID", .landmarkNameID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("landmarkName", Translator.TranslateData(mapLandmarks_Table, "landmarkName", "landmarkID", DataField.Key, Params.ImportLanguageCode, ""), FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("locationID", .locationID, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("x", .position(0), FieldType.real_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("y", .position(1), FieldType.real_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("z", .position(2), FieldType.real_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type))
+            End With
+
+            Call UpdateDB.InsertRecord(mapLandmarks_Table, DataFields)
+
+        Next
+
+        YAMLRecords.Clear()
+
+    End Sub
+
+    Private Sub CreateLandmarksTable()
+
+        ' Build table
+        Dim Table As New List(Of DBTableField) From {
+            New DBTableField("landmarkID", FieldType.int_type, 0, False, True),
+            New DBTableField("descriptionID", FieldType.int_type, 0, True),
+            New DBTableField("description", FieldType.text_type, -1, True), ' Field doesn't exist in YAML, but will get from translation table
+            New DBTableField("landmarkNameID", FieldType.int_type, 0, True),
+            New DBTableField("landmarkName", FieldType.nvarchar_type, 100, True), ' Field doesn't exist in YAML, but will get from translation table
+            New DBTableField("locationID", FieldType.int_type, 0, True),
+            New DBTableField("x", FieldType.real_type, 0, True),
+            New DBTableField("y", FieldType.real_type, 0, True),
+            New DBTableField("z", FieldType.real_type, 0, True),
+            New DBTableField("iconID", FieldType.int_type, 0, True)
+        }
+
+        Call UpdateDB.CreateTable(mapLandmarks_Table, Table)
+
+    End Sub
+
     Public Sub Close()
         Call invNamesLDB.CloseDB()
         invNamesLDB = Nothing
@@ -1213,6 +1286,7 @@ Public Class YAMLUniverse
     Protected Overrides Sub Finalize()
         MyBase.Finalize()
     End Sub
+
 #End Region
 
 End Class
@@ -1365,4 +1439,12 @@ Public Class solarSystem
         Public Property temperature As Object
     End Class
 
+End Class
+
+Public Class landmark
+    Public Property descriptionID As Object
+    Public Property iconID As Object
+    Public Property landmarkNameID As Object
+    Public Property locationID As Object
+    Public Property position As List(Of Object)
 End Class

@@ -9,9 +9,7 @@ Public Class frmMain
     Private FirstLoad As Boolean
     Public Const BSDPath As String = "\bsd\"
     Private Const FSDPath As String = "\fsd\"
-    Private Const FSDLandMarksPath As String = "\fsd\landmarks\"
-    Private Const EVEUniversePath As String = "\fsd\universe\"
-    Private Const WormholeUniversePath As String = "\fsd\universe\wormhole\"
+    Private Const EVEUniversePath As String = "\universe\"
 
     Private Const GridSettingsFileName As String = "GridSettings.txt"
     Public Const ThreadsFileName As String = "NumberofThreads.txt"
@@ -79,6 +77,7 @@ Public Class frmMain
             .SDEDirectory = lblSDEPath.Text
             .FinalDBPath = lblFinalDBPath.Text
             .DownloadFolderPath = lblDownloadFolderPath.Text
+            .UseLargerVersion = UseLargerVersionToolStripMenuItem.Checked
 
             ' Get the specific settings for each option
             If rbtnAccess.Checked Then
@@ -165,6 +164,7 @@ Public Class frmMain
             lblFinalDBPath.Text = .FinalDBPath
             lblSDEPath.Text = .SDEDirectory
             lblDownloadFolderPath.Text = .DownloadFolderPath
+            UseLargerVersionToolStripMenuItem.Checked = .UseLargerVersion
 
             ' Set the option
             Select Case .SelectedDB
@@ -254,6 +254,80 @@ Public Class frmMain
 
 #End Region
 
+#Region "Resizing"
+
+    Public Const MaxSizeModifier As Double = 1.36363636363636
+    Public Const MinFontSize As Double = 8.25
+    Public Const MaxFontSize As Double = 11.25
+
+    ''' <summary>
+    ''' Resizes the form by 36.3636% and uses font size 8.25 to 11.25. 
+    ''' </summary>
+    Private Sub SetFormSize()
+
+        If UseLargerVersionToolStripMenuItem.Checked Then
+            Me.Size = Me.MaximumSize
+            'Dim w As Integer = Math.Ceiling(TableLayoutPanelMain.Size.Width * MaxSizeModifier)
+            'Dim h As Integer = Math.Ceiling(TableLayoutPanelMain.Size.Height * MaxSizeModifier)
+
+            'TableLayoutPanelMain.Size = New Size(w, h)
+            'TableLayoutPanelMain.Font = New Font(TableLayoutPanelMain.Font.Name, MaxFontSize)
+            'TableLayoutPanelMain.Left = TableLayoutPanelMain.Size.Width / 2
+
+            'For Each Cntl In Me.Controls
+            '    '  Call SetMaximumSize(Cntl)
+            'Next
+        Else
+            ' Use the minimums
+            Me.Size = Me.MinimumSize
+            For Each Cntl In Me.Controls
+                Call SetMinimumSize(Cntl)
+            Next
+        End If
+
+        Me.Refresh()
+
+    End Sub
+
+    Private Sub SetMaximumSize(ByVal ctl As Control)
+        Dim w As Integer = Math.Ceiling(ctl.Size.Width * MaxSizeModifier)
+        Dim h As Integer = Math.Ceiling(ctl.Size.Height * MaxSizeModifier)
+
+        ctl.Size = New Size(w, h)
+        ctl.Font = New Font(ctl.Font.Name, MaxFontSize)
+
+        If ctl.HasChildren Then
+            For Each c As Control In ctl.Controls
+                SetMaximumSize(c)
+            Next
+        End If
+    End Sub
+
+    Private Sub SetMinimumSize(ByVal ctl As Control)
+        ctl.Size = ctl.MinimumSize
+        If ctl.Name <> "MenuStrip1" Then
+            ctl.Font = New Font(ctl.Font.Name, MinFontSize)
+        Else
+            ctl.Font = New Font(ctl.Font.Name, 9)
+        End If
+        If ctl.HasChildren Then
+            For Each c As Control In ctl.Controls
+                SetMinimumSize(c)
+            Next
+        End If
+    End Sub
+
+    Private Sub SaveMinimumSize(ByVal ctl As Control)
+        ctl.MinimumSize = ctl.Size
+        If ctl.HasChildren Then
+            For Each c As Control In ctl.Controls
+                SaveMinimumSize(c)
+            Next
+        End If
+    End Sub
+
+#End Region
+
     Public Sub New()
 
         ' This call is required by the designer.
@@ -288,6 +362,14 @@ Public Class frmMain
         Thread.CurrentThread.CurrentCulture = LocalCulture
 
         TestForSDEChanges = False
+
+        ' Save the control minimums first so we can go back to the original size
+        For Each Cntrl In Me.Controls
+            Call SaveMinimumSize(Cntrl)
+        Next
+
+        ' Now set the form size based on the option selected
+        Call SetFormSize()
 
         FirstLoad = False
 
@@ -557,6 +639,12 @@ ExitProc:
                     Case YAMLplanetSchematics.planetSchematicsFile
                         Dim PlanetSchematics As New YAMLplanetSchematics(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf PlanetSchematics.ImportFile)
+                    Case YAMLplanetResources.planetResourcesFile
+                        Dim PlanetResources As New YAMLplanetResources(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                        TempThreadList.T = New Thread(AddressOf PlanetResources.ImportFile)
+                    Case YAMLsovereigntyUpgrades.sovereigntyUpgradesFile
+                        Dim SovereigntyUpgrades As New YAMLsovereigntyUpgrades(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                        TempThreadList.T = New Thread(AddressOf SovereigntyUpgrades.ImportFile)
                     Case YAMLramActivities.ramActivitiesFile
                         Dim RAMActivities As New YAMLramActivities(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf RAMActivities.ImportFile)
@@ -587,17 +675,14 @@ ExitProc:
                     Case YAMLstaStations.staStationsFile
                         Dim StaStations As New YAMLstaStations(.FileName, UserApplicationSettings.SDEDirectory & BSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf StaStations.ImportFile)
-                    Case YAMLlandmarks.landmarksFile
-                        Dim Landmarks As New YAMLlandmarks(.FileName, UserApplicationSettings.SDEDirectory & FSDLandMarksPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf Landmarks.ImportFile)
                     Case YAMLagentsinSpace.agentsinSpaceFile
                         Dim AgentsInSpace As New YAMLagentsinSpace(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf AgentsInSpace.ImportFile)
                     Case YAMLblueprints.blueprintsFile
                         Dim BPs As New YAMLblueprints(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf BPs.ImportFile)
-                    Case YAMLcategoryIDs.categoryIDsFile
-                        Dim Categories As New YAMLcategoryIDs(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                    Case YAMLcategories.categoryIDsFile
+                        Dim Categories As New YAMLcategories(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf Categories.ImportFile)
                     Case YAMLcertificates.certificatesFile
                         Dim Certificates As New YAMLcertificates(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
@@ -638,11 +723,11 @@ ExitProc:
                     Case YAMLtypeDogma.typeDogmaFile
                         Dim DGMTypeAttributes As New YAMLtypeDogma(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf DGMTypeAttributes.ImportFile)
-                    Case YAMLtypeIDs.typeIDsFile
-                        Dim TIDs As New YAMLtypeIDs(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                    Case YAMLtypes.typeIDsFile
+                        Dim TIDs As New YAMLtypes(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf TIDs.ImportFile)
-                    Case YAMLgroupIDs.groupIDsFile
-                        Dim GroupIDs As New YAMLgroupIDs(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                    Case YAMLgroups.groupIDsFile
+                        Dim GroupIDs As New YAMLgroups(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf GroupIDs.ImportFile)
                     Case YAMLmarketGroups.marketGroupsFile
                         Dim MaG As New YAMLmarketGroups(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
@@ -827,7 +912,7 @@ CancelImportProcessing:
             "invCategories.yaml",
             "marketGroups.yaml",
             "metaGroups.yaml",
-            "landmarks.staticdata",
+            "landmarks.yaml",
             "planetSchematics.yaml",
             "ramActivities.yaml",
             "stationOperations.yaml",
@@ -1251,23 +1336,23 @@ CancelImportProcessing:
                 End If
             Next
 
-            ' Landmarks
-            DI = New DirectoryInfo(UserApplicationSettings.SDEDirectory & FSDLandMarksPath)
-            ' Get a reference to each file in that directory.
-            FilesList = DI.GetFiles()
+            '' Landmarks
+            'DI = New DirectoryInfo(UserApplicationSettings.SDEDirectory & FSDLandMarksPath)
+            '' Get a reference to each file in that directory.
+            'FilesList = DI.GetFiles()
 
-            For i = 0 To FilesList.Count - 1
-                ' If it's a checked file, add it to the list
-                If CheckedFilesList.Contains(FilesList(i).Name) Then
-                    TempFileListItem.FileName = FilesList(i).Name
-                    TempFileListItem.RowLocation = GetRowLocation(FilesList(i).Name)
-                    ' Set the translation data flag here as we go through the landmark files
-                    If FileListRequiringTranslationTables.Contains(FilesList(i).Name) Then
-                        ImportTranslationData = True
-                    End If
-                    Call TempFileList.Add(TempFileListItem)
-                End If
-            Next
+            'For i = 0 To FilesList.Count - 1
+            '    ' If it's a checked file, add it to the list
+            '    If CheckedFilesList.Contains(FilesList(i).Name) Then
+            '        TempFileListItem.FileName = FilesList(i).Name
+            '        TempFileListItem.RowLocation = GetRowLocation(FilesList(i).Name)
+            '        ' Set the translation data flag here as we go through the landmark files
+            '        If FileListRequiringTranslationTables.Contains(FilesList(i).Name) Then
+            '            ImportTranslationData = True
+            '        End If
+            '        Call TempFileList.Add(TempFileListItem)
+            '    End If
+            'Next
         End If
 
         ' If selected, add the universe files to the top, which should be the largest to process
@@ -1275,6 +1360,7 @@ CancelImportProcessing:
             TempFileListItem.FileName = YAMLUniverse.UniverseFiles
             TempFileListItem.RowLocation = GetRowLocation(YAMLUniverse.UniverseFiles)
             TempFileList.Insert(0, TempFileListItem)
+            ImportTranslationData = True
         End If
 
         Return TempFileList
@@ -1322,18 +1408,18 @@ CancelImportProcessing:
                 Call ShowErrorMessage(ex)
             End Try
 
-            Try
-                Dim LM_FSD_DI As New DirectoryInfo(UserApplicationSettings.SDEDirectory & FSDLandMarksPath)
-                Dim LM_FSD_FilesList As FileInfo() = LM_FSD_DI.GetFiles()
+            'Try
+            '    Dim LM_FSD_DI As New DirectoryInfo(UserApplicationSettings.SDEDirectory & FSDLandMarksPath)
+            '    Dim LM_FSD_FilesList As FileInfo() = LM_FSD_DI.GetFiles()
 
-                For Each YAMLLMFSDFile In LM_FSD_FilesList
-                    TempFile.FileName = YAMLLMFSDFile.Name
-                    TempFile.Checked = GetGridCheckValue(YAMLLMFSDFile.Name)
-                    TotalFileList.Add(TempFile)
-                Next
-            Catch ex As Exception
-                Call ShowErrorMessage(ex)
-            End Try
+            '    For Each YAMLLMFSDFile In LM_FSD_FilesList
+            '        TempFile.FileName = YAMLLMFSDFile.Name
+            '        TempFile.Checked = GetGridCheckValue(YAMLLMFSDFile.Name)
+            '        TotalFileList.Add(TempFile)
+            '    Next
+            'Catch ex As Exception
+            '    Call ShowErrorMessage(ex)
+            'End Try
 
         End If
 
@@ -1983,8 +2069,8 @@ CancelImportProcessing:
             Application.DoEvents()
             File.Delete(NewDownloadDirectory & "\SDE.zip")
 
-            lblSDEPath.Text = NewDownloadDirectory & "\sde"
-            UserApplicationSettings.SDEDirectory = NewDownloadDirectory & "\sde"
+            lblSDEPath.Text = NewDownloadDirectory
+            UserApplicationSettings.SDEDirectory = NewDownloadDirectory
             ' Save the settings as well
             Call SaveSettings(True)
             lblStatus.Text = ""
@@ -2030,6 +2116,23 @@ CancelDownload:
         CancelDownload = True
     End Sub
 
+    Private Sub UseLargerVersionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UseLargerVersionToolStripMenuItem.CheckedChanged
+        If Not FirstLoad Then
+            ' Set the setting flag for using the larger version and reload the form 
+            UserApplicationSettings.UseLargerVersion = UseLargerVersionToolStripMenuItem.Checked
+
+            ' Save the settings
+            Call AllSettings.SaveApplicationSettings(UserApplicationSettings)
+
+            ' Reload the form with the selected settings
+            Call SetFormSize()
+
+        End If
+    End Sub
+
+    Private Sub UseLargerVersionToolStripMenuItem_Click_1(sender As Object, e As EventArgs) Handles UseLargerVersionToolStripMenuItem.Click
+
+    End Sub
 End Class
 
 ' For updating the data grid view
