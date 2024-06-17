@@ -5,7 +5,7 @@ Imports System.IO
 Public Class YAMLtypes
     Inherits YAMLFilesBase
 
-    Public Const typeIDsFile As String = "types.yaml"
+    Public Const typesFile As String = "types.yaml"
 
     Private Const crtMasteries_Table As String = "crtMasteries"
     Private Const invTraits_Table As String = "invTraits"
@@ -133,7 +133,7 @@ Public Class YAMLtypes
     ''' </summary>
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
-        FileNameErrorTracker = typeIDsFile
+        FileNameErrorTracker = typesFile
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()

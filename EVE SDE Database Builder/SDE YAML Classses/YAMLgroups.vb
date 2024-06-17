@@ -5,7 +5,7 @@ Imports System.IO
 Public Class YAMLgroups
     Inherits YAMLFilesBase
 
-    Public Const groupIDsFile As String = "groups.yaml"
+    Public Const groupsFile As String = "groups.yaml"
 
     Public Sub New(ByVal YAMLFileName As String, ByVal YAMLFilePath As String, ByRef DatabaseRef As Object, ByRef TranslationRef As YAMLTranslations)
         MyBase.New(YAMLFileName, YAMLFilePath, DatabaseRef, TranslationRef)
@@ -18,7 +18,7 @@ Public Class YAMLgroups
     ''' </summary>
     ''' <param name="Params">What the row location is and whether to insert the data or not (for bulk import)</param>
     Public Sub ImportFile(ByVal Params As ImportParameters)
-        FileNameErrorTracker = groupIDsFile
+        FileNameErrorTracker = groupsFile
         Dim DSB = New DeserializerBuilder()
         If Not TestForSDEChanges Then
             DSB.IgnoreUnmatchedProperties()

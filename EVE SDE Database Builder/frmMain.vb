@@ -42,6 +42,7 @@ Public Class frmMain
     Private ReadOnly LocalCulture As New CultureInfo("en-US")
 
     Private CSVImport As Boolean ' If we are using CSV to bulk import the data
+    Private rs As New Resizer
 
     ' For use with updating the grid with files
     Public Structure FileListItem
@@ -274,9 +275,9 @@ Public Class frmMain
             'TableLayoutPanelMain.Font = New Font(TableLayoutPanelMain.Font.Name, MaxFontSize)
             'TableLayoutPanelMain.Left = TableLayoutPanelMain.Size.Width / 2
 
-            'For Each Cntl In Me.Controls
-            '    '  Call SetMaximumSize(Cntl)
-            'Next
+            For Each Cntl In Me.Controls
+                Call SetMaximumSize(Cntl)
+            Next
         Else
             ' Use the minimums
             Me.Size = Me.MinimumSize
@@ -681,7 +682,7 @@ ExitProc:
                     Case YAMLblueprints.blueprintsFile
                         Dim BPs As New YAMLblueprints(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf BPs.ImportFile)
-                    Case YAMLcategories.categoryIDsFile
+                    Case YAMLcategories.categoryiesFile
                         Dim Categories As New YAMLcategories(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf Categories.ImportFile)
                     Case YAMLcertificates.certificatesFile
@@ -723,12 +724,12 @@ ExitProc:
                     Case YAMLtypeDogma.typeDogmaFile
                         Dim DGMTypeAttributes As New YAMLtypeDogma(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf DGMTypeAttributes.ImportFile)
-                    Case YAMLtypes.typeIDsFile
+                    Case YAMLtypes.typesFile
                         Dim TIDs As New YAMLtypes(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf TIDs.ImportFile)
-                    Case YAMLgroups.groupIDsFile
-                        Dim GroupIDs As New YAMLgroups(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
-                        TempThreadList.T = New Thread(AddressOf GroupIDs.ImportFile)
+                    Case YAMLgroups.groupsFile
+                        Dim Groups As New YAMLgroups(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
+                        TempThreadList.T = New Thread(AddressOf Groups.ImportFile)
                     Case YAMLmarketGroups.marketGroupsFile
                         Dim MaG As New YAMLmarketGroups(.FileName, UserApplicationSettings.SDEDirectory & FSDPath, UpdateDatabase, Translator)
                         TempThreadList.T = New Thread(AddressOf MaG.ImportFile)
@@ -917,9 +918,9 @@ CancelImportProcessing:
             "ramActivities.yaml",
             "stationOperations.yaml",
             "stationServices.yaml",
-            "typeIDs.yaml",
-            "groupIDs.yaml",
-            "categoryIDs.yaml"
+            "types.yaml",
+            "groups.yaml",
+            "categories.yaml"
         }
 
         Return TempList
@@ -2130,8 +2131,12 @@ CancelDownload:
         End If
     End Sub
 
-    Private Sub UseLargerVersionToolStripMenuItem_Click_1(sender As Object, e As EventArgs) Handles UseLargerVersionToolStripMenuItem.Click
+    Private Sub frmMain_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+        'rs.ResizeAllControls(Me)
+    End Sub
 
+    Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+        ' rs.FindAllControls(Me)
     End Sub
 End Class
 

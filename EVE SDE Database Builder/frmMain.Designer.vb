@@ -32,6 +32,7 @@ Partial Class frmMain
         Me.pgMain = New System.Windows.Forms.ToolStripProgressBar()
         Me.FBDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnSelectDownloadPath = New System.Windows.Forms.Button()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UseLargerVersionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -45,51 +46,50 @@ Partial Class frmMain
         Me.BuildBinaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TestForSDEChangesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.gbFilePathSelect = New System.Windows.Forms.GroupBox()
-        Me.btnSelectSDEPath = New System.Windows.Forms.Button()
-        Me.lblFinalDBPath = New System.Windows.Forms.Label()
-        Me.lblFinalDBFolder = New System.Windows.Forms.Label()
-        Me.lblSDEPath = New System.Windows.Forms.Label()
-        Me.btnSelectFinalDBPath = New System.Windows.Forms.Button()
-        Me.lblMediaFire = New System.Windows.Forms.Label()
-        Me.btnCheckAllGridItems = New System.Windows.Forms.Button()
-        Me.btnCheckNoGridItems = New System.Windows.Forms.Button()
-        Me.btnSelectDownloadPath = New System.Windows.Forms.Button()
-        Me.lblDownloadFolderPath = New System.Windows.Forms.Label()
-        Me.lblDownload = New System.Windows.Forms.Label()
-        Me.btnDownloadSDE = New System.Windows.Forms.Button()
-        Me.btnCancelDownload = New System.Windows.Forms.Button()
         Me.pgBar = New System.Windows.Forms.ProgressBar()
+        Me.btnCancelDownload = New System.Windows.Forms.Button()
+        Me.btnDownloadSDE = New System.Windows.Forms.Button()
+        Me.lblDownload = New System.Windows.Forms.Label()
+        Me.lblDownloadFolderPath = New System.Windows.Forms.Label()
+        Me.btnCheckNoGridItems = New System.Windows.Forms.Button()
+        Me.btnCheckAllGridItems = New System.Windows.Forms.Button()
+        Me.lblMediaFire = New System.Windows.Forms.Label()
+        Me.btnSelectFinalDBPath = New System.Windows.Forms.Button()
+        Me.lblSDEPath = New System.Windows.Forms.Label()
+        Me.lblFinalDBFolder = New System.Windows.Forms.Label()
+        Me.lblFinalDBPath = New System.Windows.Forms.Label()
+        Me.btnSelectSDEPath = New System.Windows.Forms.Button()
         Me.dgMain = New System.Windows.Forms.DataGridView()
-        Me.Progress = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.FileSelect = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Progress = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.gbSelectDBType = New System.Windows.Forms.GroupBox()
-        Me.gbLanguage = New System.Windows.Forms.GroupBox()
-        Me.rbtnEnglish = New System.Windows.Forms.RadioButton()
-        Me.rbtnGerman = New System.Windows.Forms.RadioButton()
-        Me.rbtnFrench = New System.Windows.Forms.RadioButton()
-        Me.rbtnJapanese = New System.Windows.Forms.RadioButton()
-        Me.rbtnRussian = New System.Windows.Forms.RadioButton()
-        Me.rbtnChinese = New System.Windows.Forms.RadioButton()
-        Me.rbtnKorean = New System.Windows.Forms.RadioButton()
         Me.gbOptions = New System.Windows.Forms.GroupBox()
-        Me.txtDBName = New System.Windows.Forms.TextBox()
-        Me.txtServerName = New System.Windows.Forms.TextBox()
-        Me.rbtnPostgreSQL = New System.Windows.Forms.RadioButton()
-        Me.lblDBName = New System.Windows.Forms.Label()
-        Me.rbtnMySQL = New System.Windows.Forms.RadioButton()
-        Me.txtUserName = New System.Windows.Forms.TextBox()
-        Me.chkEUFormat = New System.Windows.Forms.CheckBox()
-        Me.txtPassword = New System.Windows.Forms.TextBox()
-        Me.rbtnCSV = New System.Windows.Forms.RadioButton()
-        Me.lblUserName = New System.Windows.Forms.Label()
-        Me.rbtnAccess = New System.Windows.Forms.RadioButton()
-        Me.lblPassword = New System.Windows.Forms.Label()
-        Me.rbtnSQLServer = New System.Windows.Forms.RadioButton()
-        Me.rbtnSQLiteDB = New System.Windows.Forms.RadioButton()
-        Me.lblPort = New System.Windows.Forms.Label()
-        Me.txtPort = New System.Windows.Forms.TextBox()
         Me.lblServerName = New System.Windows.Forms.Label()
+        Me.txtPort = New System.Windows.Forms.TextBox()
+        Me.lblPort = New System.Windows.Forms.Label()
+        Me.rbtnSQLiteDB = New System.Windows.Forms.RadioButton()
+        Me.rbtnSQLServer = New System.Windows.Forms.RadioButton()
+        Me.lblPassword = New System.Windows.Forms.Label()
+        Me.rbtnAccess = New System.Windows.Forms.RadioButton()
+        Me.lblUserName = New System.Windows.Forms.Label()
+        Me.rbtnCSV = New System.Windows.Forms.RadioButton()
+        Me.txtPassword = New System.Windows.Forms.TextBox()
+        Me.chkEUFormat = New System.Windows.Forms.CheckBox()
+        Me.txtUserName = New System.Windows.Forms.TextBox()
+        Me.rbtnMySQL = New System.Windows.Forms.RadioButton()
+        Me.lblDBName = New System.Windows.Forms.Label()
+        Me.rbtnPostgreSQL = New System.Windows.Forms.RadioButton()
+        Me.txtServerName = New System.Windows.Forms.TextBox()
+        Me.txtDBName = New System.Windows.Forms.TextBox()
+        Me.gbLanguage = New System.Windows.Forms.GroupBox()
+        Me.rbtnKorean = New System.Windows.Forms.RadioButton()
+        Me.rbtnChinese = New System.Windows.Forms.RadioButton()
+        Me.rbtnRussian = New System.Windows.Forms.RadioButton()
+        Me.rbtnJapanese = New System.Windows.Forms.RadioButton()
+        Me.rbtnFrench = New System.Windows.Forms.RadioButton()
+        Me.rbtnGerman = New System.Windows.Forms.RadioButton()
+        Me.rbtnEnglish = New System.Windows.Forms.RadioButton()
         Me.btnSaveSettings = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
@@ -99,8 +99,8 @@ Partial Class frmMain
         Me.gbFilePathSelect.SuspendLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbSelectDBType.SuspendLayout()
-        Me.gbLanguage.SuspendLayout()
         Me.gbOptions.SuspendLayout()
+        Me.gbLanguage.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlMain
@@ -124,6 +124,17 @@ Partial Class frmMain
         Me.pgMain.Name = "pgMain"
         Me.pgMain.Size = New System.Drawing.Size(220, 16)
         Me.pgMain.Visible = False
+        '
+        'btnSelectDownloadPath
+        '
+        Me.btnSelectDownloadPath.Location = New System.Drawing.Point(12, 52)
+        Me.btnSelectDownloadPath.Name = "btnSelectDownloadPath"
+        Me.btnSelectDownloadPath.Size = New System.Drawing.Size(55, 23)
+        Me.btnSelectDownloadPath.TabIndex = 8
+        Me.btnSelectDownloadPath.Text = "Select"
+        Me.ToolTip1.SetToolTip(Me.btnSelectDownloadPath, "Checks for a new database version, downloads, and unzips the files to the specifi" &
+        "ed folder.")
+        Me.btnSelectDownloadPath.UseVisualStyleBackColor = True
         '
         'MenuStrip1
         '
@@ -229,115 +240,13 @@ Partial Class frmMain
         Me.gbFilePathSelect.TabStop = False
         Me.gbFilePathSelect.Text = "Select File Locations:"
         '
-        'btnSelectSDEPath
+        'pgBar
         '
-        Me.btnSelectSDEPath.Location = New System.Drawing.Point(12, 116)
-        Me.btnSelectSDEPath.Name = "btnSelectSDEPath"
-        Me.btnSelectSDEPath.Size = New System.Drawing.Size(55, 23)
-        Me.btnSelectSDEPath.TabIndex = 2
-        Me.btnSelectSDEPath.Text = "Select"
-        Me.btnSelectSDEPath.UseVisualStyleBackColor = True
-        '
-        'lblFinalDBPath
-        '
-        Me.lblFinalDBPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblFinalDBPath.Location = New System.Drawing.Point(12, 155)
-        Me.lblFinalDBPath.Name = "lblFinalDBPath"
-        Me.lblFinalDBPath.Size = New System.Drawing.Size(501, 20)
-        Me.lblFinalDBPath.TabIndex = 4
-        Me.lblFinalDBPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'lblFinalDBFolder
-        '
-        Me.lblFinalDBFolder.AutoSize = True
-        Me.lblFinalDBFolder.Location = New System.Drawing.Point(9, 142)
-        Me.lblFinalDBFolder.Name = "lblFinalDBFolder"
-        Me.lblFinalDBFolder.Size = New System.Drawing.Size(113, 13)
-        Me.lblFinalDBFolder.TabIndex = 3
-        Me.lblFinalDBFolder.Text = "Final Database Folder:"
-        '
-        'lblSDEPath
-        '
-        Me.lblSDEPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblSDEPath.Location = New System.Drawing.Point(12, 93)
-        Me.lblSDEPath.Name = "lblSDEPath"
-        Me.lblSDEPath.Size = New System.Drawing.Size(501, 20)
-        Me.lblSDEPath.TabIndex = 1
-        Me.lblSDEPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'btnSelectFinalDBPath
-        '
-        Me.btnSelectFinalDBPath.Location = New System.Drawing.Point(12, 178)
-        Me.btnSelectFinalDBPath.Name = "btnSelectFinalDBPath"
-        Me.btnSelectFinalDBPath.Size = New System.Drawing.Size(55, 23)
-        Me.btnSelectFinalDBPath.TabIndex = 5
-        Me.btnSelectFinalDBPath.Text = "Select"
-        Me.btnSelectFinalDBPath.UseVisualStyleBackColor = True
-        '
-        'lblMediaFire
-        '
-        Me.lblMediaFire.AutoSize = True
-        Me.lblMediaFire.Location = New System.Drawing.Point(9, 80)
-        Me.lblMediaFire.Name = "lblMediaFire"
-        Me.lblMediaFire.Size = New System.Drawing.Size(83, 13)
-        Me.lblMediaFire.TabIndex = 0
-        Me.lblMediaFire.Text = "SDE File Folder:"
-        '
-        'btnCheckAllGridItems
-        '
-        Me.btnCheckAllGridItems.Location = New System.Drawing.Point(355, 178)
-        Me.btnCheckAllGridItems.Name = "btnCheckAllGridItems"
-        Me.btnCheckAllGridItems.Size = New System.Drawing.Size(76, 23)
-        Me.btnCheckAllGridItems.TabIndex = 6
-        Me.btnCheckAllGridItems.Text = "Check All"
-        Me.btnCheckAllGridItems.UseVisualStyleBackColor = True
-        '
-        'btnCheckNoGridItems
-        '
-        Me.btnCheckNoGridItems.Location = New System.Drawing.Point(437, 178)
-        Me.btnCheckNoGridItems.Name = "btnCheckNoGridItems"
-        Me.btnCheckNoGridItems.Size = New System.Drawing.Size(76, 23)
-        Me.btnCheckNoGridItems.TabIndex = 7
-        Me.btnCheckNoGridItems.Text = "Check None"
-        Me.btnCheckNoGridItems.UseVisualStyleBackColor = True
-        '
-        'btnSelectDownloadPath
-        '
-        Me.btnSelectDownloadPath.Location = New System.Drawing.Point(12, 52)
-        Me.btnSelectDownloadPath.Name = "btnSelectDownloadPath"
-        Me.btnSelectDownloadPath.Size = New System.Drawing.Size(55, 23)
-        Me.btnSelectDownloadPath.TabIndex = 8
-        Me.btnSelectDownloadPath.Text = "Select"
-        Me.ToolTip1.SetToolTip(Me.btnSelectDownloadPath, "Checks for a new database version, downloads, and unzips the files to the specifi" &
-        "ed folder.")
-        Me.btnSelectDownloadPath.UseVisualStyleBackColor = True
-        '
-        'lblDownloadFolderPath
-        '
-        Me.lblDownloadFolderPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblDownloadFolderPath.Location = New System.Drawing.Point(12, 29)
-        Me.lblDownloadFolderPath.Name = "lblDownloadFolderPath"
-        Me.lblDownloadFolderPath.Size = New System.Drawing.Size(501, 20)
-        Me.lblDownloadFolderPath.TabIndex = 10
-        Me.lblDownloadFolderPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'lblDownload
-        '
-        Me.lblDownload.AutoSize = True
-        Me.lblDownload.Location = New System.Drawing.Point(9, 16)
-        Me.lblDownload.Name = "lblDownload"
-        Me.lblDownload.Size = New System.Drawing.Size(112, 13)
-        Me.lblDownload.TabIndex = 9
-        Me.lblDownload.Text = "SDE Download Folder"
-        '
-        'btnDownloadSDE
-        '
-        Me.btnDownloadSDE.Location = New System.Drawing.Point(73, 52)
-        Me.btnDownloadSDE.Name = "btnDownloadSDE"
-        Me.btnDownloadSDE.Size = New System.Drawing.Size(76, 23)
-        Me.btnDownloadSDE.TabIndex = 11
-        Me.btnDownloadSDE.Text = "Download"
-        Me.btnDownloadSDE.UseVisualStyleBackColor = True
+        Me.pgBar.Location = New System.Drawing.Point(216, 52)
+        Me.pgBar.Name = "pgBar"
+        Me.pgBar.Size = New System.Drawing.Size(297, 23)
+        Me.pgBar.TabIndex = 13
+        Me.pgBar.Visible = False
         '
         'btnCancelDownload
         '
@@ -349,13 +258,104 @@ Partial Class frmMain
         Me.btnCancelDownload.Text = "Cancel"
         Me.btnCancelDownload.UseVisualStyleBackColor = True
         '
-        'pgBar
+        'btnDownloadSDE
         '
-        Me.pgBar.Location = New System.Drawing.Point(216, 52)
-        Me.pgBar.Name = "pgBar"
-        Me.pgBar.Size = New System.Drawing.Size(297, 23)
-        Me.pgBar.TabIndex = 13
-        Me.pgBar.Visible = False
+        Me.btnDownloadSDE.Location = New System.Drawing.Point(73, 52)
+        Me.btnDownloadSDE.Name = "btnDownloadSDE"
+        Me.btnDownloadSDE.Size = New System.Drawing.Size(76, 23)
+        Me.btnDownloadSDE.TabIndex = 11
+        Me.btnDownloadSDE.Text = "Download"
+        Me.btnDownloadSDE.UseVisualStyleBackColor = True
+        '
+        'lblDownload
+        '
+        Me.lblDownload.AutoSize = True
+        Me.lblDownload.Location = New System.Drawing.Point(9, 16)
+        Me.lblDownload.Name = "lblDownload"
+        Me.lblDownload.Size = New System.Drawing.Size(112, 13)
+        Me.lblDownload.TabIndex = 9
+        Me.lblDownload.Text = "SDE Download Folder"
+        '
+        'lblDownloadFolderPath
+        '
+        Me.lblDownloadFolderPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.lblDownloadFolderPath.Location = New System.Drawing.Point(12, 29)
+        Me.lblDownloadFolderPath.Name = "lblDownloadFolderPath"
+        Me.lblDownloadFolderPath.Size = New System.Drawing.Size(501, 20)
+        Me.lblDownloadFolderPath.TabIndex = 10
+        Me.lblDownloadFolderPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'btnCheckNoGridItems
+        '
+        Me.btnCheckNoGridItems.Location = New System.Drawing.Point(437, 178)
+        Me.btnCheckNoGridItems.Name = "btnCheckNoGridItems"
+        Me.btnCheckNoGridItems.Size = New System.Drawing.Size(76, 23)
+        Me.btnCheckNoGridItems.TabIndex = 7
+        Me.btnCheckNoGridItems.Text = "Check None"
+        Me.btnCheckNoGridItems.UseVisualStyleBackColor = True
+        '
+        'btnCheckAllGridItems
+        '
+        Me.btnCheckAllGridItems.Location = New System.Drawing.Point(355, 178)
+        Me.btnCheckAllGridItems.Name = "btnCheckAllGridItems"
+        Me.btnCheckAllGridItems.Size = New System.Drawing.Size(76, 23)
+        Me.btnCheckAllGridItems.TabIndex = 6
+        Me.btnCheckAllGridItems.Text = "Check All"
+        Me.btnCheckAllGridItems.UseVisualStyleBackColor = True
+        '
+        'lblMediaFire
+        '
+        Me.lblMediaFire.AutoSize = True
+        Me.lblMediaFire.Location = New System.Drawing.Point(9, 80)
+        Me.lblMediaFire.Name = "lblMediaFire"
+        Me.lblMediaFire.Size = New System.Drawing.Size(83, 13)
+        Me.lblMediaFire.TabIndex = 0
+        Me.lblMediaFire.Text = "SDE File Folder:"
+        '
+        'btnSelectFinalDBPath
+        '
+        Me.btnSelectFinalDBPath.Location = New System.Drawing.Point(12, 178)
+        Me.btnSelectFinalDBPath.Name = "btnSelectFinalDBPath"
+        Me.btnSelectFinalDBPath.Size = New System.Drawing.Size(55, 23)
+        Me.btnSelectFinalDBPath.TabIndex = 5
+        Me.btnSelectFinalDBPath.Text = "Select"
+        Me.btnSelectFinalDBPath.UseVisualStyleBackColor = True
+        '
+        'lblSDEPath
+        '
+        Me.lblSDEPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.lblSDEPath.Location = New System.Drawing.Point(12, 93)
+        Me.lblSDEPath.Name = "lblSDEPath"
+        Me.lblSDEPath.Size = New System.Drawing.Size(501, 20)
+        Me.lblSDEPath.TabIndex = 1
+        Me.lblSDEPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lblFinalDBFolder
+        '
+        Me.lblFinalDBFolder.AutoSize = True
+        Me.lblFinalDBFolder.Location = New System.Drawing.Point(9, 142)
+        Me.lblFinalDBFolder.Name = "lblFinalDBFolder"
+        Me.lblFinalDBFolder.Size = New System.Drawing.Size(113, 13)
+        Me.lblFinalDBFolder.TabIndex = 3
+        Me.lblFinalDBFolder.Text = "Final Database Folder:"
+        '
+        'lblFinalDBPath
+        '
+        Me.lblFinalDBPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.lblFinalDBPath.Location = New System.Drawing.Point(12, 155)
+        Me.lblFinalDBPath.Name = "lblFinalDBPath"
+        Me.lblFinalDBPath.Size = New System.Drawing.Size(501, 20)
+        Me.lblFinalDBPath.TabIndex = 4
+        Me.lblFinalDBPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'btnSelectSDEPath
+        '
+        Me.btnSelectSDEPath.Location = New System.Drawing.Point(12, 116)
+        Me.btnSelectSDEPath.Name = "btnSelectSDEPath"
+        Me.btnSelectSDEPath.Size = New System.Drawing.Size(55, 23)
+        Me.btnSelectSDEPath.TabIndex = 2
+        Me.btnSelectSDEPath.Text = "Select"
+        Me.btnSelectSDEPath.UseVisualStyleBackColor = True
         '
         'dgMain
         '
@@ -395,11 +395,11 @@ Partial Class frmMain
         Me.dgMain.Size = New System.Drawing.Size(525, 209)
         Me.dgMain.TabIndex = 1
         '
-        'Progress
+        'FileSelect
         '
-        Me.Progress.HeaderText = "Progress"
-        Me.Progress.Name = "Progress"
-        Me.Progress.Width = 255
+        Me.FileSelect.HeaderText = ""
+        Me.FileSelect.Name = "FileSelect"
+        Me.FileSelect.Width = 25
         '
         'FileName
         '
@@ -407,11 +407,11 @@ Partial Class frmMain
         Me.FileName.Name = "FileName"
         Me.FileName.Width = 225
         '
-        'FileSelect
+        'Progress
         '
-        Me.FileSelect.HeaderText = ""
-        Me.FileSelect.Name = "FileSelect"
-        Me.FileSelect.Width = 25
+        Me.Progress.HeaderText = "Progress"
+        Me.Progress.Name = "Progress"
+        Me.Progress.Width = 255
         '
         'gbSelectDBType
         '
@@ -424,85 +424,6 @@ Partial Class frmMain
         Me.gbSelectDBType.TabIndex = 23
         Me.gbSelectDBType.TabStop = False
         Me.gbSelectDBType.Text = "Select Options:"
-        '
-        'gbLanguage
-        '
-        Me.gbLanguage.Controls.Add(Me.rbtnKorean)
-        Me.gbLanguage.Controls.Add(Me.rbtnChinese)
-        Me.gbLanguage.Controls.Add(Me.rbtnRussian)
-        Me.gbLanguage.Controls.Add(Me.rbtnJapanese)
-        Me.gbLanguage.Controls.Add(Me.rbtnFrench)
-        Me.gbLanguage.Controls.Add(Me.rbtnGerman)
-        Me.gbLanguage.Controls.Add(Me.rbtnEnglish)
-        Me.gbLanguage.Location = New System.Drawing.Point(418, 15)
-        Me.gbLanguage.Name = "gbLanguage"
-        Me.gbLanguage.Size = New System.Drawing.Size(101, 124)
-        Me.gbLanguage.TabIndex = 1
-        Me.gbLanguage.TabStop = False
-        Me.gbLanguage.Text = "Language:"
-        '
-        'rbtnEnglish
-        '
-        Me.rbtnEnglish.Location = New System.Drawing.Point(8, 14)
-        Me.rbtnEnglish.Name = "rbtnEnglish"
-        Me.rbtnEnglish.Size = New System.Drawing.Size(71, 17)
-        Me.rbtnEnglish.TabIndex = 0
-        Me.rbtnEnglish.Text = "English"
-        Me.rbtnEnglish.UseVisualStyleBackColor = True
-        '
-        'rbtnGerman
-        '
-        Me.rbtnGerman.Location = New System.Drawing.Point(8, 29)
-        Me.rbtnGerman.Name = "rbtnGerman"
-        Me.rbtnGerman.Size = New System.Drawing.Size(71, 17)
-        Me.rbtnGerman.TabIndex = 1
-        Me.rbtnGerman.Text = "German"
-        Me.rbtnGerman.UseVisualStyleBackColor = True
-        '
-        'rbtnFrench
-        '
-        Me.rbtnFrench.Location = New System.Drawing.Point(8, 44)
-        Me.rbtnFrench.Name = "rbtnFrench"
-        Me.rbtnFrench.Size = New System.Drawing.Size(71, 17)
-        Me.rbtnFrench.TabIndex = 2
-        Me.rbtnFrench.Text = "French"
-        Me.rbtnFrench.UseVisualStyleBackColor = True
-        '
-        'rbtnJapanese
-        '
-        Me.rbtnJapanese.Location = New System.Drawing.Point(8, 59)
-        Me.rbtnJapanese.Name = "rbtnJapanese"
-        Me.rbtnJapanese.Size = New System.Drawing.Size(71, 17)
-        Me.rbtnJapanese.TabIndex = 3
-        Me.rbtnJapanese.Text = "Japanese"
-        Me.rbtnJapanese.UseVisualStyleBackColor = True
-        '
-        'rbtnRussian
-        '
-        Me.rbtnRussian.Location = New System.Drawing.Point(8, 74)
-        Me.rbtnRussian.Name = "rbtnRussian"
-        Me.rbtnRussian.Size = New System.Drawing.Size(71, 17)
-        Me.rbtnRussian.TabIndex = 4
-        Me.rbtnRussian.Text = "Russian"
-        Me.rbtnRussian.UseVisualStyleBackColor = True
-        '
-        'rbtnChinese
-        '
-        Me.rbtnChinese.Location = New System.Drawing.Point(8, 89)
-        Me.rbtnChinese.Name = "rbtnChinese"
-        Me.rbtnChinese.Size = New System.Drawing.Size(71, 17)
-        Me.rbtnChinese.TabIndex = 5
-        Me.rbtnChinese.Text = "Chinese"
-        Me.rbtnChinese.UseVisualStyleBackColor = True
-        '
-        'rbtnKorean
-        '
-        Me.rbtnKorean.Location = New System.Drawing.Point(8, 104)
-        Me.rbtnKorean.Name = "rbtnKorean"
-        Me.rbtnKorean.Size = New System.Drawing.Size(71, 17)
-        Me.rbtnKorean.TabIndex = 6
-        Me.rbtnKorean.Text = "Korean"
-        Me.rbtnKorean.UseVisualStyleBackColor = True
         '
         'gbOptions
         '
@@ -530,121 +451,31 @@ Partial Class frmMain
         Me.gbOptions.TabStop = False
         Me.gbOptions.Text = "Database Type:"
         '
-        'txtDBName
+        'lblServerName
         '
-        Me.txtDBName.Location = New System.Drawing.Point(95, 68)
-        Me.txtDBName.Name = "txtDBName"
-        Me.txtDBName.Size = New System.Drawing.Size(100, 20)
-        Me.txtDBName.TabIndex = 8
+        Me.lblServerName.Location = New System.Drawing.Point(6, 95)
+        Me.lblServerName.Name = "lblServerName"
+        Me.lblServerName.Size = New System.Drawing.Size(87, 13)
+        Me.lblServerName.TabIndex = 17
+        Me.lblServerName.Text = "Server Name:"
+        Me.lblServerName.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
-        'txtServerName
+        'txtPort
         '
-        Me.txtServerName.Location = New System.Drawing.Point(95, 92)
-        Me.txtServerName.Name = "txtServerName"
-        Me.txtServerName.Size = New System.Drawing.Size(100, 20)
-        Me.txtServerName.TabIndex = 10
+        Me.txtPort.Location = New System.Drawing.Point(367, 91)
+        Me.txtPort.Name = "txtPort"
+        Me.txtPort.Size = New System.Drawing.Size(34, 20)
+        Me.txtPort.TabIndex = 16
+        Me.txtPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'rbtnPostgreSQL
+        'lblPort
         '
-        Me.rbtnPostgreSQL.AutoSize = True
-        Me.rbtnPostgreSQL.Location = New System.Drawing.Point(148, 36)
-        Me.rbtnPostgreSQL.Name = "rbtnPostgreSQL"
-        Me.rbtnPostgreSQL.Size = New System.Drawing.Size(82, 17)
-        Me.rbtnPostgreSQL.TabIndex = 3
-        Me.rbtnPostgreSQL.Text = "PostgreSQL"
-        Me.rbtnPostgreSQL.UseVisualStyleBackColor = True
-        '
-        'lblDBName
-        '
-        Me.lblDBName.Location = New System.Drawing.Point(6, 72)
-        Me.lblDBName.Name = "lblDBName"
-        Me.lblDBName.Size = New System.Drawing.Size(87, 13)
-        Me.lblDBName.TabIndex = 7
-        Me.lblDBName.Text = "Database Name:"
-        Me.lblDBName.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'rbtnMySQL
-        '
-        Me.rbtnMySQL.AutoSize = True
-        Me.rbtnMySQL.Location = New System.Drawing.Point(148, 16)
-        Me.rbtnMySQL.Name = "rbtnMySQL"
-        Me.rbtnMySQL.Size = New System.Drawing.Size(60, 17)
-        Me.rbtnMySQL.TabIndex = 2
-        Me.rbtnMySQL.Text = "MySQL"
-        Me.rbtnMySQL.UseVisualStyleBackColor = True
-        '
-        'txtUserName
-        '
-        Me.txtUserName.Location = New System.Drawing.Point(261, 67)
-        Me.txtUserName.Name = "txtUserName"
-        Me.txtUserName.Size = New System.Drawing.Size(100, 20)
-        Me.txtUserName.TabIndex = 12
-        '
-        'chkEUFormat
-        '
-        Me.chkEUFormat.AutoSize = True
-        Me.chkEUFormat.Location = New System.Drawing.Point(298, 37)
-        Me.chkEUFormat.Name = "chkEUFormat"
-        Me.chkEUFormat.Size = New System.Drawing.Size(107, 17)
-        Me.chkEUFormat.TabIndex = 6
-        Me.chkEUFormat.Text = "European Format"
-        Me.chkEUFormat.UseVisualStyleBackColor = True
-        '
-        'txtPassword
-        '
-        Me.txtPassword.Location = New System.Drawing.Point(261, 91)
-        Me.txtPassword.Name = "txtPassword"
-        Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.txtPassword.Size = New System.Drawing.Size(100, 20)
-        Me.txtPassword.TabIndex = 14
-        '
-        'rbtnCSV
-        '
-        Me.rbtnCSV.AutoSize = True
-        Me.rbtnCSV.Location = New System.Drawing.Point(250, 37)
-        Me.rbtnCSV.Name = "rbtnCSV"
-        Me.rbtnCSV.Size = New System.Drawing.Size(46, 17)
-        Me.rbtnCSV.TabIndex = 5
-        Me.rbtnCSV.Text = "CSV"
-        Me.rbtnCSV.UseVisualStyleBackColor = True
-        '
-        'lblUserName
-        '
-        Me.lblUserName.AutoSize = True
-        Me.lblUserName.Location = New System.Drawing.Point(199, 71)
-        Me.lblUserName.Name = "lblUserName"
-        Me.lblUserName.Size = New System.Drawing.Size(60, 13)
-        Me.lblUserName.TabIndex = 11
-        Me.lblUserName.Text = "UserName:"
-        '
-        'rbtnAccess
-        '
-        Me.rbtnAccess.AutoSize = True
-        Me.rbtnAccess.Location = New System.Drawing.Point(250, 17)
-        Me.rbtnAccess.Name = "rbtnAccess"
-        Me.rbtnAccess.Size = New System.Drawing.Size(106, 17)
-        Me.rbtnAccess.TabIndex = 4
-        Me.rbtnAccess.Text = "Microsoft Access"
-        Me.rbtnAccess.UseVisualStyleBackColor = True
-        '
-        'lblPassword
-        '
-        Me.lblPassword.AutoSize = True
-        Me.lblPassword.Location = New System.Drawing.Point(203, 95)
-        Me.lblPassword.Name = "lblPassword"
-        Me.lblPassword.Size = New System.Drawing.Size(56, 13)
-        Me.lblPassword.TabIndex = 13
-        Me.lblPassword.Text = "Password:"
-        '
-        'rbtnSQLServer
-        '
-        Me.rbtnSQLServer.AutoSize = True
-        Me.rbtnSQLServer.Location = New System.Drawing.Point(9, 37)
-        Me.rbtnSQLServer.Name = "rbtnSQLServer"
-        Me.rbtnSQLServer.Size = New System.Drawing.Size(126, 17)
-        Me.rbtnSQLServer.TabIndex = 1
-        Me.rbtnSQLServer.Text = "Microsoft SQL Server"
-        Me.rbtnSQLServer.UseVisualStyleBackColor = True
+        Me.lblPort.AutoSize = True
+        Me.lblPort.Location = New System.Drawing.Point(367, 71)
+        Me.lblPort.Name = "lblPort"
+        Me.lblPort.Size = New System.Drawing.Size(29, 13)
+        Me.lblPort.TabIndex = 15
+        Me.lblPort.Text = "Port:"
         '
         'rbtnSQLiteDB
         '
@@ -656,31 +487,200 @@ Partial Class frmMain
         Me.rbtnSQLiteDB.Text = "SQLite"
         Me.rbtnSQLiteDB.UseVisualStyleBackColor = True
         '
-        'lblPort
+        'rbtnSQLServer
         '
-        Me.lblPort.AutoSize = True
-        Me.lblPort.Location = New System.Drawing.Point(367, 71)
-        Me.lblPort.Name = "lblPort"
-        Me.lblPort.Size = New System.Drawing.Size(29, 13)
-        Me.lblPort.TabIndex = 15
-        Me.lblPort.Text = "Port:"
+        Me.rbtnSQLServer.AutoSize = True
+        Me.rbtnSQLServer.Location = New System.Drawing.Point(9, 37)
+        Me.rbtnSQLServer.Name = "rbtnSQLServer"
+        Me.rbtnSQLServer.Size = New System.Drawing.Size(126, 17)
+        Me.rbtnSQLServer.TabIndex = 1
+        Me.rbtnSQLServer.Text = "Microsoft SQL Server"
+        Me.rbtnSQLServer.UseVisualStyleBackColor = True
         '
-        'txtPort
+        'lblPassword
         '
-        Me.txtPort.Location = New System.Drawing.Point(367, 91)
-        Me.txtPort.Name = "txtPort"
-        Me.txtPort.Size = New System.Drawing.Size(34, 20)
-        Me.txtPort.TabIndex = 16
-        Me.txtPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.lblPassword.AutoSize = True
+        Me.lblPassword.Location = New System.Drawing.Point(203, 95)
+        Me.lblPassword.Name = "lblPassword"
+        Me.lblPassword.Size = New System.Drawing.Size(56, 13)
+        Me.lblPassword.TabIndex = 13
+        Me.lblPassword.Text = "Password:"
         '
-        'lblServerName
+        'rbtnAccess
         '
-        Me.lblServerName.Location = New System.Drawing.Point(6, 95)
-        Me.lblServerName.Name = "lblServerName"
-        Me.lblServerName.Size = New System.Drawing.Size(87, 13)
-        Me.lblServerName.TabIndex = 17
-        Me.lblServerName.Text = "Server Name:"
-        Me.lblServerName.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.rbtnAccess.AutoSize = True
+        Me.rbtnAccess.Location = New System.Drawing.Point(250, 17)
+        Me.rbtnAccess.Name = "rbtnAccess"
+        Me.rbtnAccess.Size = New System.Drawing.Size(106, 17)
+        Me.rbtnAccess.TabIndex = 4
+        Me.rbtnAccess.Text = "Microsoft Access"
+        Me.rbtnAccess.UseVisualStyleBackColor = True
+        '
+        'lblUserName
+        '
+        Me.lblUserName.AutoSize = True
+        Me.lblUserName.Location = New System.Drawing.Point(199, 71)
+        Me.lblUserName.Name = "lblUserName"
+        Me.lblUserName.Size = New System.Drawing.Size(60, 13)
+        Me.lblUserName.TabIndex = 11
+        Me.lblUserName.Text = "UserName:"
+        '
+        'rbtnCSV
+        '
+        Me.rbtnCSV.AutoSize = True
+        Me.rbtnCSV.Location = New System.Drawing.Point(250, 37)
+        Me.rbtnCSV.Name = "rbtnCSV"
+        Me.rbtnCSV.Size = New System.Drawing.Size(46, 17)
+        Me.rbtnCSV.TabIndex = 5
+        Me.rbtnCSV.Text = "CSV"
+        Me.rbtnCSV.UseVisualStyleBackColor = True
+        '
+        'txtPassword
+        '
+        Me.txtPassword.Location = New System.Drawing.Point(261, 91)
+        Me.txtPassword.Name = "txtPassword"
+        Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
+        Me.txtPassword.Size = New System.Drawing.Size(100, 20)
+        Me.txtPassword.TabIndex = 14
+        '
+        'chkEUFormat
+        '
+        Me.chkEUFormat.AutoSize = True
+        Me.chkEUFormat.Location = New System.Drawing.Point(298, 37)
+        Me.chkEUFormat.Name = "chkEUFormat"
+        Me.chkEUFormat.Size = New System.Drawing.Size(107, 17)
+        Me.chkEUFormat.TabIndex = 6
+        Me.chkEUFormat.Text = "European Format"
+        Me.chkEUFormat.UseVisualStyleBackColor = True
+        '
+        'txtUserName
+        '
+        Me.txtUserName.Location = New System.Drawing.Point(261, 67)
+        Me.txtUserName.Name = "txtUserName"
+        Me.txtUserName.Size = New System.Drawing.Size(100, 20)
+        Me.txtUserName.TabIndex = 12
+        '
+        'rbtnMySQL
+        '
+        Me.rbtnMySQL.AutoSize = True
+        Me.rbtnMySQL.Location = New System.Drawing.Point(148, 16)
+        Me.rbtnMySQL.Name = "rbtnMySQL"
+        Me.rbtnMySQL.Size = New System.Drawing.Size(60, 17)
+        Me.rbtnMySQL.TabIndex = 2
+        Me.rbtnMySQL.Text = "MySQL"
+        Me.rbtnMySQL.UseVisualStyleBackColor = True
+        '
+        'lblDBName
+        '
+        Me.lblDBName.Location = New System.Drawing.Point(6, 72)
+        Me.lblDBName.Name = "lblDBName"
+        Me.lblDBName.Size = New System.Drawing.Size(87, 13)
+        Me.lblDBName.TabIndex = 7
+        Me.lblDBName.Text = "Database Name:"
+        Me.lblDBName.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'rbtnPostgreSQL
+        '
+        Me.rbtnPostgreSQL.AutoSize = True
+        Me.rbtnPostgreSQL.Location = New System.Drawing.Point(148, 36)
+        Me.rbtnPostgreSQL.Name = "rbtnPostgreSQL"
+        Me.rbtnPostgreSQL.Size = New System.Drawing.Size(82, 17)
+        Me.rbtnPostgreSQL.TabIndex = 3
+        Me.rbtnPostgreSQL.Text = "PostgreSQL"
+        Me.rbtnPostgreSQL.UseVisualStyleBackColor = True
+        '
+        'txtServerName
+        '
+        Me.txtServerName.Location = New System.Drawing.Point(95, 92)
+        Me.txtServerName.Name = "txtServerName"
+        Me.txtServerName.Size = New System.Drawing.Size(100, 20)
+        Me.txtServerName.TabIndex = 10
+        '
+        'txtDBName
+        '
+        Me.txtDBName.Location = New System.Drawing.Point(95, 68)
+        Me.txtDBName.Name = "txtDBName"
+        Me.txtDBName.Size = New System.Drawing.Size(100, 20)
+        Me.txtDBName.TabIndex = 8
+        '
+        'gbLanguage
+        '
+        Me.gbLanguage.Controls.Add(Me.rbtnKorean)
+        Me.gbLanguage.Controls.Add(Me.rbtnChinese)
+        Me.gbLanguage.Controls.Add(Me.rbtnRussian)
+        Me.gbLanguage.Controls.Add(Me.rbtnJapanese)
+        Me.gbLanguage.Controls.Add(Me.rbtnFrench)
+        Me.gbLanguage.Controls.Add(Me.rbtnGerman)
+        Me.gbLanguage.Controls.Add(Me.rbtnEnglish)
+        Me.gbLanguage.Location = New System.Drawing.Point(418, 15)
+        Me.gbLanguage.Name = "gbLanguage"
+        Me.gbLanguage.Size = New System.Drawing.Size(101, 124)
+        Me.gbLanguage.TabIndex = 1
+        Me.gbLanguage.TabStop = False
+        Me.gbLanguage.Text = "Language:"
+        '
+        'rbtnKorean
+        '
+        Me.rbtnKorean.Location = New System.Drawing.Point(8, 104)
+        Me.rbtnKorean.Name = "rbtnKorean"
+        Me.rbtnKorean.Size = New System.Drawing.Size(71, 17)
+        Me.rbtnKorean.TabIndex = 6
+        Me.rbtnKorean.Text = "Korean"
+        Me.rbtnKorean.UseVisualStyleBackColor = True
+        '
+        'rbtnChinese
+        '
+        Me.rbtnChinese.Location = New System.Drawing.Point(8, 89)
+        Me.rbtnChinese.Name = "rbtnChinese"
+        Me.rbtnChinese.Size = New System.Drawing.Size(71, 17)
+        Me.rbtnChinese.TabIndex = 5
+        Me.rbtnChinese.Text = "Chinese"
+        Me.rbtnChinese.UseVisualStyleBackColor = True
+        '
+        'rbtnRussian
+        '
+        Me.rbtnRussian.Location = New System.Drawing.Point(8, 74)
+        Me.rbtnRussian.Name = "rbtnRussian"
+        Me.rbtnRussian.Size = New System.Drawing.Size(71, 17)
+        Me.rbtnRussian.TabIndex = 4
+        Me.rbtnRussian.Text = "Russian"
+        Me.rbtnRussian.UseVisualStyleBackColor = True
+        '
+        'rbtnJapanese
+        '
+        Me.rbtnJapanese.Location = New System.Drawing.Point(8, 59)
+        Me.rbtnJapanese.Name = "rbtnJapanese"
+        Me.rbtnJapanese.Size = New System.Drawing.Size(71, 17)
+        Me.rbtnJapanese.TabIndex = 3
+        Me.rbtnJapanese.Text = "Japanese"
+        Me.rbtnJapanese.UseVisualStyleBackColor = True
+        '
+        'rbtnFrench
+        '
+        Me.rbtnFrench.Location = New System.Drawing.Point(8, 44)
+        Me.rbtnFrench.Name = "rbtnFrench"
+        Me.rbtnFrench.Size = New System.Drawing.Size(71, 17)
+        Me.rbtnFrench.TabIndex = 2
+        Me.rbtnFrench.Text = "French"
+        Me.rbtnFrench.UseVisualStyleBackColor = True
+        '
+        'rbtnGerman
+        '
+        Me.rbtnGerman.Location = New System.Drawing.Point(8, 29)
+        Me.rbtnGerman.Name = "rbtnGerman"
+        Me.rbtnGerman.Size = New System.Drawing.Size(71, 17)
+        Me.rbtnGerman.TabIndex = 1
+        Me.rbtnGerman.Text = "German"
+        Me.rbtnGerman.UseVisualStyleBackColor = True
+        '
+        'rbtnEnglish
+        '
+        Me.rbtnEnglish.Location = New System.Drawing.Point(8, 14)
+        Me.rbtnEnglish.Name = "rbtnEnglish"
+        Me.rbtnEnglish.Size = New System.Drawing.Size(71, 17)
+        Me.rbtnEnglish.TabIndex = 0
+        Me.rbtnEnglish.Text = "English"
+        Me.rbtnEnglish.UseVisualStyleBackColor = True
         '
         'btnSaveSettings
         '
@@ -748,9 +748,9 @@ Partial Class frmMain
         Me.gbFilePathSelect.PerformLayout()
         CType(Me.dgMain, System.ComponentModel.ISupportInitialize).EndInit()
         Me.gbSelectDBType.ResumeLayout(False)
-        Me.gbLanguage.ResumeLayout(False)
         Me.gbOptions.ResumeLayout(False)
         Me.gbOptions.PerformLayout()
+        Me.gbLanguage.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
