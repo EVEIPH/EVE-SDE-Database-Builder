@@ -1973,10 +1973,9 @@ CancelImportProcessing:
         Dim ChecksumFileName As String = UserApplicationSettings.DownloadFolderPath & "\" & "checksum"
         Dim OldChecksumFileName As String = UserApplicationSettings.DownloadFolderPath & "\" & "checksum-old"
         Dim NewDownloadDirectory As String ' Folder I'll download into and work with
-        Dim NewChecksum As StreamReader
         Dim NewChecksumValue As String
-        Dim OldChecksum As StreamReader
         Dim OldChecksumValue As String = ""
+        Dim Splitter(1) As String
         Dim FileDate As Date ' to save the date of the download
 
         CancelDownload = False
@@ -1995,27 +1994,24 @@ CancelImportProcessing:
             End If
             File.Copy(ChecksumFileName, OldChecksumFileName)
             File.Delete(ChecksumFileName)
-            ' Read file
-            OldChecksum = New StreamReader(OldChecksumFileName)
-            OldChecksumValue = OldChecksum.ReadLine
-            Call OldChecksum.Dispose() ' Release
+            OldChecksumValue = GetSDEChecksumValue(OldChecksumFileName)
+            Splitter = OldChecksumValue.Split("  ")
+            OldChecksumValue = Splitter(0)
         End If
 
         ' Download the new checksum
         Call DownloadFileFromServer("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/checksum", ChecksumFileName, FileDate)
 
-        ' Read each check sum and check if they are different
-        NewChecksum = New StreamReader(ChecksumFileName)
-        NewChecksumValue = NewChecksum.ReadLine
+        ' Compare the checksums and check if they are different
+        NewChecksumValue = GetSDEChecksumValue(ChecksumFileName)
 
         If IsNothing(NewChecksumValue) Then
-            Call NewChecksum.Dispose()
             MsgBox("Failed to download checksum. Try again.", vbExclamation, "SDE Database Builder")
             Exit Sub
+        Else
+            Splitter = NewChecksumValue.Split("  ")
+            NewChecksumValue = Splitter(0)
         End If
-
-        ' Release file
-        Call NewChecksum.Dispose()
 
         If NewChecksumValue <> OldChecksumValue Then
             Me.UseWaitCursor = True
@@ -2105,6 +2101,25 @@ CancelDownload:
 
     End Sub
 
+    Private Function GetSDEChecksumValue(FileName As String) As String
+        Dim CheckSumReader As StreamReader
+        Dim ChecksumValue As String = ""
+        ' Read each line in the file until it finds sde.zip
+
+        CheckSumReader = New StreamReader(FileName)
+        While Not CheckSumReader.EndOfStream
+            ChecksumValue = CheckSumReader.ReadLine
+            If ChecksumValue.Contains("sde.zip") Then
+                Exit While
+            End If
+        End While
+
+        Call CheckSumReader.Dispose() ' Release
+
+        Return ChecksumValue
+
+    End Function
+
     Private Sub TestForSDEChangesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestForSDEChangesToolStripMenuItem.Click
         If TestForSDEChangesToolStripMenuItem.Checked Then
             TestForSDEChanges = True
@@ -2137,6 +2152,11 @@ CancelDownload:
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
         ' rs.FindAllControls(Me)
+    End Sub
+
+    Private Sub ResetDownloadChecksumToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ResetDownloadChecksumToolStripMenuItem.Click
+        Call File.Delete(UserApplicationSettings.DownloadFolderPath & "\" & "checksum")
+        Call MsgBox("Database Checksum file deleted.", vbInformation, Application.ProductName)
     End Sub
 End Class
 

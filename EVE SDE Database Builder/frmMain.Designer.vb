@@ -94,6 +94,7 @@ Partial Class frmMain
         Me.btnClose = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnBuildDatabase = New System.Windows.Forms.Button()
+        Me.ResetDownloadChecksumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnlMain.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.gbFilePathSelect.SuspendLayout()
@@ -147,7 +148,7 @@ Partial Class frmMain
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UseLargerVersionToolStripMenuItem, Me.SetThreadsUsedToolStripMenuItem, Me.ExitToolStripMenuItem})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UseLargerVersionToolStripMenuItem, Me.ResetDownloadChecksumToolStripMenuItem, Me.SetThreadsUsedToolStripMenuItem, Me.ExitToolStripMenuItem})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(44, 24)
         Me.FileToolStripMenuItem.Text = "File"
@@ -156,20 +157,20 @@ Partial Class frmMain
         '
         Me.UseLargerVersionToolStripMenuItem.CheckOnClick = True
         Me.UseLargerVersionToolStripMenuItem.Name = "UseLargerVersionToolStripMenuItem"
-        Me.UseLargerVersionToolStripMenuItem.Size = New System.Drawing.Size(200, 24)
+        Me.UseLargerVersionToolStripMenuItem.Size = New System.Drawing.Size(257, 24)
         Me.UseLargerVersionToolStripMenuItem.Text = "Use Larger Version"
         Me.UseLargerVersionToolStripMenuItem.Visible = False
         '
         'SetThreadsUsedToolStripMenuItem
         '
         Me.SetThreadsUsedToolStripMenuItem.Name = "SetThreadsUsedToolStripMenuItem"
-        Me.SetThreadsUsedToolStripMenuItem.Size = New System.Drawing.Size(200, 24)
+        Me.SetThreadsUsedToolStripMenuItem.Size = New System.Drawing.Size(257, 24)
         Me.SetThreadsUsedToolStripMenuItem.Text = "Set Threads Used"
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(200, 24)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(257, 24)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'AboutToolStripMenuItem
@@ -718,6 +719,12 @@ Partial Class frmMain
         Me.btnBuildDatabase.Text = "Build Database"
         Me.btnBuildDatabase.UseVisualStyleBackColor = True
         '
+        'ResetDownloadChecksumToolStripMenuItem
+        '
+        Me.ResetDownloadChecksumToolStripMenuItem.Name = "ResetDownloadChecksumToolStripMenuItem"
+        Me.ResetDownloadChecksumToolStripMenuItem.Size = New System.Drawing.Size(257, 24)
+        Me.ResetDownloadChecksumToolStripMenuItem.Text = "Reset Download Checksum"
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -822,4 +829,5 @@ Partial Class frmMain
     Friend WithEvents btnClose As Button
     Friend WithEvents btnCancel As Button
     Friend WithEvents btnBuildDatabase As Button
+    Friend WithEvents ResetDownloadChecksumToolStripMenuItem As ToolStripMenuItem
 End Class
