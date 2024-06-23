@@ -8,6 +8,7 @@ Public Module Globals
     Public CancelDownload As Boolean = False
     Public frmErrorText As String = ""
     Public Lock As New Object
+    Public Lock2 As New Object
     Public AllSettings As New ProgramSettings
     Public UserApplicationSettings As ApplicationSettings
 

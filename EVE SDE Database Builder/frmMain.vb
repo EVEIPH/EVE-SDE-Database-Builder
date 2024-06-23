@@ -902,25 +902,25 @@ CancelImportProcessing:
         Dim TempList As New List(Of String) From {
             "ancestries.yaml",
             "bloodlines.yaml",
+            "categories.yaml",
             "characterAttributes.yaml",
-            "factions.yaml",
-            "races.yaml",
             "corporationActivities.yaml",
-            "npcCorporations.yaml",
-            "npcCorporationDivisions.yaml",
             "dogmaAttributes.yaml",
             "dogmaEffects.yaml",
+            "factions.yaml",
+            "groups.yaml",
             "invCategories.yaml",
+            "landmarks.yaml",
             "marketGroups.yaml",
             "metaGroups.yaml",
-            "landmarks.yaml",
+            "npcCorporationDivisions.yaml",
+            "npcCorporations.yaml",
             "planetSchematics.yaml",
+            "races.yaml",
             "ramActivities.yaml",
             "stationOperations.yaml",
             "stationServices.yaml",
-            "types.yaml",
-            "groups.yaml",
-            "categories.yaml"
+            "types.yaml"
         }
 
         Return TempList

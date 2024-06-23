@@ -36,7 +36,7 @@ Public Class YAMLfactions
         Dim Table As New List(Of DBTableField) From {
             New DBTableField("factionID", FieldType.int_type, 0, False, True),
             New DBTableField("factionName", FieldType.varchar_type, 100, True),
-            New DBTableField("description", FieldType.varchar_type, 1500, True),
+            New DBTableField("description", FieldType.varchar_type, 2000, True),
             New DBTableField("shortDescriptionID", FieldType.varchar_type, 500, True),
             New DBTableField("solarSystemID", FieldType.int_type, 0, True),
             New DBTableField("corporationID", FieldType.int_type, 0, True),

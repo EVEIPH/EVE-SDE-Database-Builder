@@ -36,7 +36,7 @@ Public Class YAMLnpcCorporations
         Dim Table As New List(Of DBTableField) From {
             New DBTableField("corporationID", FieldType.int_type, 0, False, True),
             New DBTableField("tickerName", FieldType.nvarchar_type, 5, True),
-            New DBTableField("corporationName", FieldType.nvarchar_type, 50, True),
+            New DBTableField("corporationName", FieldType.nvarchar_type, 100, True),
             New DBTableField("corporationDescription", FieldType.nvarchar_type, 1500, True),
             New DBTableField("uniqueName", FieldType.bit_type, 0, True),
             New DBTableField("taxRate", FieldType.real_type, 0, True),

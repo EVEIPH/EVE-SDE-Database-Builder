@@ -70,17 +70,27 @@ Public Class YAMLTranslations
         End If
         Call TranslationTablesDB.CreateTable(trnTranslationColumnsTable, Table)
 
-        ' Create Index
+        ' Create Indexes
         IndexFields = New List(Of String) From {
             "tableName",
-            "columnName",
-            "masterID"
+            "masterID",
+            "columnName"
         }
 
         If ImportTable Then
             Call UpdateDB.CreateIndex(trnTranslationColumnsTable, "IDX_" & trnTranslationColumnsTable & "_TN_CN_MID", IndexFields, True)
         End If
         Call TranslationTablesDB.CreateIndex(trnTranslationColumnsTable, "IDX_" & trnTranslationColumnsTable & "_TN_CN_MID", IndexFields, True)
+
+        IndexFields = New List(Of String) From {
+            "tableName",
+            "tcID"
+        }
+
+        If ImportTable Then
+            Call UpdateDB.CreateIndex(trnTranslationColumnsTable, "IDX_" & trnTranslationColumnsTable & "_TN_TID", IndexFields, True)
+        End If
+        Call TranslationTablesDB.CreateIndex(trnTranslationColumnsTable, "IDX_" & trnTranslationColumnsTable & "_TN_TID", IndexFields, True)
 
         ' Build translations table
         Table = New List(Of DBTableField) From {
@@ -318,7 +328,7 @@ Cancel:
     End Sub
 
     ''' <summary>
-    ''' Inserts sent data (single record with all translations) into the temp translation lists for later import. For use with typeIDs.yaml, categoryIDs.yaml, and groupIDs.yaml
+    ''' Inserts sent data (single record with all translations) into the temp translation lists for later import.
     ''' </summary>
     ''' <param name="ID">masterID field value (e.g. if masterID is 'typeID' then keyID is the typeID number</param>
     ''' <param name="TranslationMasterID">masterID field name (e.g. typeID)</param>
@@ -333,90 +343,42 @@ Cancel:
         Dim TranslationsList As List(Of trnTranslation)
         Dim TranslationColumnsList As List(Of trnTranslationColumn)
 
-
         Dim WhereClause As List(Of String)
         Dim SelectClause As New List(Of String)
-        Dim CheckClause As New List(Of String)
 
         Dim TranslationColumnID As Integer
         Dim Records As Boolean = False
-
-        ' First see if there are any records in the table
-        CheckClause.Add("*")
         Dim Result As List(Of List(Of Object))
 
-        ' Look up the max id if there are records
-        If Records Then
-            ' Look up id used
-            WhereClause = New List(Of String) From {
+        ' First see if there are any records in the translationscolumns table and set the tcID
+        WhereClause = New List(Of String) From {
                 "tableName='" & TranslationTableName & "'",
-                "columnName='" & TranslationColumnName & "'",
-                "masterID ='" & TranslationMasterID & "'"
+                "masterID ='" & TranslationMasterID & "'",
+                "columnName='" & TranslationColumnName & "'"
             }
 
-            SelectClause.Add("tcID")
-
+        SelectClause.Add("tcID")
+        SyncLock Lock2
             Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)
 
             If Result.Count = 0 Then
-                ' Look up the max and add one to it
+                ' Look up the max tcID in the table and add one to it
                 WhereClause = New List(Of String)
                 SelectClause = New List(Of String) From {
                     "Max(tcID)"
                 }
-                TranslationColumnID = CInt(TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)(0)(0)) + 1
-            Else
-                TranslationColumnID = CInt(Result(0)(0))
-            End If
-        Else
-            TranslationColumnID = 1 ' No records yet
-        End If
 
-        For Each entry In TranslationDataList
-            Records = False ' reset
-            ' See if the record is there in translations
-            WhereClause = New List(Of String) From {
-                "tcID =" & TranslationColumnID,
-                "keyID =" & ID,
-                "languageID='" & entry.TranslationCode & "'"
-            }
+                Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause)
 
-            SelectClause = New List(Of String) From {
-                "tcID"
-            }
+                If IsDBNull(Result(0)(0)) Then
+                    ' no records, so set the tcID to 1 and insert
+                    TranslationColumnID = 1
+                Else
+                    ' no records at all in table for this table
+                    TranslationColumnID = CInt(Result(0)(0)) + 1
+                End If
 
-            Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationsTable, WhereClause, Records)
-
-            If Not Records Then
-                ' No data found, insert
-                TempTranslation = New trnTranslation With {
-                    .tcID = TranslationColumnID,
-                    .keyID = ID,
-                    .text = entry.Translation,
-                    .languageID = entry.TranslationCode
-                }
-
-                TranslationsList = New List(Of trnTranslation) ' reset but only use for one record
-                Call TranslationsList.Add(TempTranslation)
-                Call InsertTranslationsRecords(TranslationsList, 0, False, False)
-            End If
-
-            Records = False ' reset
-
-            ' See if the record is there in translationColumns
-            WhereClause = New List(Of String) From {
-                "tableName='" & TranslationTableName & "'",
-                "tcID =" & TranslationColumnID
-            }
-
-            SelectClause = New List(Of String) From {
-                "tcID"
-            }
-
-            Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationColumnsTable, WhereClause, Records)
-
-            If Not Records Then
-                ' No data found, insert
+                ' Since this record didn't exist in the table, insert it now that we have the tcID
                 TempTranslationColumn = New trnTranslationColumn With {
                     .tcID = TranslationColumnID,
                     .masterID = TranslationMasterID,
@@ -428,8 +390,45 @@ Cancel:
                 TranslationColumnsList = New List(Of trnTranslationColumn) ' reset but only use for one record
                 Call TranslationColumnsList.Add(TempTranslationColumn)
                 Call InsertTranslationColumnsRecords(TranslationColumnsList, 0, False, False)
+            Else
+                ' Record exists, just return the tcID
+                TranslationColumnID = CInt(Result(0)(0))
             End If
-        Next
+
+            ' Insert a translation for each entry present
+            For Each entry In TranslationDataList
+                Records = False ' reset
+                ' See if the record is there in translations
+                WhereClause = New List(Of String) From {
+                    "tcID =" & TranslationColumnID,
+                    "keyID =" & ID,
+                    "languageID='" & entry.TranslationCode & "'"
+                }
+
+                SelectClause = New List(Of String) From {
+                    "tcID"
+                }
+
+                Result = TranslationTablesDB.SelectfromTable(SelectClause, trnTranslationsTable, WhereClause, Records)
+
+                If Not Records Then
+                    ' No data found, insert
+                    TempTranslation = New trnTranslation With {
+                        .tcID = TranslationColumnID,
+                        .keyID = ID,
+                        .text = entry.Translation,
+                        .languageID = entry.TranslationCode
+                    }
+
+                    TranslationsList = New List(Of trnTranslation) ' reset but only use for one record
+                    Call TranslationsList.Add(TempTranslation)
+                    Call InsertTranslationsRecords(TranslationsList, 0, False, False)
+                End If
+
+                Records = False ' reset
+
+            Next
+        End SyncLock
 
     End Sub
 
@@ -457,8 +456,8 @@ Cancel:
         ' Look up tcID first
         WhereValues = New List(Of String) From {
             "tableName='" & tableName & "'",
-            "columnName='" & columnName & "'",
-            "masterID='" & masterID & "'"
+            "masterID='" & masterID & "'",
+            "columnName='" & columnName & "'"
         }
 
         SelectClause.Add("tcID")
