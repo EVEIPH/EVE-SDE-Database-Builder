@@ -214,7 +214,7 @@ Public Class SQLiteDB
     ''' <param name="TableName">Name of the table to create.</param>
     ''' <param name="TableStructure">List of table fields that define the table.</param>
     Public Sub CreateTable(ByVal TableName As String, ByVal TableStructure As List(Of DBTableField))
-dim SQL As string
+        Dim SQL As String
         Dim PKFields As New List(Of String)
 
         ' Drop the table first
@@ -399,7 +399,6 @@ dim SQL As string
                         DataFields.Add(BuildDatabaseField("languageName", CType(row.Item(1), Object), FieldType.nvarchar_type))
 
                     ElseIf Tables(i).TableName = YAMLTranslations.trnTranslationsTable Then
-
                         DataFields.Add(BuildDatabaseField("keyID", CType(row.Item(0), Object), FieldType.int_type))
                         DataFields.Add(BuildDatabaseField("languageID", CType(row.Item(1), Object), FieldType.varchar_type))
                         DataFields.Add(BuildDatabaseField("tcID", CType(row.Item(2), Object), FieldType.smallint_type))

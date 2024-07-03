@@ -16,6 +16,7 @@ Public Class MySQLDB
     Private ReadOnly DBServerName As String
     Private ReadOnly DBUserID As String
     Private ReadOnly DBUserPassword As String
+    Private ReadOnly DBPort As String
 
     Private Const DBConnectionString As String = "Server={0}; userid={1}; password={2}; pooling=false; default command timeout=600; AllowLoadLocalInfile=true;"
 
@@ -40,6 +41,7 @@ Public Class MySQLDB
         MyBase.New(DatabaseName, DatabaseType.MySQL)
 
         Dim DB As New MySqlConnection
+        Dim PortString As String
 
         BulkInsertTablesData = New ConcurrentQueue(Of BulkInsertData)
         CSVDirectory = ""
@@ -53,11 +55,15 @@ Public Class MySQLDB
             DBUserID = UserID
             DBUserPassword = Password
 
-            If Port <> "" Then
-                Port = " port=" & Port & ";"
+            If Port = "" Then
+                DBPort = "3306" ' Default service port for MySQL
+            Else
+                DBPort = Port
             End If
 
-            DB = New MySqlConnection(String.Format(DBConnectionString, DBServerName, DBUserID, DBUserPassword) & Port)
+            PortString = " port=" & DBPort & ";"
+
+            DB = New MySqlConnection(String.Format(DBConnectionString, DBServerName, DBUserID, DBUserPassword) & PortString)
             DB.Open()
 
             ' See if the Databae exists first and create if not
@@ -89,10 +95,8 @@ Public Class MySQLDB
     Private Function DBConnectionRef() As MySqlConnection
 
         ' Open the connection for reference
-        Dim DBRef As New MySqlConnection(String.Format(DBConnectionString, DBServerName, DBUserID, DBUserPassword))
-
+        Dim DBRef As New MySqlConnection(String.Format(DBConnectionString, DBServerName, DBUserID, DBUserPassword) & " port=" & DBPort & ";")
         DBRef.Open()
-
 
         ' Set the database
         DBRef.ChangeDatabase(MainDatabase)

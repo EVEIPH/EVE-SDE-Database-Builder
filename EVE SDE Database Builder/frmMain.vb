@@ -94,6 +94,7 @@ Public Class frmMain
                 .MySQLPassword = txtPassword.Text
                 .MySQLConnectionString = txtServerName.Text
                 .MySQLUserName = txtUserName.Text
+                .mySQLPort = txtPort.Text
             ElseIf rbtnPostgreSQL.Checked Then
                 .SelectedDB = rbtnPostgreSQL.Text
                 .PostgreSQLPassword = txtPassword.Text
@@ -194,6 +195,12 @@ Public Class frmMain
                     rbtnJapanese.Checked = True
                 Case rbtnRussian.Text
                     rbtnRussian.Checked = True
+                Case rbtnChinese.Text
+                    rbtnChinese.Checked = True
+                Case rbtnKorean.Text
+                    rbtnKorean.Checked = True
+                Case Else
+                    rbtnEnglish.Checked = True
             End Select
         End With
 
@@ -987,7 +994,7 @@ CancelImportProcessing:
         End If
 
         If rbtnPostgreSQL.Checked Then
-            ' Check port
+            ' Check port - MySQL port can use 3306 as default if not set
             If Trim(txtPort.Text) = "" Then
                 Call MsgBox("You must select a port number", vbInformation, Application.ProductName)
                 txtPort.Focus()
@@ -1729,7 +1736,7 @@ CancelImportProcessing:
                 txtServerName.Text = .MySQLConnectionString
                 txtPassword.Text = .MySQLPassword
                 txtUserName.Text = .MySQLUserName
-                txtPort.Text = ""
+                txtPort.Text = .MySQLPort
             ElseIf rbtnPostgreSQL.Checked Then
                 txtServerName.Text = .PostgreSQLConnectionString
                 txtPassword.Text = .PostgreSQLPassword

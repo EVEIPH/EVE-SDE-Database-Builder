@@ -10,6 +10,7 @@ Public Class ProgramSettings
     Private Const DefaultSelectedDB As String = "SQLite"
     Private Const DefaultSelectedLanguage As String = "English"
     Private Const DefaultpostgreSQLPort As String = "5432"
+    Private Const DefaultMySQLPort As String = "3306"
     Private Const DefaultEUCheck As Boolean = False
     Private Const DefaultUseLargerVersion As Boolean = False
 
@@ -178,6 +179,7 @@ Public Class ProgramSettings
                     .MySQLConnectionString = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "MySQLConnectionString", ""))
                     .MySQLUserName = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "MySQLUserName", ""))
                     .MySQLPassword = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "MySQLPassword", ""))
+                    .MySQLPort = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "MySQLPort", DefaultMySQLPort))
                     .CSVEUCheck = CBool(GetSettingValue(AppSettingsFileName, SettingTypes.TypeBoolean, AppSettingsFileName, "CSVEUCheck", DefaultEUCheck))
                     .SelectedLanguage = CStr(GetSettingValue(AppSettingsFileName, SettingTypes.TypeString, AppSettingsFileName, "SelectedLanguage", DefaultSelectedLanguage))
                     .UseLargerVersion = CBool(GetSettingValue(AppSettingsFileName, SettingTypes.TypeBoolean, AppSettingsFileName, "UseLargerVersion", DefaultUseLargerVersion))
@@ -222,6 +224,7 @@ Public Class ProgramSettings
             .MySQLConnectionString = ""
             .MySQLUserName = ""
             .MySQLPassword = ""
+            .MySQLPort = DefaultMySQLPort
             .CSVEUCheck = DefaultEUCheck
             .UseLargerVersion = DefaultUseLargerVersion
             .SelectedLanguage = DefaultSelectedLanguage
@@ -236,7 +239,7 @@ Public Class ProgramSettings
 
     ' Saves the application settings to XML
     Public Sub SaveApplicationSettings(SentSettings As ApplicationSettings)
-        Dim ApplicationSettingsList(18) As Setting
+        Dim ApplicationSettingsList(19) As Setting
 
         Try
             With SentSettings
@@ -254,11 +257,12 @@ Public Class ProgramSettings
                 ApplicationSettingsList(11) = New Setting("MySQLConnectionString", .MySQLConnectionString)
                 ApplicationSettingsList(12) = New Setting("MySQLUserName", .MySQLUserName)
                 ApplicationSettingsList(13) = New Setting("MySQLPassword", .MySQLPassword)
-                ApplicationSettingsList(14) = New Setting("CSVEUCheck", .CSVEUCheck)
-                ApplicationSettingsList(15) = New Setting("SelectedLanguage", .SelectedLanguage)
-                ApplicationSettingsList(16) = New Setting("SelectedDB", .SelectedDB)
-                ApplicationSettingsList(17) = New Setting("DownloadFolderPath", .DownloadFolderPath)
-                ApplicationSettingsList(18) = New Setting("UseLargerVersion", .UseLargerVersion)
+                ApplicationSettingsList(14) = New Setting("MySQLPort", .MySQLPort)
+                ApplicationSettingsList(15) = New Setting("CSVEUCheck", .CSVEUCheck)
+                ApplicationSettingsList(16) = New Setting("SelectedLanguage", .SelectedLanguage)
+                ApplicationSettingsList(17) = New Setting("SelectedDB", .SelectedDB)
+                ApplicationSettingsList(18) = New Setting("DownloadFolderPath", .DownloadFolderPath)
+                ApplicationSettingsList(19) = New Setting("UseLargerVersion", .UseLargerVersion)
             End With
 
             Call WriteSettingsToFile(AppSettingsFileName, ApplicationSettingsList, AppSettingsFileName)
@@ -306,6 +310,7 @@ Public Structure ApplicationSettings
     Dim MySQLConnectionString As String
     Dim MySQLUserName As String
     Dim MySQLPassword As String
+    Dim MySQLPort As String
 
     Dim CSVEUCheck As Boolean
 
