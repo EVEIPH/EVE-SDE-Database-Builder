@@ -1,5 +1,6 @@
 ﻿Imports System.Security.AccessControl
 Imports System.IO
+Imports System.Security.Principal
 
 ''' <summary>
 ''' Base class for all database classes, which stores common functions and variables
@@ -75,7 +76,7 @@ Public Class DBFilesBase
         End If
 
         Dim DS As New DirectorySecurity
-        DS.AddAccessRule(New FileSystemAccessRule("Everyone", FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
+        DS.AddAccessRule(New FileSystemAccessRule(New SecurityIdentifier(WellKnownSidType.WorldSid, Nothing), FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
         Directory.CreateDirectory(FileDirectory, DS)
         CSVDirectory = FileDirectory
 
