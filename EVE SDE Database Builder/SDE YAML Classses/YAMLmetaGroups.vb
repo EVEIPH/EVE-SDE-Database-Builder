@@ -43,6 +43,13 @@ Public Class YAMLmetaGroups
 
         Call UpdateDB.CreateTable(TableName, Table)
 
+        Table = New List(Of DBTableField) From {
+            New DBTableField("metaGroupID", FieldType.smallint_type, 0, False),
+            New DBTableField("colorValue", FieldType.float_type, 0, True)
+        }
+
+        Call UpdateDB.CreateTable(TableName & "Colors", Table)
+
         ' See if we only want to build the table and indexes
         If Not Params.InsertRecords Then
             Exit Sub
@@ -76,9 +83,22 @@ Public Class YAMLmetaGroups
                 Call Translator.InsertTranslationData(DataField.Key, "marketGroupID", "descriptionID", TableName, NameTranslation.GetAllTranslations(.descriptionID))
                 Call Translator.InsertTranslationData(DataField.Key, "marketGroupID", "nameID", TableName, NameTranslation.GetAllTranslations(.nameID))
 
-            End With
+                Call UpdateDB.InsertRecord(TableName, DataFields)
 
-            Call UpdateDB.InsertRecord(TableName, DataFields)
+                If Not IsNothing(.color) Then
+                    If .color.Count <> 0 Then
+                        ' Add these
+                        For i = 0 To .color.Count - 1
+                            DataFields = New List(Of DBField) From {
+                                    UpdateDB.BuildDatabaseField("metaGroupID", DataField.Key, FieldType.int_type),
+                                    UpdateDB.BuildDatabaseField("colorValue", .color(i), FieldType.float_type)
+                                }
+                            Call UpdateDB.InsertRecord(TableName & "Colors", DataFields)
+                        Next
+                    End If
+                End If
+
+            End With
 
             ' Update grid progress
             Call UpdateGridRowProgress(Params.RowLocation, Count, TotalRecords)
@@ -103,4 +123,5 @@ Public Class metaGroup
     Public Property iconID As Object
     Public Property iconSuffix As Object
     Public Property nameID As Translations
+    Public Property color As List(Of Double) ' 4 values, no idea what they are
 End Class

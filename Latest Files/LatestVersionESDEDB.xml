@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<EVESDEDB Version="Version 2.0.8995.38447">
-  <LastUpdated>8/17/2024 9:21:43 PM</LastUpdated>
+<EVESDEDB Version="Version 2.0.9084.32440">
+  <LastUpdated>11/14/2024 6:01:31 PM</LastUpdated>
   <result>
     <rowset name="filelist" key="version" columns="Name,Version,MD5,URL">
-      <row Name="EVE SDE Database Builder.exe" Version="Version 2.0.8995.38447" MD5="b0aa671b2c8f1dbef1795413e9888ac6" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe" />
+      <row Name="EVE SDE Database Builder.exe" Version="Version 2.0.9084.32440" MD5="1f58a33ede744e20c6c237fdab2fd129" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe" />
       <row Name="ESDEDB Updater.exe" Version="2.0.0.0" MD5="3132fd9a3224393e95d3c47bed50ae46" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe" />
       <row Name="EVE SDE Database Builder.exe.config" Version="2.0.0.0" MD5="792836b161216c53a0a1cd5be58d65e1" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/EVE%20SDE%20Database%20Builder.exe.config" />
       <row Name="ESDEDB Updater.exe.config" Version="" MD5="d79ff6256aa96348362d94e72a6cb606" URL="https://raw.githubusercontent.com/EVEIPH/EVE-SDE-Database-Builder/master/Latest%20Files/ESDEDB%20Updater.exe.config" />

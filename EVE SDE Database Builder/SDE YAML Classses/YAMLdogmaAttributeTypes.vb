@@ -52,7 +52,8 @@ Public Class YAMLdogmaAttributeTypes
             New DBTableField("tooltipTitleID", FieldType.varchar_type, 1000, True),
             New DBTableField("maxAttributeID", FieldType.int_type, 0, True),
             New DBTableField("chargeRechargeTimeID", FieldType.smallint_type, 0, True),
-            New DBTableField("displayWhenZero", FieldType.bit_type, 0, True)
+            New DBTableField("displayWhenZero", FieldType.bit_type, 0, True),
+            New DBTableField("minAttributeID", FieldType.int_type, 0, True)
         }
 
         Call UpdateDB.CreateTable(TableName, Table)
@@ -96,7 +97,8 @@ Public Class YAMLdogmaAttributeTypes
                     UpdateDB.BuildDatabaseField("tooltipTitleID", NameTranslation.GetLanguageTranslationData(.tooltipTitleID), FieldType.nvarchar_type),
                     UpdateDB.BuildDatabaseField("maxAttributeID", .maxAttributeID, FieldType.int_type),
                     UpdateDB.BuildDatabaseField("chargeRechargeTimeID", .chargeRechargeTimeID, FieldType.smallint_type),
-                    UpdateDB.BuildDatabaseField("displayWhenZero", .displayWhenZero, FieldType.bit_type)
+                    UpdateDB.BuildDatabaseField("displayWhenZero", .displayWhenZero, FieldType.bit_type),
+                    UpdateDB.BuildDatabaseField("minAttributeID", .minAttributeID, FieldType.int_type)
                 }
 
                 Call UpdateDB.InsertRecord(TableName, DataFields)
@@ -142,4 +144,5 @@ Public Class dogmaAttributeType
     Public Property tooltipTitleID As Translations
     Public Property unitID As Object
     Public Property displayWhenZero As Object
+    Public Property minAttributeID As Object
 End Class
