@@ -309,7 +309,6 @@
     </Compile>
     <Compile Include="ProgramSettings.vb" />
     <Compile Include="ProgramUpdater.vb" />
-    <Compile Include="Resizer.vb" />
     <Compile Include="SDE YAML Classses\YAMLagentsinSpace.vb" />
     <Compile Include="SDE YAML Classses\YAMLblueprints.vb" />
     <Compile Include="SDE YAML Classses\YAMLcontrabandTypes.vb" />

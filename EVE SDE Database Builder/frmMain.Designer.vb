@@ -36,6 +36,7 @@ Partial Class frmMain
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UseLargerVersionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ResetDownloadChecksumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SetThreadsUsedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -91,10 +92,10 @@ Partial Class frmMain
         Me.rbtnGerman = New System.Windows.Forms.RadioButton()
         Me.rbtnEnglish = New System.Windows.Forms.RadioButton()
         Me.btnSaveSettings = New System.Windows.Forms.Button()
-        Me.btnClose = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
+        Me.btnClose = New System.Windows.Forms.Button()
         Me.btnBuildDatabase = New System.Windows.Forms.Button()
-        Me.ResetDownloadChecksumToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.pnlMain.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.gbFilePathSelect.SuspendLayout()
@@ -102,12 +103,13 @@ Partial Class frmMain
         Me.gbSelectDBType.SuspendLayout()
         Me.gbOptions.SuspendLayout()
         Me.gbLanguage.SuspendLayout()
+        Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnlMain
         '
         Me.pnlMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblStatus, Me.pgMain})
-        Me.pnlMain.Location = New System.Drawing.Point(0, 659)
+        Me.pnlMain.Location = New System.Drawing.Point(0, 719)
         Me.pnlMain.Name = "pnlMain"
         Me.pnlMain.Size = New System.Drawing.Size(544, 22)
         Me.pnlMain.TabIndex = 6
@@ -160,6 +162,12 @@ Partial Class frmMain
         Me.UseLargerVersionToolStripMenuItem.Size = New System.Drawing.Size(257, 24)
         Me.UseLargerVersionToolStripMenuItem.Text = "Use Larger Version"
         Me.UseLargerVersionToolStripMenuItem.Visible = False
+        '
+        'ResetDownloadChecksumToolStripMenuItem
+        '
+        Me.ResetDownloadChecksumToolStripMenuItem.Name = "ResetDownloadChecksumToolStripMenuItem"
+        Me.ResetDownloadChecksumToolStripMenuItem.Size = New System.Drawing.Size(257, 24)
+        Me.ResetDownloadChecksumToolStripMenuItem.Text = "Reset Download Checksum"
         '
         'SetThreadsUsedToolStripMenuItem
         '
@@ -364,6 +372,9 @@ Partial Class frmMain
         Me.dgMain.AllowUserToDeleteRows = False
         Me.dgMain.AllowUserToResizeColumns = False
         Me.dgMain.AllowUserToResizeRows = False
+        Me.dgMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -374,6 +385,7 @@ Partial Class frmMain
         Me.dgMain.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgMain.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.FileSelect, Me.FileName, Me.Progress})
+        Me.TableLayoutPanel1.SetColumnSpan(Me.dgMain, 4)
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -382,7 +394,7 @@ Partial Class frmMain
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgMain.DefaultCellStyle = DataGridViewCellStyle2
-        Me.dgMain.Location = New System.Drawing.Point(10, 393)
+        Me.dgMain.Location = New System.Drawing.Point(3, 3)
         Me.dgMain.Name = "dgMain"
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
@@ -393,7 +405,7 @@ Partial Class frmMain
         DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgMain.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.dgMain.RowHeadersVisible = False
-        Me.dgMain.Size = New System.Drawing.Size(525, 209)
+        Me.dgMain.Size = New System.Drawing.Size(511, 281)
         Me.dgMain.TabIndex = 1
         '
         'FileSelect
@@ -685,65 +697,82 @@ Partial Class frmMain
         '
         'btnSaveSettings
         '
-        Me.btnSaveSettings.Location = New System.Drawing.Point(279, 615)
+        Me.btnSaveSettings.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btnSaveSettings.Location = New System.Drawing.Point(165, 290)
         Me.btnSaveSettings.Name = "btnSaveSettings"
-        Me.btnSaveSettings.Size = New System.Drawing.Size(90, 30)
+        Me.btnSaveSettings.Size = New System.Drawing.Size(87, 30)
         Me.btnSaveSettings.TabIndex = 4
         Me.btnSaveSettings.Text = "Save Settings"
         Me.btnSaveSettings.UseVisualStyleBackColor = True
         '
-        'btnClose
-        '
-        Me.btnClose.Location = New System.Drawing.Point(377, 615)
-        Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(90, 30)
-        Me.btnClose.TabIndex = 5
-        Me.btnClose.Text = "Close"
-        Me.btnClose.UseVisualStyleBackColor = True
-        '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(181, 615)
+        Me.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btnCancel.Location = New System.Drawing.Point(258, 290)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(90, 30)
         Me.btnCancel.TabIndex = 3
         Me.btnCancel.Text = "Cancel"
         Me.btnCancel.UseVisualStyleBackColor = True
         '
+        'btnClose
+        '
+        Me.btnClose.Anchor = System.Windows.Forms.AnchorStyles.Left
+        Me.btnClose.Location = New System.Drawing.Point(355, 290)
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(90, 30)
+        Me.btnClose.TabIndex = 5
+        Me.btnClose.Text = "Close"
+        Me.btnClose.UseVisualStyleBackColor = True
+        '
         'btnBuildDatabase
         '
-        Me.btnBuildDatabase.Location = New System.Drawing.Point(83, 615)
+        Me.btnBuildDatabase.Anchor = System.Windows.Forms.AnchorStyles.Right
+        Me.btnBuildDatabase.Location = New System.Drawing.Point(69, 290)
         Me.btnBuildDatabase.Name = "btnBuildDatabase"
         Me.btnBuildDatabase.Size = New System.Drawing.Size(90, 30)
         Me.btnBuildDatabase.TabIndex = 2
         Me.btnBuildDatabase.Text = "Build Database"
         Me.btnBuildDatabase.UseVisualStyleBackColor = True
         '
-        'ResetDownloadChecksumToolStripMenuItem
+        'TableLayoutPanel1
         '
-        Me.ResetDownloadChecksumToolStripMenuItem.Name = "ResetDownloadChecksumToolStripMenuItem"
-        Me.ResetDownloadChecksumToolStripMenuItem.Size = New System.Drawing.Size(257, 24)
-        Me.ResetDownloadChecksumToolStripMenuItem.Text = "Reset Download Checksum"
+        Me.TableLayoutPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanel1.ColumnCount = 4
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 31.35755!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.97323!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.73805!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 31.54876!))
+        Me.TableLayoutPanel1.Controls.Add(Me.btnClose, 3, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.btnCancel, 2, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.dgMain, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.btnBuildDatabase, 0, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.btnSaveSettings, 1, 1)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(12, 393)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 2
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.02692!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.97308!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(517, 323)
+        Me.TableLayoutPanel1.TabIndex = 25
         '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
-        Me.ClientSize = New System.Drawing.Size(544, 681)
-        Me.Controls.Add(Me.btnBuildDatabase)
-        Me.Controls.Add(Me.btnCancel)
-        Me.Controls.Add(Me.dgMain)
-        Me.Controls.Add(Me.btnClose)
-        Me.Controls.Add(Me.btnSaveSettings)
+        Me.ClientSize = New System.Drawing.Size(544, 741)
+        Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.gbSelectDBType)
         Me.Controls.Add(Me.gbFilePathSelect)
         Me.Controls.Add(Me.pnlMain)
         Me.Controls.Add(Me.MenuStrip1)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
-        Me.MaximumSize = New System.Drawing.Size(764, 982)
-        Me.MinimumSize = New System.Drawing.Size(560, 720)
+        Me.MaximizeBox = False
+        Me.MinimumSize = New System.Drawing.Size(560, 780)
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "EVE SDE Database Builder"
@@ -758,6 +787,7 @@ Partial Class frmMain
         Me.gbOptions.ResumeLayout(False)
         Me.gbOptions.PerformLayout()
         Me.gbLanguage.ResumeLayout(False)
+        Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -826,8 +856,9 @@ Partial Class frmMain
     Friend WithEvents rbtnGerman As RadioButton
     Friend WithEvents rbtnEnglish As RadioButton
     Friend WithEvents btnSaveSettings As Button
-    Friend WithEvents btnClose As Button
     Friend WithEvents btnCancel As Button
-    Friend WithEvents btnBuildDatabase As Button
     Friend WithEvents ResetDownloadChecksumToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents btnClose As Button
+    Friend WithEvents btnBuildDatabase As Button
 End Class

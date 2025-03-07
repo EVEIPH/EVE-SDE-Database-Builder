@@ -42,7 +42,6 @@ Public Class frmMain
     Private ReadOnly LocalCulture As New CultureInfo("en-US")
 
     Private CSVImport As Boolean ' If we are using CSV to bulk import the data
-    Private rs As New Resizer
 
     ' For use with updating the grid with files
     Public Structure FileListItem

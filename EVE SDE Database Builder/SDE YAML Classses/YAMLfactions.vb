@@ -43,7 +43,9 @@ Public Class YAMLfactions
             New DBTableField("sizeFactor", FieldType.real_type, 0, True),
             New DBTableField("militiaCorporationID", FieldType.int_type, 0, True),
             New DBTableField("iconID", FieldType.int_type, 0, True),
-            New DBTableField("uniqueName", FieldType.int_type, 0, True)
+            New DBTableField("uniqueName", FieldType.int_type, 0, True),
+            New DBTableField("flatLogo", FieldType.varchar_type, 100, True),
+            New DBTableField("flatLogoWithName", FieldType.varchar_type, 100, True)
         }
 
         Call UpdateDB.CreateTable(TableName, Table)
@@ -89,6 +91,8 @@ Public Class YAMLfactions
                 DataFields.Add(UpdateDB.BuildDatabaseField("militiaCorporationID", .militiaCorporationID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("iconID", .iconID, FieldType.int_type))
                 DataFields.Add(UpdateDB.BuildDatabaseField("uniqueName", .uniqueName, FieldType.int_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("flatLogo", .flatLogo, FieldType.nvarchar_type))
+                DataFields.Add(UpdateDB.BuildDatabaseField("flatLogoWithName", .flatLogoWithName, FieldType.nvarchar_type))
 
                 ' Insert the translated data into translation tables
                 Call Translator.InsertTranslationData(DataField.Key, "factionID", "factionName", TableName, NameTranslation.GetAllTranslations(.nameID))
@@ -134,4 +138,7 @@ Public Class faction
     Public Property sizeFactor As Object
     Public Property solarSystemID As Object
     Public Property uniqueName As Object
+    Public Property flatLogo As Object
+    Public Property flatLogoWithName As Object
+
 End Class
