@@ -1983,6 +1983,7 @@ CancelImportProcessing:
         Dim OldChecksumValue As String = ""
         Dim Splitter(1) As String
         Dim FileDate As Date ' to save the date of the download
+        Dim FolderName As String
 
         CancelDownload = False
 
@@ -2038,8 +2039,9 @@ CancelImportProcessing:
 
             lblStatus.Text = "Preparing files..."
             Application.DoEvents()
+            FolderName = MonthName(FileDate.Month) & "_" & CStr(FileDate.Day) & "_" & Year(FileDate)
             ' Create a folder for today's date and download the SDE into that folder - will overwrite anything there
-            NewDownloadDirectory = UserApplicationSettings.DownloadFolderPath & "\" & MonthName(FileDate.Month) & "_" & CStr(FileDate.Day) & "_" & Year(FileDate)
+            NewDownloadDirectory = UserApplicationSettings.DownloadFolderPath & "\" & FolderName
             If Directory.Exists(NewDownloadDirectory) Then
                 Call Directory.Delete(NewDownloadDirectory, True)
             End If
@@ -2074,6 +2076,8 @@ CancelImportProcessing:
 
             lblSDEPath.Text = NewDownloadDirectory
             UserApplicationSettings.SDEDirectory = NewDownloadDirectory
+            ' Auto set the new folder to process
+            txtDBName.Text = FolderName
             ' Save the settings as well
             Call SaveSettings(True)
             lblStatus.Text = ""
